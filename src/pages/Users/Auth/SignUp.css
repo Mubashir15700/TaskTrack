@@ -1,0 +1,67 @@
+.main-div {
+    width: 600px;
+    padding: 30px;
+    border: 1px solid #c4bfbe;
+    border-radius: 10px;
+    margin-top: 80px;
+    margin-bottom: 20px;
+}
+
+.sub-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sign-up-btn {
+    width: 150px;
+    background-color: #4B49AC;
+    border-color: #4B49AC;
+    color: #fff;
+    border-radius: 50px;
+}
+
+.sign-up-btn:hover {
+    background-color: #7C79C8;
+    border-color: #7C79C8;
+}
+
+.link {
+    color: #4B49AC;
+}
+
+@media screen and (max-width: 678px) {
+    .main-div {
+        width: 430px;
+        padding: 20px;
+    }
+
+    .sign-up-btn {
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .main-div {
+        width: 430px;
+        padding: 20px;
+    }
+
+    .sign-up-btn {
+        width: 100px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .main-div {
+        width: 280px;
+        padding: 15px;
+        border: none;
+    }
+
+    .bottom-div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

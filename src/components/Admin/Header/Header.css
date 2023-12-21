@@ -22,16 +22,16 @@ img {
     border-color: #4B49AC;
 }
 
-.sign-up-btn {
+.header-sign-up-btn {
     border-color: #4B49AC;
     color: #4B49AC;
 }
 
-.login-btn {
+.header-login-btn {
     margin-right: 5px;
 }
 
-.sign-up-btn:hover {
+.header-sign-up-btn:hover {
     background-color: #4B49AC;
     color: #fff;
 }
@@ -81,5 +81,11 @@ img {
         margin-left: auto;
         margin-right: auto;
         display: block;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .login-signup-btn-div {
+        margin-top: 15px;
     }
 }

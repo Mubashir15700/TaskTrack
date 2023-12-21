@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from "react-router-dom";
-import logo from '../../assets/images/logo.png';
+import logo from '../../../assets/images/logo.png';
 import './Header.css';
 
 const Header = () => {
@@ -34,26 +34,26 @@ const Header = () => {
           </ul>
           {isAuth &&
             <>
-              <Link to="/post-job" className="btn btn-outline-success post-job-btn" type="submit">Post Job</Link>
+              <Link to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit">Post Job</Link>
               <div className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="bi bi-caret-down-square-fill"></i>
+                  <i className="bi bi-caret-down-square-fill"></i>
                 </a>
                 <ul className="dropdown-menu">
                   <li>
                     <Link to="/profile" className="dropdown-item" aria-current="page">
-                      <i class="bi bi-person-circle"></i> Profile
+                      <i className="bi bi-person-circle"></i> Profile
                     </Link>
                   </li>
                   <li>
                     <Link to="/notifications" className="dropdown-item" aria-current="page">
-                      <i class="bi bi-bell"></i> Notifications
+                      <i className="bi bi-bell"></i> Notifications
                     </Link>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
                     <button type="button" className="btn btn-danger logout-btn">
-                      <i class="bi bi-power"></i> Logout
+                      <i className="bi bi-power"></i> Logout
                     </button>
                   </li>
                 </ul>
@@ -62,15 +62,15 @@ const Header = () => {
           }
           <form className="d-flex input-group search-form" role="search">
             <input className="form-control search-input " type="search" placeholder="Search" aria-label="Search" />
-            <select class="form-select search-select" id="inputGroupSelect03" aria-label="Example select with button addon">
+            <select className="form-select search-select" id="inputGroupSelect03" aria-label="Example select with button addon">
               <option value="laborers">Laborers</option>
               <option value="jobs">Jobs</option>
             </select>
           </form>
           {!isAuth &&
-            <div >
-              <Link to="/login" type="button" class="btn btn-light login-btn">Login</Link>
-              <Link to="/sign-up" className="btn btn-outline-success sign-up-btn" type="submit">Sign Up</Link>
+            <div className='login-signup-btn-div'>
+              <Link to="/login" type="button" className="btn btn-light header-login-btn">Login</Link>
+              <Link to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">Sign Up</Link>
             </div>
           }
         </div>
