@@ -22,6 +22,10 @@ img {
     border-color: #4B49AC;
 }
 
+.display-name {
+    font-size: 15px;
+}
+
 .header-sign-up-btn {
     border-color: #4B49AC;
     color: #4B49AC;

@@ -1,8 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setLoggedIn } from '../../../redux/slices/adminSlice';
+import { logout } from "../../../services/api";
 import logo from '../../../assets/images/logo.png';
 import './Header.css';
 
 const Header = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogout = async () => {
+        const response = await logout({ role: 'admin' });
+        if (response && response.status === 200) {
+            dispatch(setLoggedIn(false));
+            navigate("/admin/login");
+        } else {
+            console.log("logout error: ", response);
+        }
+    }
+
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
             <div className="container-fluid">
@@ -32,13 +48,13 @@ const Header = () => {
                             </a>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <Link to="/notifications" className="dropdown-item" aria-current="page">
+                                    <Link to="/admin/notifications" className="dropdown-item" aria-current="page">
                                         <i className="bi bi-bell"></i> Notifications
                                     </Link>
                                 </li>
                                 <li><hr className="dropdown-divider" /></li>
                                 <li>
-                                    <button type="button" className="btn btn-danger logout-btn">
+                                    <button type="button" className="btn btn-danger logout-btn" onClick={handleLogout}>
                                         <i className="bi bi-power"></i> Logout
                                     </button>
                                 </li>

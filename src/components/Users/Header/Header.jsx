@@ -1,11 +1,26 @@
-import { useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux';
+import { setLoggedIn } from '../../../redux/slices/userSlice';
+import { logout } from "../../../services/api";
 import logo from '../../../assets/images/logo.png';
 import './Header.css';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [isAuth, setIsAuth] = useState(false);
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const dispalyName = useSelector(state => state.user.username);
+
+  const handleLogout = async () => {
+    const response = await logout({ role: 'user' });
+    if (response && response.status === 200) {
+      dispatch(setLoggedIn(false));
+      navigate("/login");
+    } else {
+      console.log("logout error: ", response);
+    }
+  }
 
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -32,7 +47,7 @@ const Header = () => {
               <Link to="/jobs" className="nav-link" aria-current="page">Jobs</Link>
             </li>
           </ul>
-          {isAuth &&
+          {isLoggedIn &&
             <>
               <Link to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit">Post Job</Link>
               <div className="nav-item dropdown">
@@ -52,7 +67,7 @@ const Header = () => {
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
-                    <button type="button" className="btn btn-danger logout-btn">
+                    <button type="button" className="btn btn-danger logout-btn" onClick={handleLogout}>
                       <i className="bi bi-power"></i> Logout
                     </button>
                   </li>
@@ -67,7 +82,7 @@ const Header = () => {
               <option value="jobs">Jobs</option>
             </select>
           </form>
-          {!isAuth &&
+          {!isLoggedIn &&
             <div className='login-signup-btn-div'>
               <Link to="/login" type="button" className="btn btn-light header-login-btn">Login</Link>
               <Link to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">Sign Up</Link>

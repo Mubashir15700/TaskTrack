@@ -13,6 +13,10 @@
     align-items: center;
 }
 
+.error-display {
+    color: #ff0000;
+}
+
 .sign-up-btn {
     width: 150px;
     background-color: #4B49AC;

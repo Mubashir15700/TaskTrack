@@ -1,0 +1,52 @@
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+
+const URL = 'http://localhost:3000';
+
+export const checkAuth = async (data) => {
+    try {
+        return await axios.post(`${URL}/auth/checkauth`, data);
+    } catch (error) {
+        console.log("check auth error: ", error);
+        return error.response;
+    }
+};
+
+// Admin
+export const adminLogin = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/login`, data);
+    } catch (error) {
+        console.log("admin login error: ", error);
+        return error.response;
+    }
+};
+
+// User
+export const userLogin = async (data) => {
+    try {
+        return await axios.post(`${URL}/login`, data);
+    } catch (error) {
+        console.log("user login error: ", error);
+        return error.response;
+    }
+};
+
+export const userSignUp = async (data) => {
+    try {
+        return await axios.post(`${URL}/sign-up`, data);
+    } catch (error) {
+        console.log("sign-up error: ", error);
+        return error.response;
+    }
+};
+
+export const logout = async (data) => {
+    try {
+        return await axios.post(`${URL}/logout`, data);
+    } catch (error) {
+        alert(error.response.data.message);
+        console.log(error);
+    }
+};
