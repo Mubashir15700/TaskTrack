@@ -43,6 +43,15 @@ export const getUser = async (data) => {
     }
 };
 
+export const userAction = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/user-action/${data}`);
+    } catch (error) {
+        console.log("user action error: ", error);
+        return error.response;
+    }
+};
+
 // User
 export const userLogin = async (data) => {
     try {

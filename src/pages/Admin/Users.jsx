@@ -1,64 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import DataTable from 'react-data-table-component';
 import Pagination from '../../components/Partials/Pagination';
-import { getUsers } from '../../services/api';
-
-const columns = [
-  {
-    name: 'User',
-    selector: 'profile',
-    cell: row => (
-      row.profile ? (
-        <img src={row.profile} alt="Profile" style={{ width: '50px', height: '50px' }} />
-      ) : (
-        <i className="bi bi-person-circle fs-1 mb-1"></i>
-      )
-    ),
-  },
-  {
-    name: 'Username',
-    selector: 'username',
-    sortable: true,
-  },
-  {
-    name: 'Email',
-    selector: 'email',
-    sortable: true,
-  },
-  {
-    name: 'Phone',
-    selector: 'phone',
-  },
-  {
-    name: 'Verified',
-    selector: 'isVerified',
-    sortable: true,
-    cell: row => row.isVerified ? 'Yes' : 'No',
-  },
-  {
-    name: 'Is Job Seeker',
-    selector: 'isJobSeeker',
-    sortable: true,
-    cell: row => row.isJobSeeker ? 'Yes' : 'No',
-  },
-  {
-    name: 'Actions',
-    width: '170px',
-    cell: row => (
-      <div className='d-flex gap-2'>
-        <Link to={`/admin/user/${row._id}`} className='btn btn-primary'>
-          View
-        </Link>
-        <button className={`btn ${row.isBlocked} ? btn-primary : btn-danger`}
-          onClick={() => handleBlockUnblock(row.isBlocked)}>
-          {row.isBlocked ? 'Unblock' : 'Block'}
-        </button>
-      </div>
-    ),
-  },
-];
+import { getUsers, userAction } from '../../services/api';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -87,9 +33,107 @@ const Users = () => {
     getAllUsers();
   }, [currentPage]);
 
+  const confirmBlockUnblock = (userId, isBlocked) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Are you sure you want to ${isBlocked ? 'Unblock' : 'Block'} this user?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      cancelButtonText: 'Cancel',
+      confirmButtonText: isBlocked ? 'Unblock' : 'Block',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleBlockUnblock(userId);
+      }
+    });
+  };
+
+  const handleBlockUnblock = async (userId) => {
+    try {
+      const response = await userAction(userId);
+      if (response) {
+        if (response.data.status === "success") {
+          // Update local state by fetching the updated data
+          const updatedUsersResponse = await getUsers(itemsPerPage, currentPage);
+          if (
+            updatedUsersResponse &&
+            updatedUsersResponse.data.status === "success" &&
+            updatedUsersResponse.data.users
+          ) {
+            setUsers(updatedUsersResponse.data.users);
+          } else {
+            setError("Failed to fetch updated users data.");
+          }
+        } else {
+          setError('Something went wrong');
+        }
+      }
+    } catch (error) {
+      setError("Failed to update user");
+      console.error("user action error: ", error);
+    }
+  };
+
   useEffect(() => {
     error && toast.error(error);
   }, [error]);
+
+  const columns = [
+    {
+      name: 'User',
+      selector: 'profile',
+      cell: row => (
+        row.profile ? (
+          <img src={row.profile} alt="Profile" style={{ width: '50px', height: '50px' }} />
+        ) : (
+          <i className="bi bi-person-circle fs-1 mb-1"></i>
+        )
+      ),
+    },
+    {
+      name: 'Username',
+      selector: 'username',
+      sortable: true,
+    },
+    {
+      name: 'Email',
+      selector: 'email',
+      sortable: true,
+    },
+    {
+      name: 'Phone',
+      selector: 'phone',
+    },
+    {
+      name: 'Verified',
+      selector: 'isVerified',
+      sortable: true,
+      cell: row => row.isVerified ? 'Yes' : 'No',
+    },
+    {
+      name: 'Is Job Seeker',
+      selector: 'isJobSeeker',
+      sortable: true,
+      cell: row => row.isJobSeeker ? 'Yes' : 'No',
+    },
+    {
+      name: 'Actions',
+      width: '190px',
+      cell: row => (
+        <div className='d-flex gap-2'>
+          <Link to={`/admin/user/${row._id}`} className='btn btn-primary'>
+            View
+          </Link>
+          <button className={`btn ${row.isBlocked ? 'btn-warning' : 'btn-danger'}`}
+            onClick={() => confirmBlockUnblock(row._id, row.isBlocked)}>
+            {row.isBlocked ? 'Unblock' : 'Block'}
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <>
