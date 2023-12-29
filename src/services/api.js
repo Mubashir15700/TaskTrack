@@ -23,6 +23,26 @@ export const adminLogin = async (data) => {
     }
 };
 
+export const getUsers = async (itemsPerPage, currentPage) => {
+    try {
+        return await axios.get(
+            `${URL}/admin/users?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
+        );
+    } catch (error) {
+        console.log("get users error: ", error);
+        return error.response;
+    }
+};
+
+export const getUser = async (data) => {
+    try {
+        return await axios.get(`${URL}/admin/user/${data}`);
+    } catch (error) {
+        console.log("get user error: ", error);
+        return error.response;
+    }
+};
+
 // User
 export const userLogin = async (data) => {
     try {
@@ -38,6 +58,42 @@ export const userSignUp = async (data) => {
         return await axios.post(`${URL}/sign-up`, data);
     } catch (error) {
         console.log("sign-up error: ", error);
+        return error.response;
+    }
+};
+
+export const verifyOtp = async (data) => {
+    try {
+        return await axios.post(`${URL}/verify-otp`, data);
+    } catch (error) {
+        console.log("verify otp error: ", error);
+        return error.response;
+    }
+};
+
+export const resendOtp = async (data) => {
+    try {
+        return await axios.post(`${URL}/resend-otp`, data);
+    } catch (error) {
+        console.log("resend otp error: ", error);
+        return error.response;
+    }
+};
+
+export const confirmEmail = async (data) => {
+    try {
+        return await axios.post(`${URL}/confirm-email`, data);
+    } catch (error) {
+        console.log("confirm email error: ", error);
+        return error.response;
+    }
+};
+
+export const resetPassword = async (data) => {
+    try {
+        return await axios.post(`${URL}/reset-password`, data);
+    } catch (error) {
+        console.log("reset password error: ", error);
         return error.response;
     }
 };

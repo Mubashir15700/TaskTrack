@@ -1,13 +1,76 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { resetPassword } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './ResetPassword.css';
 
-const Login = () => {
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+const ResetPassword = () => {
+    const navigate = useNavigate();
 
-    const handleLogin = () => {
-        console.log('Logging in with:', { username, password });
+    const [formData, setFormData] = useState({
+        password: '',
+        confirmPassword: ''
+    });
+
+    const [errors, setErrors] = useState({});
+    const [formFilled, setFormFilled] = useState(false);
+    const [serverResponse, setServerResponse] = useState('');
+
+    const userId = useSelector(state => state.user.userData?._id);
+
+    const handleChange = (e) => {
+        setServerResponse('');
+        if (Object.values(formData).filter(value => value.trim() !== '').length === 2) {
+            setFormFilled(true);
+        }
+        const { name, value } = e.target;
+        errors[name] = null;
+        setFormData({
+            ...formData,
+            [name]: value
+        });
+    }
+
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+
+        const validationErrors = {};
+
+        if (!formData.password.trim()) {
+            validationErrors.password = "Password is required";
+        } else if (formData.password.length < 8) {
+            validationErrors.password = "Password must be atleast 8 characters long";
+        } else {
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{8,}$/;
+            if (!passwordRegex.test(formData.password)) {
+                validationErrors.password = "Password must contain at least one lowercase letter, one uppercase letter, and one special character.";
+            }
+        }
+
+        if (!formData.confirmPassword.trim()) {
+            validationErrors.confirmPassword = "Confirm password is required";
+        } else if (formData.confirmPassword !== formData.password) {
+            validationErrors.confirmPassword = "Password and Confirm password not match";
+        }
+
+        setErrors(validationErrors);
+
+        if (Object.keys(validationErrors).length === 0) {
+            try {
+                const response = await resetPassword({ userId, ...formData });
+                if (response) {
+                    console.log("reset password response: ", response.data);
+                    setServerResponse(response.data);
+                    if (response.data.status === 'success') {
+                        navigate('/login');
+                    }
+                }
+            } catch (error) {
+                console.error('Error during resetting password:', error);
+                setServerResponse({ status: 'failed', message: 'An error occurred during resetting password' });
+            }
+        }
     };
 
     return (
@@ -17,7 +80,7 @@ const Login = () => {
                 <h3>Reset Password</h3>
                 <p>Enter your new password.</p>
             </div>
-            <form className='mt-3'>
+            <form className='mt-3' onSubmit={handleResetPassword}>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">
                         Password *
@@ -26,10 +89,11 @@ const Login = () => {
                         type="password"
                         className="form-control input"
                         id="password"
+                        name="password"
                         placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={handleChange}
                     />
+                    {errors.password && <span className='error-display'>{errors.password}</span>}
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">
@@ -39,19 +103,25 @@ const Login = () => {
                         type="password"
                         className="form-control input"
                         id="confirm-password"
+                        name="confirmPassword"
                         placeholder="Confirm your password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onChange={handleChange}
                     />
+                    {errors.confirmPassword && <span className='error-display'>{errors.confirmPassword}</span>}
                 </div>
                 <div className='d-flex justify-content-center bottom-div'>
-                    <button type="button" className="btn btn-primary reset-password-btn" onClick={handleLogin}>
+                    <button type="submit" className="btn btn-primary reset-password-btn" disabled={!formFilled}>
                         Reset Password
                     </button>
                 </div>
+                {serverResponse && (
+                    <div className={`alert ${serverResponse.status === 'failed' ? 'alert-danger' : 'alert-success'} mt-3`} role="alert">
+                        {serverResponse.message}
+                    </div>
+                )}
             </form>
         </div>
     );
 };
 
-export default Login;
+export default ResetPassword;

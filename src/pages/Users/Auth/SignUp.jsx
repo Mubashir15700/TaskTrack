@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setLoggedIn } from '../../../redux/slices/userSlice';
-import { setUsername } from '../../../redux/slices/userSlice';
+import { setUserData } from '../../../redux/slices/userSlice';
 import { userSignUp } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './SignUp.css';
@@ -38,6 +37,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
     const validationErrors = {};
     if (!formData.username.trim()) {
       validationErrors.username = "Username is required";
@@ -81,9 +81,8 @@ const SignUp = () => {
           console.log("sign-up response: ", response.data);
           setServerResponse(response.data);
           if (response.data.status === 'success') {
-            dispatch(setLoggedIn(true));
-            dispatch(setUsername(formData.username));
-            navigate('/verify-otp');
+            dispatch(setUserData(response.data.currentUser));
+            navigate(`/verify-otp?purpose=signup&email=${formData.email}`);
           }
         }
       } catch (error) {

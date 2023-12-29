@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setLoggedIn as setUserLoggedIn } from '../../../redux/slices/userSlice';
-import { setUsername as setUserDisplayName } from '../../../redux/slices/userSlice';
-import { setLoggedIn as setAdminLoggedIn } from '../../../redux/slices/adminSlice';
-import { setUsername as setAdmiDisplayName } from '../../../redux/slices/adminSlice';
-import logo from '../../../assets/images/logo.png';
+import { setUserData, setLoggedIn as setUserLoggedIn } from '../../../redux/slices/userSlice';
+import { setLoggedIn as setAdminLoggedIn, setUsername as setAdmiDisplayName } from '../../../redux/slices/adminSlice';
 import { adminLogin, userLogin } from '../../../services/api';
+import logo from '../../../assets/images/logo.png';
 import './Login.css';
 
 const Login = ({ role }) => {
@@ -58,16 +56,15 @@ const Login = ({ role }) => {
           response = await userLogin(formData);
         }
         if (response) {
-          console.log("log-in response: ", response.data);
           setServerResponse(response.data);
           if (response.data.status === 'success') {
             if (role === 'admin') {
               dispatch(setAdminLoggedIn(true));
-              dispatch(setAdmiDisplayName(formData.username));
+              dispatch(setAdmiDisplayName(response.data.currentUser.username));
               navigate('/admin/');
             } else {
               dispatch(setUserLoggedIn(true));
-              dispatch(setUserDisplayName(formData.username));
+              dispatch(setUserData(response.data.currentUser));
               navigate('/');
             }
           }

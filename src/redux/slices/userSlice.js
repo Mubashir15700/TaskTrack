@@ -5,15 +5,15 @@ const userSlice = createSlice({
     name: 'user',
     initialState: {
         isLoggedIn: false,
-        username: null,
+        userData: null,
         loading: false,
     },
     reducers: {
         setLoggedIn: (state, action) => {
             state.isLoggedIn = action.payload;
         },
-        setUsername: (state, action) => {
-            state.username = action.payload;
+        setUserData: (state, action) => {
+            state.userData = action.payload;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -22,7 +22,7 @@ const userSlice = createSlice({
 });
 
 // export admin actions and reducer
-export const { setLoggedIn, setUsername, setLoading } = userSlice.actions;
+export const { setLoggedIn, setUserData, setLoading } = userSlice.actions;
 export default userSlice.reducer;
 
 // Asynchronous initialization function
@@ -32,8 +32,8 @@ export const initializeUser = () => async (dispatch) => {
         const response = await checkAuth({ role: 'user' });
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
-            dispatch(setUsername(response.data.currentUser.username));
-            // console.log(response);
+            dispatch(setUserData(response.data.currentUser));
+            // console.log("check auth resp: ", response);
         } else {
             dispatch(setLoggedIn(false));
         }

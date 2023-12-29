@@ -33,7 +33,7 @@ export const initializeAdmin = () => async (dispatch) => {
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
             dispatch(setUsername(response.data.currentUser.username));
-            // console.log(response);
+            // console.log("check admin auth resp: ", response);
         } else {
             dispatch(setLoggedIn(false));
         }

@@ -1,7 +1,10 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { setLoggedIn } from '../../../redux/slices/adminSlice';
-import { logout } from "../../../services/api";
+import { setLoading, setLoggedIn } from '../../../redux/slices/adminSlice';
+import { logout } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './Header.css';
 
@@ -9,18 +12,64 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const [error, setError] = useState("");
+
+    const confirmLogout = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Are you sure you want to log out?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Logout',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handleLogout();
+            }
+        });
+    };
+
     const handleLogout = async () => {
+        dispatch(setLoading(true));
+
         const response = await logout({ role: 'admin' });
         if (response && response.status === 200) {
             dispatch(setLoggedIn(false));
             navigate("/admin/login");
         } else {
+            setError("An error occured while logging out");
             console.log("logout error: ", response);
         }
+        dispatch(setLoading(false));
     }
 
+    useEffect(() => {
+        error && toast.error(error);
+    }, [error]);
+
+    // Add padding to the body to accommodate the fixed header
+    useEffect(() => {
+        if (location.pathname !== '/admin/login') {
+            const handleResize = () => {
+                document.body.style.paddingTop = `${document.querySelector('nav').offsetHeight}px`;
+            };
+
+            // Initial padding calculation
+            handleResize();
+
+            // Recalculate padding on window resize
+            window.addEventListener('resize', handleResize);
+
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, []);
+
     return (
-        <nav className="navbar navbar-expand-lg bg-body-tertiary">
+        <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
             <div className="container-fluid">
                 <img src={logo} alt="logo" />
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +103,8 @@ const Header = () => {
                                 </li>
                                 <li><hr className="dropdown-divider" /></li>
                                 <li>
-                                    <button type="button" className="btn btn-danger logout-btn" onClick={handleLogout}>
+                                    <button type="button" className="btn btn-danger logout-btn" data-bs-toggle="modal"
+                                        data-bs-target="#logoutModal" onClick={confirmLogout}>
                                         <i className="bi bi-power"></i> Logout
                                     </button>
                                 </li>

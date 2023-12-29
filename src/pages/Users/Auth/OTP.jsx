@@ -1,29 +1,81 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setLoggedIn } from '../../../redux/slices/userSlice';
+import { verifyOtp, resendOtp } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './OTP.css';
 
 const OTP = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const purpose = queryParams.get("purpose");
+  const email = queryParams.get("email");
 
   const [otp, setOtp] = useState('');
+  const [timer, setTimer] = useState(300); // 5 minutes in seconds
+  const [serverResponse, setServerResponse] = useState('');
 
-  const handleLogin = () => {
-    console.log('Verify otp:', { otp });
+  const handleVerification = async (e) => {
+    e.preventDefault();
+    setServerResponse('');
+
+    const response = await verifyOtp({ otp, email });
+    if (response) {
+      setServerResponse(response.data);
+      if (response.data.status === 'success') {
+        if (purpose === "forgot-password") {
+          navigate("/reset-password");
+        } else if (purpose === "signup") {
+          dispatch(setLoggedIn(true));
+          navigate("/");
+        }
+      }
+    }
+  };
+
+  const handleResend = async () => {
+    setServerResponse('');
+
+    const response = await resendOtp({ email });
+    if (response) {
+      setServerResponse(response.data);
+      if (response.data.status === 'success') {
+        setTimer(300);
+      }
+    }
   };
 
   const handleCancel = () => {
     navigate(-1);
   };
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
+    }, 1000);
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Convert seconds to minutes and seconds for display
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer % 60;
+
   return (
     <div className="container-fluid main-div">
-      <div className='sub-div'>
-        <img src={logo} alt='logo' />
+      <div className="sub-div">
+        <img src={logo} alt="logo" />
         <h3>Verify your email</h3>
-        <p>Enter the OTP that has been sent to your Email.</p>
+        <p>
+          Enter the OTP that has been sent to your Email
+        </p>
       </div>
-      <form className='mt-3'>
+      <form className="mt-3" onSubmit={handleVerification}>
         <div className="mb-3">
           <label htmlFor="otp" className="form-label">
             OTP *
@@ -37,14 +89,30 @@ const OTP = () => {
             onChange={(e) => setOtp(e.target.value)}
           />
         </div>
-        <div className='d-flex justify-content-end bottom-div'>
-          <Link onClick={handleCancel} className='link mt-1'>
+        <div className='d-flex flex-column'>
+          {timer > 0 && (
+            <span className="timer">
+              Time remaining: {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+            </span>
+          )}
+          {timer === 0 && (<Link onClick={handleResend} className="link mt-1">
+            Resend OTP
+          </Link>
+          )}
+        </div>
+        <div className="d-flex justify-content-end bottom-div">
+          <Link onClick={handleCancel} className="link mt-1">
             Cancel
           </Link>
-          <button type="button" className="btn btn-primary otp-verify-btn" onClick={handleLogin}>
+          <button type="submit" className="btn btn-primary otp-verify-btn" disabled={otp.length < 4 ? true : false}>
             Verify
           </button>
         </div>
+        {serverResponse && (
+          <div className={`alert ${['failed', 'error'].includes(serverResponse.status) ? 'alert-danger' : 'alert-success'} mt-3`} role="alert">
+            {serverResponse.message}
+          </div>
+        )}
       </form>
     </div>
   );
