@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setUserData, setLoggedIn as setUserLoggedIn } from '../../../redux/slices/userSlice';
+import { setLoading, setUserData, setLoggedIn as setUserLoggedIn } from '../../../redux/slices/userSlice';
 import { setLoggedIn as setAdminLoggedIn, setUsername as setAdmiDisplayName } from '../../../redux/slices/adminSlice';
 import { adminLogin, userLogin } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
@@ -35,6 +35,7 @@ const Login = ({ role }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    dispatch(setLoading(true));
 
     const validationErrors = {};
     if (!formData.username.trim()) {
@@ -73,6 +74,7 @@ const Login = ({ role }) => {
         console.error('Error during signup:', error);
         setServerResponse({ status: 'failed', message: 'An error occurred during login' });
       }
+      dispatch(setLoading(false));
     }
   };
 

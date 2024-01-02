@@ -23,6 +23,15 @@ export const adminLogin = async (data) => {
     }
 };
 
+export const search = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/search`, data);
+    } catch (error) {
+        console.log("user action error: ", error);
+        return error.response;
+    }
+};
+
 export const getUsers = async (itemsPerPage, currentPage) => {
     try {
         return await axios.get(
@@ -107,11 +116,29 @@ export const resetPassword = async (data) => {
     }
 };
 
+export const updateProfile = async (data, id) => {
+    try {
+        return await axios.post(`${URL}/update-profile?id=${id}`, data);
+    } catch (error) {
+        console.log(error);
+        return error.response;
+    }
+};
+
+export const deleteUserProfileImage = async (id, image) => {
+    try {
+        return await axios.post(`${URL}/delete-profile-image?id=${id}`, { image });
+    } catch (error) {
+        console.log("profile image delete error: ", error);
+        return error.response;
+    }
+};
+
 export const logout = async (data) => {
     try {
         return await axios.post(`${URL}/logout`, data);
     } catch (error) {
-        alert(error.response.data.message);
         console.log(error);
+        return (error.response);
     }
 };

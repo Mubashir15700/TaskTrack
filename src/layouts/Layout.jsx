@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import Header from "../components/Users/Header/Header";
-import AdminHeader from "../components/Admin/Header/Header";
+import AdminHeader from "../components/Admin/Header/AdminHeader";
 import Routers from "../routes/Routers";
 import Footer from "../components/Users/Footer/Footer";
 
@@ -50,7 +50,7 @@ const Layout = () => {
       ) : shouldDisplayHeaderFooter && currentUser === "user" ? (
         <Header />
       ) : null}
-      <main>
+      <main style={{ paddingTop: shouldDisplayHeaderFooter ? '70px' : '0' }}>
         <Routers />
       </main>
       {shouldDisplayHeaderFooter && currentUser === "user" && <Footer />}

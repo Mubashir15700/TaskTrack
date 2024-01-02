@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { useSelector, useDispatch } from 'react-redux';
@@ -51,25 +51,6 @@ const Header = () => {
     error && toast.error(error);
   }, [error]);
 
-  // Add padding to the body to accommodate the fixed header
-  useEffect(() => {
-    if ((location.pathname !== '/login') && (location.pathname !== '/sign-up')) {
-      const handleResize = () => {
-        document.body.style.paddingTop = `${document.querySelector('nav').offsetHeight}px`;
-      };
-
-      // Initial padding calculation
-      handleResize();
-
-      // Recalculate padding on window resize
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
-    }
-  }, []);
-
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
       <div className="container-fluid">
@@ -80,38 +61,48 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link to="/" className="nav-link" aria-current="page">Home</Link>
+              <NavLink to="/" className="nav-link" aria-current="page">
+                Home
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link to="/about" className="nav-link" aria-current="page">About</Link>
+              <NavLink to="/about" className="nav-link" aria-current="page">
+                About
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link to="/contact" className="nav-link" aria-current="page">Contact</Link>
+              <NavLink to="/contact" className="nav-link" aria-current="page">
+                Contact
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link to="/laborers" className="nav-link" aria-current="page">Laborers</Link>
+              <NavLink to="/laborers" className="nav-link" aria-current="page">
+                Laborers
+              </NavLink>
             </li>
             <li className="nav-item">
-              <Link to="/jobs" className="nav-link" aria-current="page">Jobs</Link>
+              <NavLink to="/jobs" className="nav-link" aria-current="page">
+                Jobs
+              </NavLink>
             </li>
           </ul>
           {isLoggedIn &&
             <>
-              <Link to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit">Post Job</Link>
+              <NavLink to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit" >Post Job</NavLink>
               <div className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i className="bi bi-caret-down-square-fill"></i>
                 </a>
                 <ul className="dropdown-menu">
                   <li>
-                    <Link to="/profile" className="dropdown-item" aria-current="page">
+                    <NavLink to="/profile" className="dropdown-item" aria-current="page">
                       <i className="bi bi-person-circle"></i> Profile
-                    </Link>
+                    </NavLink>
                   </li>
                   <li>
-                    <Link to="/notifications" className="dropdown-item" aria-current="page">
+                    <NavLink to="/notifications" className="dropdown-item" aria-current="page">
                       <i className="bi bi-bell"></i> Notifications
-                    </Link>
+                    </NavLink>
                   </li>
                   <li><hr className="dropdown-divider" /></li>
                   <li>
@@ -132,8 +123,8 @@ const Header = () => {
           </form>
           {!isLoggedIn &&
             <div className='login-signup-btn-div'>
-              <Link to="/login" type="button" className="btn btn-light header-login-btn">Login</Link>
-              <Link to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">Sign Up</Link>
+              <NavLink to="/login" type="button" className="btn btn-light header-login-btn">Login</NavLink>
+              <NavLink to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">Sign Up</NavLink>
             </div>
           }
         </div>

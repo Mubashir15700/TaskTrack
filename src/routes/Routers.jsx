@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from 'react-redux';
-import { initializeAdmin } from '../redux/slices/adminSlice';
+import { setLoading, initializeAdmin, setSearchResults } from '../redux/slices/adminSlice';
 import { initializeUser } from '../redux/slices/userSlice';
 import LoadingSpinner from "../components/Partials/LoadingSpinner";
 import Home from "../pages/Users/Home";
@@ -31,20 +31,26 @@ const Routers = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  useEffect(() => {
-    // Dispatch the asynchronous initialization functions on component mount
-    if (location.pathname.startsWith('/admin')) {
-      dispatch(initializeAdmin());
-    } else {
-      dispatch(initializeUser());
-    }
-  }, [dispatch, location.pathname]);
-
-  // Use selectors to get the logged-in status of admin and user
   const isAdminLoggedIn = useSelector(state => state.admin.isLoggedIn);
   const isUserLoggedIn = useSelector(state => state.user.isLoggedIn);
   const isAdminLoading = useSelector(state => state.admin.loading);
   const isUserLoading = useSelector(state => state.user.loading);
+
+  useEffect(() => {
+    dispatch(setLoading(true));
+
+    dispatch(setSearchResults({
+      searchOn: null, results: null
+    }));
+
+    if (location.pathname.startsWith('/admin')) {
+      !isAdminLoggedIn && dispatch(initializeAdmin());
+    } else {
+      !isUserLoggedIn && dispatch(initializeUser());
+    }
+
+    dispatch(setLoading(false));
+  }, [location.pathname, isUserLoggedIn, isAdminLoggedIn]);
 
   if (isAdminLoading || isUserLoading) {
     return <LoadingSpinner />;

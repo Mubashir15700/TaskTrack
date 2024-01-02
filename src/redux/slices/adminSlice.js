@@ -7,6 +7,10 @@ const adminSlice = createSlice({
         isLoggedIn: false,
         username: null,
         loading: false,
+        searchResults: {
+            searchOn: null,
+            results: null,
+        }
     },
     reducers: {
         setLoggedIn: (state, action) => {
@@ -18,11 +22,20 @@ const adminSlice = createSlice({
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
+        setSearchResults: (state, action) => {
+            state.searchResults = action.payload;
+        },
     },
 });
 
 // export admin actions and reducer
-export const { setLoggedIn, setUsername, setLoading } = adminSlice.actions;
+export const {
+    setLoggedIn,
+    setUsername,
+    setLoading,
+    setSearchResults
+} = adminSlice.actions;
+
 export default adminSlice.reducer;
 
 // Asynchronous initialization function
@@ -33,7 +46,6 @@ export const initializeAdmin = () => async (dispatch) => {
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
             dispatch(setUsername(response.data.currentUser.username));
-            // console.log("check admin auth resp: ", response);
         } else {
             dispatch(setLoggedIn(false));
         }

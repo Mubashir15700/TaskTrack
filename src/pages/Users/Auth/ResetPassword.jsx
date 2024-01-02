@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../../redux/slices/userSlice';
 import { resetPassword } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './ResetPassword.css';
 
 const ResetPassword = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [formData, setFormData] = useState({
         password: '',
@@ -34,6 +36,7 @@ const ResetPassword = () => {
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
+        dispatch(setLoading(true));
 
         const validationErrors = {};
 
@@ -71,6 +74,7 @@ const ResetPassword = () => {
                 setServerResponse({ status: 'failed', message: 'An error occurred during resetting password' });
             }
         }
+        dispatch(setLoading(false));
     };
 
     return (

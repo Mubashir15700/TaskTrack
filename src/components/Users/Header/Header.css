@@ -7,6 +7,16 @@ img {
     color: #4B49AC;
 }
 
+.nav-link.active {
+    color: #4B49AC !important;
+    border-bottom: 2px solid #4B49AC;
+}
+
+.dropdown-menu .dropdown-item.active {
+    background-color: #4B49AC;
+    color: #fff;
+}
+
 .post-job-btn {
     background-color: #4B49AC;
     color: #fff;

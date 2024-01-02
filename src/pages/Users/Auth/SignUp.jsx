@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { setUserData } from '../../../redux/slices/userSlice';
+import { setLoading, setUserData } from '../../../redux/slices/userSlice';
 import { userSignUp } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './SignUp.css';
@@ -37,6 +37,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    dispatch(setLoading(true));
 
     const validationErrors = {};
     if (!formData.username.trim()) {
@@ -78,7 +79,6 @@ const SignUp = () => {
       try {
         const response = await userSignUp(formData);
         if (response) {
-          console.log("sign-up response: ", response.data);
           setServerResponse(response.data);
           if (response.data.status === 'success') {
             dispatch(setUserData(response.data.currentUser));
@@ -89,6 +89,7 @@ const SignUp = () => {
         console.error('Error during signup:', error);
         setServerResponse({ status: 'failed', message: 'An error occurred during signup' });
       }
+      dispatch(setLoading(false));
     }
   };
 

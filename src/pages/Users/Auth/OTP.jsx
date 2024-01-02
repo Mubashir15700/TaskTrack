@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLoggedIn } from '../../../redux/slices/userSlice';
+import { setLoading, setLoggedIn } from '../../../redux/slices/userSlice';
 import { verifyOtp, resendOtp } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './OTP.css';
@@ -16,11 +16,16 @@ const OTP = () => {
   const email = queryParams.get("email");
 
   const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(300); // 5 minutes in seconds
+  const [timer, setTimer] = useState(() => {
+    // Retrieve the timer value from localStorage or set it to the initial value (300 seconds)
+    const storedTimer = localStorage.getItem('otpTimer');
+    return storedTimer ? parseInt(storedTimer, 10) : 300;
+  });
   const [serverResponse, setServerResponse] = useState('');
 
   const handleVerification = async (e) => {
     e.preventDefault();
+    dispatch(setLoading(true));
     setServerResponse('');
 
     const response = await verifyOtp({ otp, email });
@@ -35,6 +40,7 @@ const OTP = () => {
         }
       }
     }
+    dispatch(setLoading(false));
   };
 
   const handleResend = async () => {
@@ -45,6 +51,7 @@ const OTP = () => {
       setServerResponse(response.data);
       if (response.data.status === 'success') {
         setTimer(300);
+        localStorage.setItem('otpTimer', '300');
       }
     }
   };
@@ -55,7 +62,11 @@ const OTP = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
+      setTimer((prevTimer) => {
+        const newTimer = prevTimer > 0 ? prevTimer - 1 : 0;
+        localStorage.setItem('otpTimer', String(newTimer));
+        return newTimer;
+      });
     }, 1000);
 
     // Clear the interval when the component is unmounted

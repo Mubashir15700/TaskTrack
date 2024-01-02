@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from 'react-redux';
+import { setLoading } from '../../../redux/slices/userSlice';
 import { confirmEmail } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
 import './Email.css';
 
 const Email = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState('');
     const [serverResponse, setServerResponse] = useState('');
@@ -19,6 +22,7 @@ const Email = () => {
 
     const handleConfirmEmail = async (e) => {
         e.preventDefault();
+        dispatch(setLoading(true));
 
         let error;
         if (!email.trim()) {
@@ -39,6 +43,7 @@ const Email = () => {
                 }
             }
         }
+        dispatch(setLoading(false));
     };
 
     const handleCancel = () => {

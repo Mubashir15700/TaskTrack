@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoading } from '../../redux/slices/userSlice';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import DataTable from 'react-data-table-component';
@@ -7,12 +9,16 @@ import Pagination from '../../components/Partials/Pagination';
 import { getUsers, userAction } from '../../services/api';
 
 const Users = () => {
+  const dispatch = useDispatch();
+
   const [users, setUsers] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
 
-  const itemsPerPage = 1;
+  const searchResults = useSelector(state => state.admin.searchResults);
+
+  const itemsPerPage = 3;
 
   useEffect(() => {
     const getAllUsers = async () => {
@@ -30,8 +36,13 @@ const Users = () => {
       }
     };
 
-    getAllUsers();
-  }, [currentPage]);
+    if (
+      (searchResults.searchOn === "employers" || searchResults.searchOn === "laborers")) {
+      setUsers(searchResults.results);
+    } else {
+      getAllUsers();
+    }
+  }, [currentPage, searchResults]);
 
   const confirmBlockUnblock = (userId, isBlocked) => {
     Swal.fire({
@@ -55,7 +66,6 @@ const Users = () => {
       const response = await userAction(userId);
       if (response) {
         if (response.data.status === "success") {
-          // Update local state by fetching the updated data
           const updatedUsersResponse = await getUsers(itemsPerPage, currentPage);
           if (
             updatedUsersResponse &&
@@ -83,10 +93,15 @@ const Users = () => {
   const columns = [
     {
       name: 'User',
-      selector: 'profile',
+      selector: (row) => row.profile,
       cell: row => (
         row.profile ? (
-          <img src={row.profile} alt="Profile" style={{ width: '50px', height: '50px' }} />
+          <img
+            src={`http://localhost:3000/uploads/${row?.profile}`}
+            alt="Profile"
+            style={{ width: '50px', height: '50px' }}
+            className="rounded-5"
+          />
         ) : (
           <i className="bi bi-person-circle fs-1 mb-1"></i>
         )
@@ -94,27 +109,27 @@ const Users = () => {
     },
     {
       name: 'Username',
-      selector: 'username',
+      selector: (row) => row.username,
       sortable: true,
     },
     {
       name: 'Email',
-      selector: 'email',
+      selector: (row) => row.email,
       sortable: true,
     },
     {
       name: 'Phone',
-      selector: 'phone',
+      selector: (row) => row.phone,
     },
     {
       name: 'Verified',
-      selector: 'isVerified',
+      selector: (row) => row.isVerified,
       sortable: true,
       cell: row => row.isVerified ? 'Yes' : 'No',
     },
     {
       name: 'Is Job Seeker',
-      selector: 'isJobSeeker',
+      selector: (row) => row.isJobSeeker,
       sortable: true,
       cell: row => row.isJobSeeker ? 'Yes' : 'No',
     },

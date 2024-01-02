@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { setLoading, setLoggedIn } from '../../../redux/slices/adminSlice';
-import { logout } from '../../../services/api';
+import { setLoading, setLoggedIn, setSearchResults } from '../../../redux/slices/adminSlice';
+import { search, logout } from '../../../services/api';
 import logo from '../../../assets/images/logo.png';
-import './Header.css';
+import './AdminHeader.css';
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
+    const [searchSelect, setSearchSelect] = useState('employers');
     const [error, setError] = useState("");
 
     const confirmLogout = () => {
@@ -29,6 +30,37 @@ const Header = () => {
                 handleLogout();
             }
         });
+    };
+
+    const handleSearch = async (e) => {
+        if (e.target.value !== "") {
+            const response = await search({
+                searchWith: e.target.value,
+                searchOn: searchSelect
+            });
+            if (response) {
+                if (response.data.status === "success") {
+                    dispatch(setSearchResults({
+                        searchOn: searchSelect, results: response.data.result
+                    }));
+                    if (searchSelect === 'employers' || searchSelect === 'laborers') {
+                        navigate("/admin/users");
+                    } else if (searchSelect === 'plans') {
+                        navigate("/admin/subscription-plans");
+                    } else {
+                        navigate("/admin/banners");
+                    }
+                } else {
+                    setError("An error occured while searching");
+                }
+            } else {
+                setError("An error occured while searching");
+            }
+        } else {
+            dispatch(setSearchResults({
+                searchOn: null, results: null
+            }));
+        }
     };
 
     const handleLogout = async () => {
@@ -49,25 +81,6 @@ const Header = () => {
         error && toast.error(error);
     }, [error]);
 
-    // Add padding to the body to accommodate the fixed header
-    useEffect(() => {
-        if (location.pathname !== '/admin/login') {
-            const handleResize = () => {
-                document.body.style.paddingTop = `${document.querySelector('nav').offsetHeight}px`;
-            };
-
-            // Initial padding calculation
-            handleResize();
-
-            // Recalculate padding on window resize
-            window.addEventListener('resize', handleResize);
-
-            return () => {
-                window.removeEventListener('resize', handleResize);
-            };
-        }
-    }, []);
-
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
             <div className="container-fluid">
@@ -78,16 +91,16 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <Link to="/admin" className="nav-link" aria-current="page">Dashboard</Link>
+                            <NavLink to="/admin" className="nav-link" aria-current="page" end>Dashboard</NavLink>
                         </li>
                         <li className="nav-item">
-                            <Link to="/admin/users" className="nav-link" aria-current="page">Users</Link>
+                            <NavLink to="/admin/users" className="nav-link" aria-current="page">Users</NavLink>
                         </li>
                         <li className="nav-item">
-                            <Link to="/admin/subscription-plans" className="nav-link" aria-current="page">Plans</Link>
+                            <NavLink to="/admin/subscription-plans" className="nav-link" aria-current="page">Plans</NavLink>
                         </li>
                         <li className="nav-item">
-                            <Link to="/admin/banners" className="nav-link" aria-current="page">Banners</Link>
+                            <NavLink to="/admin/banners" className="nav-link" aria-current="page">Banners</NavLink>
                         </li>
                     </ul>
                     <>
@@ -97,9 +110,9 @@ const Header = () => {
                             </a>
                             <ul className="dropdown-menu">
                                 <li>
-                                    <Link to="/admin/notifications" className="dropdown-item" aria-current="page">
+                                    <NavLink to="/admin/notifications" className="dropdown-item" aria-current="page">
                                         <i className="bi bi-bell"></i> Notifications
-                                    </Link>
+                                    </NavLink>
                                 </li>
                                 <li><hr className="dropdown-divider" /></li>
                                 <li>
@@ -112,12 +125,22 @@ const Header = () => {
                         </div>
                     </>
                     <form className="d-flex input-group search-form" role="search">
-                        <input className="form-control search-input " type="search" placeholder="Search" aria-label="Search" />
-                        <select className="form-select search-select" id="inputGroupSelect03" aria-label="Example select with button addon">
-                            <option value="laborers">Employers</option>
+                        <input
+                            className="form-control search-input"
+                            type="search"
+                            placeholder="Search"
+                            aria-label="Search"
+                            onChange={handleSearch}
+                        />
+                        <select
+                            className="form-select search-select"
+                            id="inputGroupSelect03"
+                            onChange={(e) => setSearchSelect(e.target.value)}
+                        >
+                            <option value="employers">Employers</option>
                             <option value="laborers">Laborers</option>
-                            <option value="laborers">Plans</option>
-                            <option value="laborers">Banners</option>
+                            <option value="plans">Plans</option>
+                            <option value="banners">Banners</option>
                         </select>
                     </form>
                 </div>
