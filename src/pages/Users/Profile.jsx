@@ -5,6 +5,7 @@ import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice"
 import toast from "react-hot-toast";
 import ImageCrop from "../../components/Partials/ImageCrop";
 import { updateProfile, deleteUserProfileImage } from "../../services/api";
+import Address from "../../components/Users/Address";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const UserDetails = () => {
   });
   const [changed, setChanged] = useState(false);
   const [newImageSelected, setNewImageSelected] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState('');
 
   const handleInputChange = (e) => {
     if (currentUser !== userData) {
@@ -41,12 +43,22 @@ const UserDetails = () => {
     setNewImageSelected(true);
   };
 
+  const newAddressSelected = (address) => {
+    setSelectedAddress(address);
+    setChanged(true);
+  };
+
   const handleUpdate = async () => {
     try {
       const formData = new FormData();
       (userData.username !== currentUser.username) && formData.append("username", userData.username);
       (userData.email !== currentUser.email) && formData.append("email", userData.email);
       (userData.phone !== currentUser.phone) && formData.append("phone", userData.phone);
+      // Convert selectedAddress to JSON string if it's an object
+      if (selectedAddress && typeof selectedAddress === 'object') {
+        const locationString = JSON.stringify(selectedAddress);
+        formData.append("location", locationString);
+      }
 
       // Check if a new profile image is selected
       if (userData.profile instanceof File && newImageSelected) {
@@ -90,7 +102,7 @@ const UserDetails = () => {
   const imageUrl = `http://localhost:3000/uploads/${currentUser?.profile}`;
 
   return (
-    <div className="col-md-8 my-5 mx-auto">
+    <div className="col-md-8 my-3 mx-auto">
       {currentUser ? (
         <div className="p-3 p-lg-5 border">
           {(currentUser.profile && !newImageSelected) && (
@@ -151,6 +163,10 @@ const UserDetails = () => {
                 />
               </div>
             </div>
+            <Address
+              currentAddress={currentUser.location}
+              onAddressChange={newAddressSelected}
+            />
             {changed && (
               <div className="form-group row mt-3">
                 <div className="col-lg-12">

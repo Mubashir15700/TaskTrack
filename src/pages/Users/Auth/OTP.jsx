@@ -32,6 +32,7 @@ const OTP = () => {
     if (response) {
       setServerResponse(response.data);
       if (response.data.status === 'success') {
+        localStorage.removeItem('otpTimer');
         if (purpose === "forgot-password") {
           navigate("/reset-password");
         } else if (purpose === "signup") {

@@ -32,7 +32,10 @@ export const initializeUser = () => async (dispatch) => {
         const response = await checkAuth({ role: 'user' });
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
-            dispatch(setUserData(response.data.currentUser));
+            const locationObject = JSON.parse(response.data.currentUser.location);
+            const currentUser = response.data.currentUser;
+            currentUser.location = locationObject;
+            dispatch(setUserData(currentUser));
             // console.log("check auth resp: ", response);
         } else {
             dispatch(setLoggedIn(false));
