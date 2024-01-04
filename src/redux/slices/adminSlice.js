@@ -50,10 +50,9 @@ export const initializeAdmin = () => async (dispatch) => {
             dispatch(setLoggedIn(false));
         }
     } catch (error) {
-        // Handle error if the authentication check fails
         console.error('Authentication check failed:', error);
         dispatch(setLoggedIn(false));
     } finally {
-        dispatch(setLoading(false)); // Set loading to false regardless of success or failure
+        dispatch(setLoading(false)); 
     }
 };

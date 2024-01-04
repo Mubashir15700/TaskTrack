@@ -25,7 +25,11 @@ import Dashboard from '../pages/Admin/Dashboard';
 import Users from '../pages/Admin/Users';
 import UserDetails from "../pages/Admin/UserDetails";
 import SubscriptionPlans from '../pages/Admin/SubscriptionPlans';
+import AddPlan from '../pages/Admin/AddPlan';
+import EditPlan from '../pages/Admin/EditPlan';
 import Banners from '../pages/Admin/Banners';
+import AddBanner from "../pages/Admin/AddBanner";
+import EditBanner from "../pages/Admin/EditBanner";
 
 const Routers = () => {
   const dispatch = useDispatch();
@@ -81,9 +85,13 @@ const Routers = () => {
         <Route path="/admin" element={isAdminLoggedIn ? <Dashboard /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/login" element={!isAdminLoggedIn ? <Login role={'admin'} /> : <Navigate to="/admin" />} />
         <Route path="/admin/users" element={isAdminLoggedIn ? <Users /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/user/:id" element={isAdminLoggedIn ? <UserDetails /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/users/:id" element={isAdminLoggedIn ? <UserDetails /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/subscription-plans" element={isAdminLoggedIn ? <SubscriptionPlans /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/subscription-plans/add-plan" element={isAdminLoggedIn ? <AddPlan /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/subscription-plans/edit-plan/:id" element={isAdminLoggedIn ? <EditPlan /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/banners" element={isAdminLoggedIn ? <Banners /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
+        <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />
         <Route path="/admin/notifications" element={isAdminLoggedIn ? <Notifications /> : <Navigate to="/admin/login" />} />
         {/* Errors */}
         <Route path="*" element={<ErrorPage />} />

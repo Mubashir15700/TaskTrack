@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import DataTable from 'react-data-table-component';
 
 const columns = [
@@ -61,22 +62,22 @@ const data = [
 const customStyles = {
   head: {
     style: {
-      
+
     },
   },
   headCells: {
     style: {
-      
+
     },
   },
   rows: {
     style: {
-      
+
     },
   },
   cells: {
     style: {
-      
+
     },
   },
 };
@@ -85,7 +86,12 @@ const SubscriptionPlans = () => {
   return (
     <>
       <div className='mt-3 w-75 mx-auto'>
-        <h5>Subscription Plans</h5>
+        <div className='d-flex justify-content-between'>
+          <h5>Subscription Plans</h5>
+          <Link to={`/admin/subscription-plans/add-plan`} className='btn btn-sm btn-outline-primary'>
+            +
+          </Link>
+        </div>
         <DataTable
           columns={columns}
           data={data}

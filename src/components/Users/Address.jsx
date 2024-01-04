@@ -1,14 +1,23 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Address = ({ currentAddress, onAddressChange }) => {
+const Address = ({ label, currentAddress, onAddressChange }) => {
     const [selectedAddress, setSelectedAddress] = useState(currentAddress || {});
+    const [textareaValue, setTextareaValue] = useState('');
+
+    useEffect(() => {
+        setTextareaValue(
+            (Object.values(selectedAddress).length) ? (
+                `${selectedAddress.road}, ${selectedAddress.village}, \n ${selectedAddress.district}, ${selectedAddress.state}, \n ${selectedAddress.postcode}`
+            ) : "No Location provided"
+        );
+    }, [selectedAddress]);
 
     const handleChangeLocation = async () => {
         navigator.geolocation.getCurrentPosition((pos) => {
             const { latitude, longitude } = pos.coords;
             const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
             const headers = new Headers({
-                'Accept-Language': 'en',
+                "Accept-Language": "en",
             });
 
             fetch(url, { headers })
@@ -25,7 +34,7 @@ const Address = ({ currentAddress, onAddressChange }) => {
                     onAddressChange(fullAddress);
                 })
                 .catch((error) => {
-                    console.error('Error fetching address:', error);
+                    console.error("Error fetching address:", error);
                 });
         });
     };
@@ -33,26 +42,22 @@ const Address = ({ currentAddress, onAddressChange }) => {
     return (
         <div className="form-group row">
             <div className="col-md-12">
-                <label>Lives In</label>
-                <div className="d-flex">
+                <label>{label}</label>
+                <div className="d-flex align-items-center">
                     <textarea
                         type="text"
                         className="form-control"
                         name="location"
-                        defaultValue={(Object.values(selectedAddress).length) ? (
-                            `${selectedAddress.road}, ${selectedAddress.village}, \n ${selectedAddress.district}, ${selectedAddress.state}, \n ${selectedAddress.postcode}`
-                        ) : 'No Location provided'}
+                        defaultValue={textareaValue}
                     />
-                    <button
-                        className="btn"
-                        onClick={handleChangeLocation}
-                    >
-                        {(!Object.values(selectedAddress).length) ?
-                            'Add Location'
-                            :
-                            'Change Location'
-                        }
-                    </button>
+                    <div>
+                        <button
+                            className="btn btn-primary rounded-5"
+                            onClick={handleChangeLocation}
+                        >
+                            <i className="bi bi-crosshair"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

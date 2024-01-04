@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLoading } from '../../redux/slices/userSlice';
+import { setLoading } from '../../redux/slices/adminSlice';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { getUser, userAction } from '../../services/api';
@@ -17,26 +17,28 @@ const UserDetails = () => {
     useEffect(() => {
         const getUserDetails = async () => {
             try {
+                // dispatch(setLoading(true));
                 const response = await getUser(id);
                 if (response && response.data.status === "success" && response.data.user) {
-                    setUser(response.data.user);
+                    const user = response.data.user;
+                    if (user.location && Object.values(user.location).length) {
+                        user.location = JSON.parse(user.location);
+                    }
+                    setUser(user);
                 } else {
                     setError("Failed to fetch user details.");
                 }
             } catch (error) {
                 setError("An error occurred while fetching user details.");
                 console.error('Error fetching user details:', error);
+            } finally {
+                // dispatch(setLoading(false));
             }
         };
-
         getUserDetails();
     }, [id]);
 
-    useEffect(() => {
-        error && toast.error(error);
-    }, [error]);
-
-    const confirmBlockUnblock = (userId, isBlocked) => {
+    const confirmBlockUnblock = (isBlocked) => {
         Swal.fire({
             title: 'Are you sure?',
             text: `Are you sure you want to ${isBlocked ? 'Unblock' : 'Block'} this user?`,
@@ -79,7 +81,7 @@ const UserDetails = () => {
     }, [error]);
 
     return (
-        <div className="col-md-6 my-5 mx-auto">
+        <div className="col-md-6 my-3 mx-auto">
             {user ? (
                 <div className="p-3 p-lg-5 border">
                     <div>
@@ -153,9 +155,20 @@ const UserDetails = () => {
                                 />
                             </div>
                         </div>
+                        <div className="col-md-12">
+                            <label>Lives In</label>
+                            <textarea
+                                type="text"
+                                className="form-control"
+                                name="location"
+                                defaultValue={(user.location && Object.values(user.location).length) ? (
+                                    `${user.location.road}, ${user.location.village}, \n ${user.location.district}, ${user.location.state}, \n ${user.location.postcode}`
+                                ) : 'No Location provided'}
+                            />
+                        </div>
                         <button
                             className={`btn ${user.isBlocked ? 'btn-warning' : 'btn-danger'} mt-3`}
-                            onClick={() => confirmBlockUnblock(user._id, user.isBlocked)}
+                            onClick={() => confirmBlockUnblock(user.isBlocked)}
                         >
                             {user.isBlocked ? 'Unblock' : 'Block'}
                         </button>
@@ -165,8 +178,9 @@ const UserDetails = () => {
                 <div className='mt-5 mx-auto'>
                     <p>No data found</p>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     );
 };
 

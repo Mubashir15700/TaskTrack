@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import ImageCrop from "../../components/Partials/ImageCrop";
 import { updateProfile, deleteUserProfileImage } from "../../services/api";
+import ImageCrop from "../../components/Partials/ImageCrop";
 import Address from "../../components/Users/Address";
 
 const UserDetails = () => {
@@ -68,6 +68,9 @@ const UserDetails = () => {
       const response = await updateProfile(formData, currentUser?._id);
 
       if (response && response.data?.status === "success") {
+        const locationObject = JSON.parse(response.data.updatedUser.location);
+        const updatedUser = response.data.updatedUser;
+        updatedUser.location = locationObject;
         dispatch(setUpdatedUserData(response.data.updatedUser));
         navigate("/profile");
         toast.success("Updated profile successfully");
@@ -86,6 +89,9 @@ const UserDetails = () => {
     try {
       const response = await deleteUserProfileImage(currentUser?._id, currentUser.profile);
       if (response && response.data.status === "success") {
+        const locationObject = JSON.parse(response.data.updatedUser.location);
+        const updatedUser = response.data.updatedUser;
+        updatedUser.location = locationObject;
         dispatch(setUpdatedUserData(response.data.updatedUser));
         navigate("/profile");
         toast.success("Deleted profile image successfully");
@@ -163,10 +169,13 @@ const UserDetails = () => {
                 />
               </div>
             </div>
-            <Address
-              currentAddress={currentUser.location}
-              onAddressChange={newAddressSelected}
-            />
+            <div>
+              <Address
+                label={'Lives In'}
+                currentAddress={currentUser.location}
+                onAddressChange={newAddressSelected}
+              />
+            </div>
             {changed && (
               <div className="form-group row mt-3">
                 <div className="col-lg-12">
