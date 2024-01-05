@@ -134,6 +134,15 @@ export const deleteUserProfileImage = async (id, image) => {
     }
 };
 
+export const getCurrentLocation = async (data) => {
+    try {
+        return await axios.post(`${URL}/get-current-location`, data);
+    } catch (error) {
+        console.log("get current location error: ", error);
+        return error.response;
+    }
+};
+
 export const logout = async (data) => {
     try {
         return await axios.post(`${URL}/logout`, data);

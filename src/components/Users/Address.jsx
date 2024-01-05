@@ -1,41 +1,35 @@
 import { useState, useEffect } from "react";
+import DisplayMap from '../../components/Users/DisplayMap';
+import { getCurrentLocation } from '../../services/api';
 
 const Address = ({ label, currentAddress, onAddressChange }) => {
     const [selectedAddress, setSelectedAddress] = useState(currentAddress || {});
     const [textareaValue, setTextareaValue] = useState('');
+    const [mapVisible, setMapVisible] = useState(false);
 
     useEffect(() => {
+        // Check if currentAddress has latitude and longitude
+        if (selectedAddress && selectedAddress.lat && selectedAddress.lon) {
+            setMapVisible(true);
+        }
+
         setTextareaValue(
             (Object.values(selectedAddress).length) ? (
-                `${selectedAddress.road}, ${selectedAddress.village}, \n ${selectedAddress.district}, ${selectedAddress.state}, \n ${selectedAddress.postcode}`
+                `${selectedAddress.road}, ${selectedAddress.village}, \n ${selectedAddress.district}, ${selectedAddress.state}, ${selectedAddress.postcode}`
             ) : "No Location provided"
         );
+
     }, [selectedAddress]);
 
-    const handleChangeLocation = async () => {
-        navigator.geolocation.getCurrentPosition((pos) => {
+    const handleGetCurrentLocation = async () => {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
             const { latitude, longitude } = pos.coords;
-            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-            const headers = new Headers({
-                "Accept-Language": "en",
-            });
-
-            fetch(url, { headers })
-                .then((res) => res.json())
-                .then((data) => {
-                    const fullAddress = {
-                        road: data.address.road,
-                        village: data.address.village,
-                        district: data.address.state_district,
-                        state: data.address.state,
-                        postcode: data.address.postcode
-                    };
-                    setSelectedAddress(fullAddress);
-                    onAddressChange(fullAddress);
-                })
-                .catch((error) => {
-                    console.error("Error fetching address:", error);
-                });
+            const response = await getCurrentLocation({ latitude, longitude });
+            if (response) {
+                setMapVisible(true);
+                setSelectedAddress(response.data.fullAddress);
+                onAddressChange(response.data.fullAddress);
+            }
         });
     };
 
@@ -46,19 +40,31 @@ const Address = ({ label, currentAddress, onAddressChange }) => {
                 <div className="d-flex align-items-center">
                     <textarea
                         type="text"
-                        className="form-control"
+                        className="form-control w-75"
                         name="location"
                         defaultValue={textareaValue}
                     />
-                    <div>
+                    <div className="d-flex flex-column flex-md-row justify-content-around w-25">
                         <button
                             className="btn btn-primary rounded-5"
-                            onClick={handleChangeLocation}
+                            onClick={handleGetCurrentLocation}
                         >
                             <i className="bi bi-crosshair"></i>
                         </button>
+                        <button
+                            className="btn btn-outline-dark"
+                        // onClick={handleEnterLocation}
+                        >
+                            Add
+                        </button>
                     </div>
                 </div>
+                {mapVisible && (
+                    <DisplayMap
+                        latitude={selectedAddress.lat}
+                        longitude={selectedAddress.lon}
+                    />
+                )}
             </div>
         </div>
     );
