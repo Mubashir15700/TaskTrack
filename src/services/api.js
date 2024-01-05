@@ -143,6 +143,15 @@ export const getCurrentLocation = async (data) => {
     }
 };
 
+export const deleteLocation = async (id) => {
+    try {
+        return await axios.post(`${URL}/delete-current-location`, id);
+    } catch (error) {
+        console.log("get current location error: ", error);
+        return error.response;
+    }
+};
+
 export const logout = async (data) => {
     try {
         return await axios.post(`${URL}/logout`, data);

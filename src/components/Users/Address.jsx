@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
 import DisplayMap from '../../components/Users/DisplayMap';
-import { getCurrentLocation } from '../../services/api';
+import { getCurrentLocation, deleteLocation } from '../../services/api';
 
-const Address = ({ label, currentAddress, onAddressChange }) => {
+const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted }) => {
     const [selectedAddress, setSelectedAddress] = useState(currentAddress || {});
     const [textareaValue, setTextareaValue] = useState('');
     const [mapVisible, setMapVisible] = useState(false);
+    const [manualEntryVisible, setManualEntryVisible] = useState(false);
+    const [manualEntry, setManualEntry] = useState({
+        road: '',
+        village: '',
+        district: '',
+        state: '',
+        postcode: '',
+    });
 
     useEffect(() => {
-        // Check if currentAddress has latitude and longitude
         if (selectedAddress && selectedAddress.lat && selectedAddress.lon) {
             setMapVisible(true);
         }
@@ -22,6 +29,7 @@ const Address = ({ label, currentAddress, onAddressChange }) => {
     }, [selectedAddress]);
 
     const handleGetCurrentLocation = async () => {
+        setManualEntryVisible(false);
         navigator.geolocation.getCurrentPosition(async (pos) => {
             const { latitude, longitude } = pos.coords;
             const response = await getCurrentLocation({ latitude, longitude });
@@ -33,38 +41,137 @@ const Address = ({ label, currentAddress, onAddressChange }) => {
         });
     };
 
+    const handleEnterLocationManually = () => {
+        setManualEntryVisible(true);
+    };
+
+    const handleManualEntryChange = (e) => {
+        const { name, value } = e.target;
+        setManualEntry(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleDeleteLocation = async () => {
+        const response = await deleteLocation({ userId });
+        console.log(response);
+        if (response.data.status === "success") {
+            setSelectedAddress({});
+            onLocationDeleted(response.data.deleteResult);
+        }
+    };
+
+    const saveManuelLocationEntry = () => {
+        setSelectedAddress(manualEntry);
+        onAddressChange(manualEntry);
+    };
+
     return (
         <div className="form-group row">
             <div className="col-md-12">
                 <label>{label}</label>
-                <div className="d-flex align-items-center">
+                <div className="d-flex">
                     <textarea
                         type="text"
-                        className="form-control w-75"
                         name="location"
+                        className="form-control"
                         defaultValue={textareaValue}
                     />
-                    <div className="d-flex flex-column flex-md-row justify-content-around w-25">
-                        <button
-                            className="btn btn-primary rounded-5"
-                            onClick={handleGetCurrentLocation}
-                        >
-                            <i className="bi bi-crosshair"></i>
+                    {textareaValue !== "No Location provided" ? (
+                        <button className="btn" onClick={handleDeleteLocation}>
+                            <i className="bi bi-x-circle text-danger fs-3"></i>
                         </button>
-                        <button
-                            className="btn btn-outline-dark"
-                        // onClick={handleEnterLocation}
-                        >
-                            Add
-                        </button>
-                    </div>
+                    ) : null}
                 </div>
-                {mapVisible && (
+                {(mapVisible && selectedAddress.lat && selectedAddress.lon) ? (
                     <DisplayMap
                         latitude={selectedAddress.lat}
                         longitude={selectedAddress.lon}
                     />
+                ) : null}
+                {manualEntryVisible && (
+                    <div>
+                        <div className="d-flex">
+                            <div className="col-md-6">
+                                <label>Road</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="road"
+                                    value={manualEntry.road}
+                                    onChange={handleManualEntryChange}
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <label>Village</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="village"
+                                    value={manualEntry.village}
+                                    onChange={handleManualEntryChange}
+                                />
+                            </div>
+                        </div>
+                        <div className="d-flex">
+                            <div className="col-md-4">
+                                <label>District</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="district"
+                                    value={manualEntry.district}
+                                    onChange={handleManualEntryChange}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label>State</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="state"
+                                    value={manualEntry.state}
+                                    onChange={handleManualEntryChange}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <label>Pincode</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    name="postcode"
+                                    value={manualEntry.pincode}
+                                    onChange={handleManualEntryChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 )}
+                <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
+                    <button
+                        className="btn btn-primary col-md-5 my-sm-1"
+                        onClick={handleGetCurrentLocation}
+                    >
+                        <i className="bi bi-crosshair mx-2"></i>
+                        Get your current location
+                    </button>
+                    {!manualEntryVisible ? (
+                        <button
+                            className="btn btn-outline-dark col-md-5"
+                            onClick={handleEnterLocationManually}
+                        >
+                            Add location manually
+                        </button>
+                    ) : (
+                        <button
+                            className="btn btn-dark col-md-5"
+                            onClick={saveManuelLocationEntry}
+                        >
+                            Save location
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );

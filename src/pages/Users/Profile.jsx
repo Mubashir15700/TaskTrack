@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
@@ -21,7 +21,7 @@ const UserDetails = () => {
   });
   const [changed, setChanged] = useState(false);
   const [newImageSelected, setNewImageSelected] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [selectedAddress, setSelectedAddress] = useState("");
 
   const handleInputChange = (e) => {
     if (currentUser !== userData) {
@@ -48,14 +48,19 @@ const UserDetails = () => {
     setChanged(true);
   };
 
+  const deleteSuccess = async (updatedUser) => {
+    toast.success("Deleted location successfully");
+    dispatch(setUpdatedUserData(updatedUser));
+  };
+
   const handleUpdate = async () => {
     try {
       const formData = new FormData();
       (userData.username !== currentUser.username) && formData.append("username", userData.username);
       (userData.email !== currentUser.email) && formData.append("email", userData.email);
       (userData.phone !== currentUser.phone) && formData.append("phone", userData.phone);
-      // Convert selectedAddress to JSON string if it's an object
-      if (selectedAddress && typeof selectedAddress === 'object') {
+      // Convert selectedAddress to JSON string if it"s an object
+      if (selectedAddress && typeof selectedAddress === "object") {
         const locationString = JSON.stringify(selectedAddress);
         formData.append("location", locationString);
       }
@@ -76,12 +81,12 @@ const UserDetails = () => {
         toast.success("Updated profile successfully");
         setChanged(false);
       } else {
-        console.error('Error updating profile:', response?.data);
-        toast.error(response?.data?.message || 'An error occurred during profile update');
+        console.error("Error updating profile:", response?.data);
+        toast.error(response?.data?.message || "An error occurred during profile update");
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error('An unexpected error occurred during profile update');
+      console.error("Error updating profile:", error);
+      toast.error("An unexpected error occurred during profile update");
     }
   };
 
@@ -96,11 +101,11 @@ const UserDetails = () => {
         navigate("/profile");
         toast.success("Deleted profile image successfully");
       } else {
-        toast.error('An unexpected error occurred during profile image update');
+        toast.error("An unexpected error occurred during profile image update");
       }
     } catch (error) {
-      console.error('Error deleting profile image:', error);
-      toast.error('An unexpected error occurred during profile image update');
+      console.error("Error deleting profile image:", error);
+      toast.error("An unexpected error occurred during profile image update");
     }
   };
 
@@ -171,9 +176,11 @@ const UserDetails = () => {
             </div>
             <div>
               <Address
-                label={'Lives In'}
+                userId={currentUser?._id}
+                label={"Lives In"}
                 currentAddress={currentUser.location}
                 onAddressChange={newAddressSelected}
+                onLocationDeleted={deleteSuccess}
               />
             </div>
             {changed && (
