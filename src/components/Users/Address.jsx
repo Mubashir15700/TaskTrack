@@ -55,7 +55,6 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
 
     const handleDeleteLocation = async () => {
         const response = await deleteLocation({ userId });
-        console.log(response);
         if (response.data.status === "success") {
             setSelectedAddress({});
             onLocationDeleted(response.data.deleteResult);

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
+import {  } from './profileSchema';
+import { setUserData as setUpdatedUserData } from "../../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { updateProfile, deleteUserProfileImage } from "../../services/api";
-import ImageCrop from "../../components/Partials/ImageCrop";
-import Address from "../../components/Users/Address";
+import { updateProfile, deleteUserProfileImage } from "../../../services/api";
+import ImageCrop from "../../../components/Partials/ImageCrop";
+import Address from "../../../components/Users/Address";
 
 const UserDetails = () => {
   const navigate = useNavigate();

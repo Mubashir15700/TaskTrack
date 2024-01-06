@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setLoading } from '../../redux/slices/adminSlice';
+import { setLoading } from '../../../redux/slices/adminSlice';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
-import { getUser, userAction } from '../../services/api';
+import { getUser, userAction } from '../../../services/api';
 
 const UserDetails = () => {
     const dispatch = useDispatch();

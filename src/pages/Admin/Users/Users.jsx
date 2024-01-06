@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { setLoading } from '../../redux/slices/adminSlice';
+import { setLoading } from '../../../redux/slices/adminSlice';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import DataTable from 'react-data-table-component';
-import Pagination from '../../components/Partials/Pagination';
-import { getUsers, userAction } from '../../services/api';
+import Pagination from '../../../components/Partials/Pagination';
+import { getUsers, userAction } from '../../../services/api';
 
 const Users = () => {
   const dispatch = useDispatch();

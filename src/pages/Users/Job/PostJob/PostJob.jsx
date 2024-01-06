@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import Address from "../../../components/Users/Address";
+import {} from './jobSchema';
+import Address from "../../../../components/Users/Address";
 import './PostJob.css';
 
 const PostJob = () => {

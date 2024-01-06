@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setLoading, setLoggedIn } from '../../../redux/slices/userSlice';
-import { verifyOtp, resendOtp } from '../../../services/api';
-import logo from '../../../assets/images/logo.png';
-import './OTP.css';
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { otpSchema } from './otpSchema';
+import { setLoading, setLoggedIn } from "../../../../redux/slices/userSlice";
+import { verifyOtp, resendOtp } from "../../../../services/api";
+import logo from "../../../../assets/images/logo.png";
+import "./OTP.css";
 
 const OTP = () => {
   const navigate = useNavigate();
@@ -15,44 +16,63 @@ const OTP = () => {
   const purpose = queryParams.get("purpose");
   const email = queryParams.get("email");
 
-  const [otp, setOtp] = useState('');
+  const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(() => {
     // Retrieve the timer value from localStorage or set it to the initial value (300 seconds)
-    const storedTimer = localStorage.getItem('otpTimer');
+    const storedTimer = localStorage.getItem("otpTimer");
     return storedTimer ? parseInt(storedTimer, 10) : 300;
   });
-  const [serverResponse, setServerResponse] = useState('');
+  const [serverResponse, setServerResponse] = useState("");
+  const [errors, setErrors] = useState("");
 
   const handleVerification = async (e) => {
     e.preventDefault();
-    dispatch(setLoading(true));
-    setServerResponse('');
+    // dispatch(setLoading(true));
+    setServerResponse("");
 
-    const response = await verifyOtp({ otp, email });
-    if (response) {
-      setServerResponse(response.data);
-      if (response.data.status === 'success') {
-        localStorage.removeItem('otpTimer');
-        if (purpose === "forgot-password") {
-          navigate("/reset-password");
-        } else if (purpose === "signup") {
-          dispatch(setLoggedIn(true));
-          navigate("/");
+    try {
+      // Validate OTP and email against the schema
+      await otpSchema.validate({ otp });
+
+      // If validation passes, proceed with OTP verification
+      const response = await verifyOtp({ otp, email });
+
+      if (response) {
+        setServerResponse(response.data);
+
+        if (response.data.status === "success") {
+          localStorage.removeItem("otpTimer");
+          if (purpose === "forgot-password") {
+            navigate("/reset-password");
+          } else if (purpose === "signup") {
+            dispatch(setLoggedIn(true));
+            navigate("/");
+          }
         }
       }
+    } catch (error) {
+      console.error("Error during OTP verification:", error);
+
+      // Handle the validation error or set an appropriate server response
+      if (error.name === 'ValidationError') {
+        setErrors(error.errors[0]);
+      } else {
+        setServerResponse("An error occurred during OTP verification");
+      }
     }
-    dispatch(setLoading(false));
+
+    // dispatch(setLoading(false));
   };
 
   const handleResend = async () => {
-    setServerResponse('');
+    setServerResponse("");
 
     const response = await resendOtp({ email });
     if (response) {
       setServerResponse(response.data);
-      if (response.data.status === 'success') {
+      if (response.data.status === "success") {
         setTimer(300);
-        localStorage.setItem('otpTimer', '300');
+        localStorage.setItem("otpTimer", "300");
       }
     }
   };
@@ -65,7 +85,7 @@ const OTP = () => {
     const intervalId = setInterval(() => {
       setTimer((prevTimer) => {
         const newTimer = prevTimer > 0 ? prevTimer - 1 : 0;
-        localStorage.setItem('otpTimer', String(newTimer));
+        localStorage.setItem("otpTimer", String(newTimer));
         return newTimer;
       });
     }, 1000);
@@ -100,11 +120,12 @@ const OTP = () => {
             value={otp}
             onChange={(e) => setOtp(e.target.value)}
           />
+          {errors && <span className="error-display">{errors}</span>}
         </div>
-        <div className='d-flex flex-column'>
+        <div className="d-flex flex-column">
           {timer > 0 && (
             <span className="timer">
-              Time remaining: {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+              Time remaining: {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
             </span>
           )}
           {timer === 0 && (<Link onClick={handleResend} className="link mt-1">
@@ -121,7 +142,7 @@ const OTP = () => {
           </button>
         </div>
         {serverResponse && (
-          <div className={`alert ${['failed', 'error'].includes(serverResponse.status) ? 'alert-danger' : 'alert-success'} mt-3`} role="alert">
+          <div className={`alert ${["failed", "error"].includes(serverResponse.status) ? "alert-danger" : "alert-success"} mt-3`} role="alert">
             {serverResponse.message}
           </div>
         )}
