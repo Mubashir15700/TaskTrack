@@ -1,3 +1,19 @@
+#root {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+    padding-top: 70px;
+    /* Adjust the value based on your header height */
+}
+
+footer {
+    margin-top: auto;
+}
+
 /* Works for Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

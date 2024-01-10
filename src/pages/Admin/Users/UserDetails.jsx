@@ -87,7 +87,7 @@ const UserDetails = () => {
                     <div>
                         {user.profile ? (
                             <img
-                                src={`http://localhost:3000/uploads/${user?.profile}`}
+                                src={`http://localhost:3000/uploads/profile/${user?.profile}`}
                                 alt="profileImage"
                                 style={{ height: "130px", width: "150px" }}
                                 className="rounded-3"

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginSchema } from './loginSchema';
+import { loginSchema } from "../../../../validations/userValidations/loginSchema";
 import { setLoading, setUserData, setLoggedIn as setUserLoggedIn } from "../../../../redux/slices/userSlice";
 import { setLoggedIn as setAdminLoggedIn, setUsername as setAdmiDisplayName } from "../../../../redux/slices/adminSlice";
 import { adminLogin, userLogin } from "../../../../services/api";

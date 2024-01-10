@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {  } from './profileSchema';
+import { profileSchema } from "../../../validations/userValidations/profileSchema";
 import { setUserData as setUpdatedUserData } from "../../../redux/slices/userSlice";
 import toast from "react-hot-toast";
 import { updateProfile, deleteUserProfileImage } from "../../../services/api";
@@ -23,6 +23,8 @@ const UserDetails = () => {
   const [changed, setChanged] = useState(false);
   const [newImageSelected, setNewImageSelected] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [errors, setErrors] = useState({});
+  const [serverResponse, setServerResponse] = useState("");
 
   const handleInputChange = (e) => {
     if (currentUser !== userData) {
@@ -56,17 +58,32 @@ const UserDetails = () => {
 
   const handleUpdate = async () => {
     try {
+      // Validate formData against the profile schema
+      const checkValidData = {
+        username: userData.username,
+        email: userData.email,
+        phone: userData.phone,
+      };
+
+      if (newImageSelected) {
+        checkValidData.profile = userData.profile
+      }
+
+      await profileSchema.validate(checkValidData, { abortEarly: false });
+
+      setErrors({}); // Clear previous validation errors
+
+      // If validation passes, proceed with profile update
       const formData = new FormData();
-      (userData.username !== currentUser.username) && formData.append("username", userData.username);
-      (userData.email !== currentUser.email) && formData.append("email", userData.email);
-      (userData.phone !== currentUser.phone) && formData.append("phone", userData.phone);
-      // Convert selectedAddress to JSON string if it"s an object
+      formData.append("username", userData.username);
+      formData.append("email", userData.email);
+      formData.append("phone", userData.phone);
+
       if (selectedAddress && typeof selectedAddress === "object") {
         const locationString = JSON.stringify(selectedAddress);
         formData.append("location", locationString);
       }
 
-      // Check if a new profile image is selected
       if (userData.profile instanceof File && newImageSelected) {
         formData.append("profile", userData.profile);
       }
@@ -87,7 +104,17 @@ const UserDetails = () => {
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("An unexpected error occurred during profile update");
+
+      // Handle the validation error or set an appropriate server response
+      if (error.name === "ValidationError") {
+        const validationErrors = {};
+        error.inner.forEach(err => {
+          validationErrors[err.path] = err.message;
+        });
+        setErrors(validationErrors);
+      } else {
+        setServerResponse({ status: "failed", message: "An error occurred during profile update" });
+      }
     }
   };
 
@@ -111,7 +138,7 @@ const UserDetails = () => {
   };
 
   // the profile image URL
-  const imageUrl = `http://localhost:3000/uploads/${currentUser?.profile}`;
+  const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
 
   return (
     <div className="col-md-8 my-3 mx-auto">
@@ -125,21 +152,20 @@ const UserDetails = () => {
               className="rounded-3"
             />
           )}
+          {currentUser.profile && (
+            <i
+              className="bi bi-trash"
+              style={{ cursor: "pointer" }}
+              onClick={handleDeleteProfile}
+            />
+          )}
           {(!currentUser.profile && !newImageSelected) && (
             <i className="bi bi-person-circle fs-1 mb-3"></i>
           )}
-          <div className="d-flex mb-2">
-            <ImageCrop onNewImageUrl={addCropImg} />
-            <div className=" me-4">
-            </div>
-            {currentUser.profile && (
-              <i
-                className="bi bi-trash me-4"
-                style={{ cursor: 'pointer' }}
-                onClick={handleDeleteProfile}
-              />
-            )}
+          <div className="mb-2">
+            <ImageCrop onNewImageUrl={addCropImg} purpose={"profile"} />
           </div>
+          {errors.profile && <span className="error-display">{errors.profile}</span>}
           <div>
             <div className="form-group row">
               <div className="col-md-6">
@@ -151,6 +177,7 @@ const UserDetails = () => {
                   value={userData?.username}
                   onChange={handleInputChange}
                 />
+                {errors.username && <span className="error-display">{errors.username}</span>}
               </div>
               <div className="col-md-6">
                 <label>Phone</label>
@@ -161,6 +188,7 @@ const UserDetails = () => {
                   value={userData?.phone}
                   onChange={handleInputChange}
                 />
+                {errors.phone && <span className="error-display">{errors.phone}</span>}
               </div>
             </div>
             <div className="form-group row">
@@ -173,6 +201,7 @@ const UserDetails = () => {
                   value={userData?.email}
                   onChange={handleInputChange}
                 />
+                {errors.email && <span className="error-display">{errors.email}</span>}
               </div>
             </div>
             <div>
@@ -182,6 +211,7 @@ const UserDetails = () => {
                 currentAddress={currentUser.location}
                 onAddressChange={newAddressSelected}
                 onLocationDeleted={deleteSuccess}
+                usage={"profile"}
               />
             </div>
             {changed && (
@@ -195,6 +225,11 @@ const UserDetails = () => {
                     Update Profile
                   </button>
                 </div>
+              </div>
+            )}
+            {serverResponse && (
+              <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                {serverResponse.message}
               </div>
             )}
           </div>

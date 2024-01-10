@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
-import DisplayMap from '../../components/Users/DisplayMap';
-import { getCurrentLocation, deleteLocation } from '../../services/api';
+import DisplayMap from "../../components/Users/DisplayMap";
+import { getCurrentLocation, deleteLocation } from "../../services/api";
+import { locationSchema } from "../../validations/userValidations/locationSchema";
 
-const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted }) => {
+const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => {
     const [selectedAddress, setSelectedAddress] = useState(currentAddress || {});
-    const [textareaValue, setTextareaValue] = useState('');
+    const [textareaValue, setTextareaValue] = useState("");
     const [mapVisible, setMapVisible] = useState(false);
     const [manualEntryVisible, setManualEntryVisible] = useState(false);
     const [manualEntry, setManualEntry] = useState({
-        road: '',
-        village: '',
-        district: '',
-        state: '',
-        postcode: '',
+        road: "",
+        village: "",
+        district: "",
+        state: "",
+        postcode: undefined,
     });
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (selectedAddress && selectedAddress.lat && selectedAddress.lon) {
@@ -61,9 +63,26 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         }
     };
 
-    const saveManuelLocationEntry = () => {
-        setSelectedAddress(manualEntry);
-        onAddressChange(manualEntry);
+    const saveManuelLocationEntry = async () => {
+        try {
+            // Validate manualEntry against the address schema
+            await locationSchema.validate(manualEntry, { abortEarly: false });
+
+            // If validation passes, update the selected address
+            setSelectedAddress(manualEntry);
+            onAddressChange(manualEntry);
+        } catch (error) {
+            // Handle the validation error
+            const validationErrors = {};
+            if (error.name === "ValidationError") {
+                error.inner.forEach(err => {
+                    validationErrors[err.path] = err.message;
+                });
+            }
+            setErrors(validationErrors);
+            // Handle validation errors (you can display them or handle as needed)
+            console.error("Address validation error:", validationErrors);
+        }
     };
 
     return (
@@ -76,8 +95,9 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         name="location"
                         className="form-control"
                         defaultValue={textareaValue}
+                        disabled
                     />
-                    {textareaValue !== "No Location provided" ? (
+                    {(textareaValue !== "No Location provided" && usage === "profile") ? (
                         <button className="btn" onClick={handleDeleteLocation}>
                             <i className="bi bi-x-circle text-danger fs-3"></i>
                         </button>
@@ -101,6 +121,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.road}
                                     onChange={handleManualEntryChange}
                                 />
+                                {errors.road && <span className="error-display">{errors.road}</span>}
                             </div>
                             <div className="col-md-6">
                                 <label>Village</label>
@@ -111,6 +132,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.village}
                                     onChange={handleManualEntryChange}
                                 />
+                                {errors.village && <span className="error-display">{errors.village}</span>}
                             </div>
                         </div>
                         <div className="d-flex">
@@ -123,6 +145,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.district}
                                     onChange={handleManualEntryChange}
                                 />
+                                {errors.district && <span className="error-display">{errors.district}</span>}
                             </div>
                             <div className="col-md-4">
                                 <label>State</label>
@@ -133,6 +156,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.state}
                                     onChange={handleManualEntryChange}
                                 />
+                                {errors.state && <span className="error-display">{errors.state}</span>}
                             </div>
                             <div className="col-md-4">
                                 <label>Pincode</label>
@@ -143,6 +167,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.pincode}
                                     onChange={handleManualEntryChange}
                                 />
+                                {errors.postcode && <span className="error-display">{errors.postcode}</span>}
                             </div>
                         </div>
                     </div>

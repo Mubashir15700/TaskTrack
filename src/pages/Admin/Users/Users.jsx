@@ -100,7 +100,7 @@ const Users = () => {
       cell: row => (
         row.profile ? (
           <img
-            src={`http://localhost:3000/uploads/${row?.profile}`}
+            src={`http://localhost:3000/uploads/profile/${row?.profile}`}
             alt="Profile"
             style={{ width: '50px', height: '50px' }}
             className="rounded-5"

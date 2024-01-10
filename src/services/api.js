@@ -61,7 +61,110 @@ export const userAction = async (data) => {
     }
 };
 
+export const getBanners = async (itemsPerPage, currentPage) => {
+    try {
+        return await axios.get(
+            `${URL}/admin/banners?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
+        );
+    } catch (error) {
+        console.log("get banner error: ", error);
+        return error.response;
+    }
+};
+
+export const getBanner = async (data) => {
+    try {
+        return await axios.get(`${URL}/admin/banner/${data}`);
+    } catch (error) {
+        console.log("get banner error: ", error);
+        return error.response;
+    }
+};
+
+export const addBanner = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/add-banner`, data);
+    } catch (error) {
+        console.log("add banner error: ", error);
+        return error.response;
+    }
+};
+
+export const editBanner = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/edit-banner/${data._id}`, data);
+    } catch (error) {
+        console.log("edit banner error: ", error);
+        return error.response;
+    }
+};
+
+export const bannerAction = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/banner-action/${data}`);
+    } catch (error) {
+        console.log("banner action error: ", error);
+        return error.response;
+    }
+};
+
+export const getplans = async (itemsPerPage, currentPage) => {
+    try {
+        return await axios.get(
+            `${URL}/admin/plans?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
+        );
+    } catch (error) {
+        console.log("get plans error: ", error);
+        return error.response;
+    }
+};
+
+export const getPlan = async (data) => {
+    try {
+        return await axios.get(`${URL}/admin/plan/${data}`);
+    } catch (error) {
+        console.log("get plan error: ", error);
+        return error.response;
+    }
+};
+
+export const addPlan = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/add-plan`, data);
+    } catch (error) {
+        console.log("add plan error: ", error);
+        return error.response;
+    }
+};
+
+export const editPlan = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/edit-plan/${data}`);
+    } catch (error) {
+        console.log("edit plan error: ", error);
+        return error.response;
+    }
+};
+
+export const planAction = async (data) => {
+    try {
+        return await axios.post(`${URL}/admin/plan-action/${data}`);
+    } catch (error) {
+        console.log("plan action error: ", error);
+        return error.response;
+    }
+};
+
 // User
+export const getActiveBanners = async () => {
+    try {
+        return await axios.get(`${URL}/get-active-banners`);
+    } catch (error) {
+        console.log("get active banners error: ", error);
+        return error.response;
+    }
+};
+
 export const userLogin = async (data) => {
     try {
         return await axios.post(`${URL}/login`, data);
@@ -152,11 +255,65 @@ export const deleteLocation = async (id) => {
     }
 };
 
+export const getLaborers = async () => {
+    try {
+        return await axios.get(`${URL}/get-laborers`);
+    } catch (error) {
+        console.log("get laborers error: ", error);
+        return error.response;
+    }
+};
+
+export const getLaborer = async (data) => {
+    try {
+        return await axios.get(`${URL}/get-laborer/${data}`);
+    } catch (error) {
+        console.log("get laborer error: ", error);
+        return error.response;
+    }
+};
+
+export const getJobs = async () => {
+    try {
+        return await axios.get(`${URL}/get-jobs`);
+    } catch (error) {
+        console.log("get jobs error: ", error);
+        return error.response;
+    }
+};
+
+export const getJob = async (data) => {
+    try {
+        return await axios.get(`${URL}/get-job/${data}`);
+    } catch (error) {
+        console.log("get job error: ", error);
+        return error.response;
+    }
+};
+
+export const editJob = async (id, data) => {
+    try {
+        return await axios.post(`${URL}/edit-job/${id}`, data);
+    } catch (error) {
+        console.log("edit job error: ", error);
+        return error.response;
+    }
+};
+
+export const postNewJob = async (data) => {
+    try {
+        return await axios.post(`${URL}/post-job`, data);
+    } catch (error) {
+        console.log("post job error: ", error);
+        return error.response;
+    }
+};
+
 export const logout = async (data) => {
     try {
         return await axios.post(`${URL}/logout`, data);
     } catch (error) {
-        console.log(error);
+        console.log("logout error: ", error);
         return (error.response);
     }
 };

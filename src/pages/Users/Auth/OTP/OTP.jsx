@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { otpSchema } from './otpSchema';
+import { otpSchema } from "../../../../validations/userValidations/otpSchema";
 import { setLoading, setLoggedIn } from "../../../../redux/slices/userSlice";
 import { verifyOtp, resendOtp } from "../../../../services/api";
 import logo from "../../../../assets/images/logo.png";
