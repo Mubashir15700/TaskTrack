@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 

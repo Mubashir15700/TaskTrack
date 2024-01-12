@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import DisplayMap from "../../components/Users/DisplayMap";
-import { getCurrentLocation, deleteLocation } from "../../services/api";
+import { getCurrentLocation, deleteLocation } from "../../services/userApi";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
 
 const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => {
-    const [selectedAddress, setSelectedAddress] = useState(currentAddress || {});
+    const [selectedAddress, setSelectedAddress] = useState({});
     const [textareaValue, setTextareaValue] = useState("");
     const [mapVisible, setMapVisible] = useState(false);
     const [manualEntryVisible, setManualEntryVisible] = useState(false);
@@ -16,6 +16,11 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         postcode: undefined,
     });
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        setSelectedAddress(currentAddress || {});
+    }, [currentAddress]);
+
 
     useEffect(() => {
         if (selectedAddress && selectedAddress.lat && selectedAddress.lon) {
@@ -172,30 +177,32 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         </div>
                     </div>
                 )}
-                <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
-                    <button
-                        className="btn btn-primary col-md-5 my-sm-1"
-                        onClick={handleGetCurrentLocation}
-                    >
-                        <i className="bi bi-crosshair mx-2"></i>
-                        Get your current location
-                    </button>
-                    {!manualEntryVisible ? (
+                {usage !== "display-job" && (
+                    <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
                         <button
-                            className="btn btn-outline-dark col-md-5"
-                            onClick={handleEnterLocationManually}
+                            className="btn btn-primary col-md-5 my-sm-1"
+                            onClick={handleGetCurrentLocation}
                         >
-                            Add location manually
+                            <i className="bi bi-crosshair mx-2"></i>
+                            Get your current location
                         </button>
-                    ) : (
-                        <button
-                            className="btn btn-dark col-md-5"
-                            onClick={saveManuelLocationEntry}
-                        >
-                            Save location
-                        </button>
-                    )}
-                </div>
+                        {!manualEntryVisible ? (
+                            <button
+                                className="btn btn-outline-dark col-md-5"
+                                onClick={handleEnterLocationManually}
+                            >
+                                Add location manually
+                            </button>
+                        ) : (
+                            <button
+                                className="btn btn-dark col-md-5"
+                                onClick={saveManuelLocationEntry}
+                            >
+                                Save location
+                            </button>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

@@ -6,8 +6,6 @@
 
 main {
     flex-grow: 1;
-    padding-top: 70px;
-    /* Adjust the value based on your header height */
 }
 
 footer {

@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getJobs } from "../../../services/api";
+import { useSelector } from "react-redux";
+import { getJobs } from "../../../services/userApi";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
+
+  const searchResults = useSelector(state => state.user.searchResults);
 
   useEffect(() => {
     const getAllJobs = async () => {
       try {
         const response = await getJobs();
         if (response && response.data.status === "success") {
+          console.log(response.data.jobs);
           setJobs(response.data.jobs);
         }
       } catch (error) {
@@ -17,41 +21,51 @@ const Jobs = () => {
       }
     };
 
-    getAllJobs();
-  }, []);
+    if (searchResults.searchOn === "jobs") {
+      setJobs(searchResults.results);
+    } else {
+      getAllJobs();
+    }
+  }, [searchResults]);
 
   return (
-    <div className="mt-3">
-      {jobs.length ? (
-        jobs.map((job, index) => (
-          <div className="d-flex flex-md-row border col-md-10 p-3 mx-auto mb-2" key={index}>
-            <div className="col-md-3 col-12 mb-5">
-              <p>{job.date}</p>
-              <p>{job.time}</p>
-              <p>Duration: {job.duration}(hrs)</p>
-            </div>
-            <div className="d-flex col-md-8 col-12 flex-column flex-md-row">
-              <div className="col-md-8">
-                <span className="d-block text-primary h6 text-uppercase">
-                  {job.title}
-                </span>
-                <p>
-                  {job.description}
-                </p>
+    <div className="col-10 mx-auto mt-3">
+      <h3 className="mb-4">Jobs</h3>
+      {
+        jobs.length ? (
+          jobs.map((job, index) => (
+            <div className="card" key={index}>
+              <div className="card-header">
+                {job.title}
               </div>
-              <div className="">
-                <Link to={`/jobs/${job._id}`} className="btn btn-primary">
-                  View
-                </Link>
+              <div className="card-body d-flex flex-wrap justify-content-between">
+                <div className="col-md-3 col-12 mb-3">
+                  <img
+                    src={`http://localhost:3000/uploads/profile/${job.userDetails?.profile}`}
+                    alt="emp-profile"
+                    className="img-fluid"
+                    width={"50px"}
+                  />
+                  <p>{job.userDetails.username}</p>
+                </div>
+                <div className="col-md-6 col-12 mb-3">
+                  <p className="card-text">{job.description}</p>
+                  <p className="mb-1">Location: {job.location.village}, {job.location.district}</p>
+                  <p className="mb-1">Posted on: {new Date(job.postedAt).toLocaleString()}</p>
+                </div>
+                <div className="col-md-3 col-12 mb-3">
+                  <Link to={`/jobs/${job._id}`} className="btn btn-primary btn-block">View More</Link>
+                </div>
               </div>
+
             </div>
+          ))
+        ) : (
+          <div>
+            No jobs found
           </div>
-        ))
-      ) : (
-        <div>
-          No data found
-        </div>
-      )}
+        )
+      }
     </div>
   );
 };

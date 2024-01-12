@@ -1,24 +1,30 @@
 import { useLocation } from "react-router-dom";
+import Routers from "../routes/Routers";
 import Header from "../components/Users/Header/Header";
 import AdminHeader from "../components/Admin/Header/AdminHeader";
-import Routers from "../routes/Routers";
 import Footer from "../components/Users/Footer/Footer";
 
 const Layout = () => {
   const location = useLocation();
 
-  // List of routes where Header and Footer should be displayed
-  const routesToCheck = [
+  // List of user routes where Header and Footer should be displayed
+  const userRoutesToCheck = [
     "/",
     "/about",
     "/contact",
     "/jobs",
     /^\/jobs\/[\w-]+?$/,
+    "/listed-jobs",
     "/laborers",
     /^\/laborers\/[\w-]+?$/,
+    "/account",
     "/profile",
     "/notifications",
     /^\/notifications\/[\w-]+?$/,
+  ];
+
+  // List of admin routes where Header and Footer should be displayed
+  const adminRoutesToCheck = [
     "/admin",
     "/admin/users",
     /^\/admin\/users\/[\w-]+\/?$/,
@@ -32,32 +38,37 @@ const Layout = () => {
     /^\/admin\/notifications\/[\w-]+?$/,
   ];
 
-  let shouldDisplayHeaderFooter = routesToCheck.some((route) => {
-    if (route instanceof RegExp) {
-      return route.test(location.pathname);
-    } else {
-      return location.pathname === route;
-    }
-  });
+  const checkToDisplayHeaderFooter = (routes) => {
+    return routes.some((route) => {
+      if (route instanceof RegExp) {
+        return route.test(location.pathname);
+      } else {
+        return location.pathname === route;
+      }
+    });
+  };
 
-  let currentUser;
+  let userRole;
+  let shouldDisplayHeaderFooter;
   if (location.pathname.startsWith("/admin")) {
-    currentUser = "admin";
+    userRole = "admin";
+    shouldDisplayHeaderFooter = checkToDisplayHeaderFooter(adminRoutesToCheck);
   } else {
-    currentUser = "user";
+    userRole = "user";
+    shouldDisplayHeaderFooter = checkToDisplayHeaderFooter(userRoutesToCheck);
   }
 
   return (
     <>
-      {shouldDisplayHeaderFooter && currentUser === "admin" ? (
+      {shouldDisplayHeaderFooter && userRole === "admin" ? (
         <AdminHeader />
-      ) : shouldDisplayHeaderFooter && currentUser === "user" ? (
+      ) : shouldDisplayHeaderFooter && userRole === "user" ? (
         <Header />
       ) : null}
-      <main style={{ paddingTop: shouldDisplayHeaderFooter ? '70px' : '0' }}>
+      <main style={{ paddingTop: shouldDisplayHeaderFooter ? "70px" : "0" }}>
         <Routers />
       </main>
-      {shouldDisplayHeaderFooter && currentUser === "user" && <Footer />}
+      {shouldDisplayHeaderFooter && userRole === "user" && <Footer />}
     </>
   );
 };

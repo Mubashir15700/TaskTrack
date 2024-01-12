@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { setLoading } from '../../../redux/slices/adminSlice';
-import Swal from 'sweetalert2';
-import toast from 'react-hot-toast';
-import { getUser, userAction } from '../../../services/api';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../../redux/slices/adminSlice";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
+import { getUser, userAction } from "../../../services/adminApi";
 
 const UserDetails = () => {
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const UserDetails = () => {
                 }
             } catch (error) {
                 setError("An error occurred while fetching user details.");
-                console.error('Error fetching user details:', error);
+                console.error("Error fetching user details:", error);
             } finally {
                 // dispatch(setLoading(false));
             }
@@ -40,14 +40,14 @@ const UserDetails = () => {
 
     const confirmBlockUnblock = (isBlocked) => {
         Swal.fire({
-            title: 'Are you sure?',
-            text: `Are you sure you want to ${isBlocked ? 'Unblock' : 'Block'} this user?`,
-            icon: 'warning',
+            title: "Are you sure?",
+            text: `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Cancel',
-            confirmButtonText: isBlocked ? 'Unblock' : 'Block',
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            cancelButtonText: "Cancel",
+            confirmButtonText: isBlocked ? "Unblock" : "Block",
         }).then((result) => {
             if (result.isConfirmed) {
                 handleBlockUnblock();
@@ -67,7 +67,7 @@ const UserDetails = () => {
                         setError("Failed to fetch updated user data.");
                     }
                 } else {
-                    setError('Something went wrong');
+                    setError("Something went wrong");
                 }
             }
         } catch (error) {
@@ -93,7 +93,7 @@ const UserDetails = () => {
                                 className="rounded-3"
                             />
                         ) : (
-                            <div id="personIcon" style={{ display: 'block' }}>
+                            <div id="personIcon" style={{ display: "block" }}>
                                 <i className="bi bi-person-circle fs-1"></i>
                             </div>
                         )}
@@ -163,19 +163,19 @@ const UserDetails = () => {
                                 name="location"
                                 defaultValue={(user.location && Object.values(user.location).length) ? (
                                     `${user.location.road}, ${user.location.village}, \n ${user.location.district}, ${user.location.state}, \n ${user.location.postcode}`
-                                ) : 'No Location provided'}
+                                ) : "No Location provided"}
                             />
                         </div>
                         <button
-                            className={`btn ${user.isBlocked ? 'btn-warning' : 'btn-danger'} mt-3`}
+                            className={`btn ${user.isBlocked ? "btn-warning" : "btn-danger"} mt-3`}
                             onClick={() => confirmBlockUnblock(user.isBlocked)}
                         >
-                            {user.isBlocked ? 'Unblock' : 'Block'}
+                            {user.isBlocked ? "Unblock" : "Block"}
                         </button>
                     </div>
                 </div>
             ) : (
-                <div className='mt-5 mx-auto'>
+                <div className="mt-5 mx-auto">
                     <p>No data found</p>
                 </div>
             )

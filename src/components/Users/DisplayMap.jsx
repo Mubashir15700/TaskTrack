@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect } from "react";
 
 const DisplayMap = ({ latitude, longitude }) => {
     useEffect(() => {
@@ -24,7 +24,7 @@ const DisplayMap = ({ latitude, longitude }) => {
     return (
         <div
             id="map"
-            className="m-2 mb-4 rounded-2"
+            className="my-3 rounded-2"
             style={{ height: "200px", width: "100%" }}
         ></div>
     );

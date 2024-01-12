@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { profileSchema } from "../../../validations/userValidations/profileSchema";
-import { setUserData as setUpdatedUserData } from "../../../redux/slices/userSlice";
+import { profileSchema } from "../../validations/userValidations/profileSchema";
+import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { updateProfile, deleteUserProfileImage } from "../../../services/api";
-import ImageCrop from "../../../components/Partials/ImageCrop";
-import Address from "../../../components/Users/Address";
+import { updateProfile, deleteUserProfileImage } from "../../services/userApi";
+import ImageCrop from "../../components/Common/ImageCrop";
+import Address from "../../components/Users/Address";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -91,9 +91,10 @@ const UserDetails = () => {
       const response = await updateProfile(formData, currentUser?._id);
 
       if (response && response.data?.status === "success") {
-        const locationObject = JSON.parse(response.data.updatedUser.location);
         const updatedUser = response.data.updatedUser;
-        updatedUser.location = locationObject;
+        if (response.data.updatedUser.location) {
+          updatedUser.location = JSON.parse(response.data.updatedUser.location);
+        }
         dispatch(setUpdatedUserData(response.data.updatedUser));
         navigate("/profile");
         toast.success("Updated profile successfully");
@@ -141,7 +142,7 @@ const UserDetails = () => {
   const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
 
   return (
-    <div className="col-md-8 my-3 mx-auto">
+    <div className="col-8 my-3 mx-auto">
       {currentUser ? (
         <div className="p-3 p-lg-5 border">
           {(currentUser.profile && !newImageSelected) && (

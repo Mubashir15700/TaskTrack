@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { addBanner } from "../../../services/api";
-import ImageCrop from "../../../components/Partials/ImageCrop";
+import { addBanner } from "../../../services/adminApi";
+import ImageCrop from "../../../components/Common/ImageCrop";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 
 const AddBanner = () => {
     const navigate = useNavigate();
 
     const [bannerData, setBannerData] = useState({
-        title: '',
-        description: '',
-        image: '',
+        title: "",
+        description: "",
+        image: "",
     });
     const [errors, setErrors] = useState({});
     const [serverResponse, setServerResponse] = useState("");
@@ -57,7 +57,7 @@ const AddBanner = () => {
                 }
             }
         } catch (error) {
-            if (error.name === 'ValidationError') {
+            if (error.name === "ValidationError") {
                 const validationErrors = {};
                 error.inner.forEach(err => {
                     validationErrors[err.path] = err.message;
@@ -94,7 +94,7 @@ const AddBanner = () => {
                         {errors.description && <span className="error-display">{errors.description}</span>}
                     </div>
                     <div className="col-md-12">
-                        <ImageCrop onNewImageUrl={addCropImage} purpose={'banner'} />
+                        <ImageCrop onNewImageUrl={addCropImage} purpose={"banner"} />
                         {errors.image && <span className="error-display">{errors.image}</span>}
                     </div>
                     <button

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signupSchema } from "../../../../validations/userValidations/signUpSchema";
 import { setLoading, setUserData } from "../../../../redux/slices/userSlice";
-import { userSignUp } from "../../../../services/api";
+import { userSignUp } from "../../../../services/authApi";
 import logo from '../../../../assets/images/logo.png';
 import "./SignUp.css";
 

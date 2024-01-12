@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { postNewJob } from "../../../../services/api";
+import { postNewJob } from "../../../../services/userApi";
 import { jobSchema } from "../../../../validations/userValidations/jobSchema";
 import Address from "../../../../components/Users/Address";
 import "./PostJob.css";
@@ -103,6 +103,7 @@ const PostJob = () => {
   return (
     <div className="col-md-8 my-3 mx-auto">
       <div className="p-3 p-lg-5 border">
+        <h3 className="mb-2">Post new job</h3>
         <div className="col-md-12">
           <label>Title</label>
           <input

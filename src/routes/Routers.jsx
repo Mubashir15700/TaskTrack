@@ -1,19 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { useSelector, useDispatch } from 'react-redux';
-import { setLoading, initializeAdmin, setSearchResults } from '../redux/slices/adminSlice';
-import { initializeUser } from '../redux/slices/userSlice';
-import LoadingSpinner from "../components/Partials/LoadingSpinner";
-import Home from "../pages/Users/Home";
-import About from "../pages/Users/About";
-import Contact from "../pages/Users/Contact";
-import Profile from "../pages/Users/Profile/Profile";
-import Notifications from "../pages/Users/Notifications";
-import Jobs from "../pages/Users/Job/Jobs";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoading, initializeAdmin, setSearchResults } from "../redux/slices/adminSlice";
+import { initializeUser } from "../redux/slices/userSlice";
+// Lazy-loaded components
+const Home = lazy(() => import("../pages/Users/Home"));
+const About = lazy(() => import("../pages/Users/About"));
+const Contact = lazy(() => import("../pages/Users/Contact"));
+const Notifications = lazy(() => import("../pages/Users/Notifications"));
+const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
+const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
+const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
+const Dashboard = lazy(() => import("../pages/Admin/Dashboard"));
+const Users = lazy(() => import("../pages/Admin/Users/Users"));
+const SubscriptionPlans = lazy(() => import("../pages/Admin/Plans/SubscriptionPlans"));
+const Banners = lazy(() => import("../pages/Admin/Banners/Banners"));
+import LoadingSpinner from "../components/Common/LoadingSpinner";
+import Account from "../pages/Users/Account";
+import Profile from "../pages/Users/Profile";
 import JobDetails from "../pages/Users/Job/JobDetails";
 import PostJob from "../pages/Users/Job/PostJob/PostJob";
-import Laborers from "../pages/Users/Laborer/Laborers";
 import LaborerDetails from "../pages/Users/Laborer/LaborerDetails";
 import Login from "../pages/Users/Auth/Login/Login";
 import SignUp from "../pages/Users/Auth/SignUp/SignUp";
@@ -21,13 +28,9 @@ import Email from "../pages/Users/Auth/Email/Email";
 import OTP from "../pages/Users/Auth/OTP/OTP";
 import ResetPassword from "../pages/Users/Auth/ResetPassword/ResetPassword";
 import ErrorPage from "../pages/Users/ErrorPage";
-import Dashboard from '../pages/Admin/Dashboard';
-import Users from '../pages/Admin/Users/Users';
 import UserDetails from "../pages/Admin/Users/UserDetails";
-import SubscriptionPlans from '../pages/Admin/Plans/SubscriptionPlans';
-import AddPlan from '../pages/Admin/Plans/AddPlan';
-import EditPlan from '../pages/Admin/Plans/EditPlan';
-import Banners from '../pages/Admin/Banners/Banners';
+import AddPlan from "../pages/Admin/Plans/AddPlan";
+import EditPlan from "../pages/Admin/Plans/EditPlan";
 import AddBanner from "../pages/Admin/Banners/AddBanner";
 import EditBanner from "../pages/Admin/Banners/EditBanner";
 
@@ -47,7 +50,7 @@ const Routers = () => {
       searchOn: null, results: null
     }));
 
-    if (location.pathname.startsWith('/admin')) {
+    if (location.pathname.startsWith("/admin")) {
       !isAdminLoggedIn && dispatch(initializeAdmin());
     } else {
       !isUserLoggedIn && dispatch(initializeUser());
@@ -64,38 +67,42 @@ const Routers = () => {
     <>
       {/* toast ui */}
       <Toaster position="top-center" reverseOrder={false} />
-      <Routes>
-        {/* Users */}
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/profile" element={isUserLoggedIn ? <Profile /> : <Navigate to="/login" />} />
-        <Route path="/notifications" element={isUserLoggedIn ? <Notifications /> : <Navigate to="/login" />} />
-        <Route path="/jobs" element={<Jobs />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
-        <Route path="/laborers" element={<Laborers />} />
-        <Route path="/laborers/:id" element={<LaborerDetails />} />
-        <Route path="/login" element={!isUserLoggedIn ? <Login role={'user'} /> : <Navigate to="/" />} />
-        <Route path="/sign-up" element={!isUserLoggedIn ? <SignUp /> : <Navigate to="/" />} />
-        <Route path="/verify-email" element={!isUserLoggedIn ? <Email /> : <Navigate to="/" />} />
-        <Route path="/verify-otp" element={<OTP />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        {/* Admin */}
-        <Route path="/admin" element={isAdminLoggedIn ? <Dashboard /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/login" element={!isAdminLoggedIn ? <Login role={'admin'} /> : <Navigate to="/admin" />} />
-        <Route path="/admin/users" element={isAdminLoggedIn ? <Users /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/users/:id" element={isAdminLoggedIn ? <UserDetails /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/subscription-plans" element={isAdminLoggedIn ? <SubscriptionPlans /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/subscription-plans/add-plan" element={isAdminLoggedIn ? <AddPlan /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/subscription-plans/edit-plan/:id" element={isAdminLoggedIn ? <EditPlan /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/banners" element={isAdminLoggedIn ? <Banners /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />
-        <Route path="/admin/notifications" element={isAdminLoggedIn ? <Notifications /> : <Navigate to="/admin/login" />} />
-        {/* Errors */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          {/* Users */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/account" element={isUserLoggedIn ? <Account /> : <Navigate to="/login" />} />
+          <Route path="/profile" element={isUserLoggedIn ? <Profile /> : <Navigate to="/login" />} />
+          <Route path="/notifications" element={isUserLoggedIn ? <Notifications /> : <Navigate to="/login" />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:id" element={<JobDetails />} />
+          <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
+          <Route path="/jobs/listed-jobs" element={isUserLoggedIn ? <ListedJobs /> : <Navigate to="/login" />} />
+          <Route path="/laborers" element={<Laborers />} />
+          <Route path="/laborers/:id" element={<LaborerDetails />} />
+          <Route path="/login" element={!isUserLoggedIn ? <Login role={"user"} /> : <Navigate to="/" />} />
+          <Route path="/sign-up" element={!isUserLoggedIn ? <SignUp /> : <Navigate to="/" />} />
+          <Route path="/verify-email" element={!isUserLoggedIn ? <Email /> : <Navigate to="/" />} />
+          <Route path="/verify-otp" element={<OTP />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          {/* Admin */}
+          <Route path="/admin" element={isAdminLoggedIn ? <Dashboard /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/login" element={!isAdminLoggedIn ? <Login role={"admin"} /> : <Navigate to="/admin" />} />
+          <Route path="/admin/users" element={isAdminLoggedIn ? <Users /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/users/:id" element={isAdminLoggedIn ? <UserDetails /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/subscription-plans" element={isAdminLoggedIn ? <SubscriptionPlans /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/subscription-plans/add-plan" element={isAdminLoggedIn ? <AddPlan /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/subscription-plans/edit-plan/:id" element={isAdminLoggedIn ? <EditPlan /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/banners" element={isAdminLoggedIn ? <Banners /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/notifications" element={isAdminLoggedIn ? <Notifications /> : <Navigate to="/admin/login" />} />
+          {/* Errors */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+      </Suspense>
     </>
   );
 };

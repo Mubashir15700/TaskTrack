@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getBanner, editBanner } from "../../../services/api";
-import ImageCrop from "../../../components/Partials/ImageCrop";
+import { getBanner, editBanner } from "../../../services/adminApi";
+import ImageCrop from "../../../components/Common/ImageCrop";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 
 const EditBanner = () => {

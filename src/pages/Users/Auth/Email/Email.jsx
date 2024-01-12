@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { emailSchema } from "../../../../validations/userValidations/emailSchema";
 import { setLoading } from "../../../../redux/slices/userSlice";
-import { confirmEmail } from "../../../../services/api";
+import { confirmEmail } from "../../../../services/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./Email.css";
 

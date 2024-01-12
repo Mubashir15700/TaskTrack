@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { passwordSchema } from "../../../../validations/userValidations/passwordSchema";
 import { setLoading } from "../../../../redux/slices/userSlice";
-import { resetPassword } from "../../../../services/api";
+import { resetPassword } from "../../../../services/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./ResetPassword.css";
 
