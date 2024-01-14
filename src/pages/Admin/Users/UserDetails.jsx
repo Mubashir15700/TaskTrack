@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { getUser, userAction } from "../../../services/adminApi";
+import Address from "../../../components/Users/Address";
+import SweetAlert from "../../../components/Common/SweetAlert";
 
 const UserDetails = () => {
     const dispatch = useDispatch();
@@ -38,21 +39,17 @@ const UserDetails = () => {
         getUserDetails();
     }, [id]);
 
-    const confirmBlockUnblock = (isBlocked) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            cancelButtonText: "Cancel",
-            confirmButtonText: isBlocked ? "Unblock" : "Block",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                handleBlockUnblock();
-            }
-        });
+    const confirmBlockUnblock = async (isBlocked) => {
+        const result = await SweetAlert.confirmAction(
+            `${isBlocked ? "Unblock" : "Block"}`,
+            `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
+            `${isBlocked ? "Unblock" : "Block"}`,
+            "#d9534f"
+        );
+
+        if (result.isConfirmed) {
+            handleBlockUnblock();
+        }
     };
 
     const handleBlockUnblock = async () => {
@@ -81,7 +78,7 @@ const UserDetails = () => {
     }, [error]);
 
     return (
-        <div className="col-md-6 my-3 mx-auto">
+        <div className="col-10 my-3 mx-auto">
             {user ? (
                 <div className="p-3 p-lg-5 border">
                     <div>
@@ -156,14 +153,10 @@ const UserDetails = () => {
                             </div>
                         </div>
                         <div className="col-md-12">
-                            <label>Lives In</label>
-                            <textarea
-                                type="text"
-                                className="form-control"
-                                name="location"
-                                defaultValue={(user.location && Object.values(user.location).length) ? (
-                                    `${user.location.road}, ${user.location.village}, \n ${user.location.district}, ${user.location.state}, \n ${user.location.postcode}`
-                                ) : "No Location provided"}
+                            <Address
+                                label={"Lives In"}
+                                currentAddress={user.location}
+                                usage={"admin"}
                             />
                         </div>
                         <button

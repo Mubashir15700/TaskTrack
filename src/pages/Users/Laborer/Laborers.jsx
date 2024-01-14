@@ -29,7 +29,7 @@ const Laborers = () => {
   }, [searchResults]);
 
   return (
-    <div className="col-md-10 mx-auto mt-3">
+    <div className="col-10 mx-auto mt-3">
       <h3 className="mb-2">Laborers</h3>
       <div className="row">
         {laborers.length ? (

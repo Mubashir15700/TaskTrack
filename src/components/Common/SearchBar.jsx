@@ -1,0 +1,36 @@
+
+const SearchBar = ({ role, onSearch, onSelect }) => {
+    return (
+        <form className="d-flex input-group search-form" role="search">
+            <input
+                className="form-control search-input"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+                onChange={onSearch}
+            />
+            <select
+                className="form-select search-select"
+                id="inputGroupSelect03"
+                onChange={(e) => onSelect(e.target.value)}
+            >
+                {role === "user" ? (
+                    <>
+                        <option value="laborers">Laborers</option>
+                        <option value="jobs">Jobs</option>
+                    </>
+
+                ) : (
+                    <>
+                        <option value="employers">Employers</option>
+                        <option value="laborers">Laborers</option>
+                        <option value="plans">Plans</option>
+                        <option value="banners">Banners</option>
+                    </>
+                )}
+            </select>
+        </form>
+    );
+};
+
+export default SearchBar;

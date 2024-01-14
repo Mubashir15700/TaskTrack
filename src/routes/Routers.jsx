@@ -11,6 +11,7 @@ const Contact = lazy(() => import("../pages/Users/Contact"));
 const Notifications = lazy(() => import("../pages/Users/Notifications"));
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
+const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
 const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
 const Dashboard = lazy(() => import("../pages/Admin/Dashboard"));
 const Users = lazy(() => import("../pages/Admin/Users/Users"));
@@ -20,7 +21,7 @@ import LoadingSpinner from "../components/Common/LoadingSpinner";
 import Account from "../pages/Users/Account";
 import Profile from "../pages/Users/Profile";
 import JobDetails from "../pages/Users/Job/JobDetails";
-import PostJob from "../pages/Users/Job/PostJob/PostJob";
+import PostJob from "../pages/Users/Job/PostJob";
 import LaborerDetails from "../pages/Users/Laborer/LaborerDetails";
 import Login from "../pages/Users/Auth/Login/Login";
 import SignUp from "../pages/Users/Auth/SignUp/SignUp";
@@ -80,6 +81,7 @@ const Routers = () => {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
           <Route path="/jobs/listed-jobs" element={isUserLoggedIn ? <ListedJobs /> : <Navigate to="/login" />} />
+          <Route path="/jobs/listed-jobs/:id" element={isUserLoggedIn ? <EditListedJob /> : <Navigate to="/login" />} />
           <Route path="/laborers" element={<Laborers />} />
           <Route path="/laborers/:id" element={<LaborerDetails />} />
           <Route path="/login" element={!isUserLoggedIn ? <Login role={"user"} /> : <Navigate to="/" />} />

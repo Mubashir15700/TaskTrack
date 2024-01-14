@@ -7,11 +7,12 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
 
   const searchResults = useSelector(state => state.user.searchResults);
+  const currentUserId = useSelector(state => state.user.userData._id);
 
   useEffect(() => {
     const getAllJobs = async () => {
       try {
-        const response = await getJobs();
+        const response = await getJobs({ currentUserId });
         if (response && response.data.status === "success") {
           console.log(response.data.jobs);
           setJobs(response.data.jobs);
@@ -34,18 +35,22 @@ const Jobs = () => {
       {
         jobs.length ? (
           jobs.map((job, index) => (
-            <div className="card" key={index}>
+            <div className="card mb-3" key={index}>
               <div className="card-header">
                 {job.title}
               </div>
               <div className="card-body d-flex flex-wrap justify-content-between">
                 <div className="col-md-3 col-12 mb-3">
-                  <img
-                    src={`http://localhost:3000/uploads/profile/${job.userDetails?.profile}`}
-                    alt="emp-profile"
-                    className="img-fluid"
-                    width={"50px"}
-                  />
+                  {job.userDetails.profile ? (
+                    <img
+                      src={`http://localhost:3000/uploads/profile/${job.userDetails?.profile}`}
+                      alt="emp-profile"
+                      className="img-fluid"
+                      width={"50px"}
+                    />
+                  ) : (
+                    <i className="bi bi-person-circle fs-1 mb-3"></i>
+                  )}
                   <p>{job.userDetails.username}</p>
                 </div>
                 <div className="col-md-6 col-12 mb-3">
@@ -54,10 +59,10 @@ const Jobs = () => {
                   <p className="mb-1">Posted on: {new Date(job.postedAt).toLocaleString()}</p>
                 </div>
                 <div className="col-md-3 col-12 mb-3">
+                  <p>Status: {job.status}</p>
                   <Link to={`/jobs/${job._id}`} className="btn btn-primary btn-block">View More</Link>
                 </div>
               </div>
-
             </div>
           ))
         ) : (

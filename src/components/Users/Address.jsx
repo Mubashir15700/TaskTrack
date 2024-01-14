@@ -177,7 +177,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         </div>
                     </div>
                 )}
-                {usage !== "display-job" && (
+                {(usage !== "display-job" && usage !== "admin") && (
                     <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
                         <button
                             className="btn btn-primary col-md-5 my-sm-1"

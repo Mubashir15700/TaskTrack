@@ -24,38 +24,36 @@ const ListedJobs = () => {
     }, []);
 
     return (
-        <div className="col-md-10 mx-auto mt-3">
-            <h3 className="mb-2">View listed jobs</h3>
-            {jobs.length ? (
-                jobs.map((job, index) => (
-                    <div className="d-flex flex-md-row border p-3 mb-2" key={index}>
-                        <div className="col-md-3 col-12 mb-5">
-                            <p>{job.date}</p>
-                            <p>{job.time}</p>
-                            <p>Duration: {job.duration}(hrs)</p>
-                        </div>
-                        <div className="d-flex col-md-8 col-12 flex-column flex-md-row">
-                            <div className="col-md-8">
-                                <span className="d-block text-primary h6 text-uppercase">
-                                    {job.title}
-                                </span>
-                                <p>
-                                    {job.description}
-                                </p>
+        <div className="col-10 mx-auto mt-3">
+            <h3 className="mb-4">Your Listed Jobs</h3>
+            {
+                jobs.length ? (
+                    jobs.map((job, index) => (
+                        <div className="card mb-3" key={index}>
+                            <div className="card-header">
+                                {job.title}
                             </div>
-                            <div className="">
-                                <Link to={`/jobs/${job._id}`} className="btn btn-primary">
-                                    View
-                                </Link>
+                            <div className="card-body d-flex flex-wrap justify-content-between">
+                                <div className="col-md-6 col-12 mb-3">
+                                    <p className="card-text">{job.description}</p>
+                                    <p className="mb-1">Location: {job.location.village}, {job.location.district}</p>
+                                    <p className="mb-1">Posted on: {new Date(job.postedAt).toLocaleString()}</p>
+                                </div>
+                                <div className="col-md-3 col-12 mb-3">
+                                    <p>Status: {job.status}</p>
+                                    <Link to={`/jobs/listed-jobs/${job._id}`} className="btn btn-primary btn-block">
+                                        Edit
+                                    </Link>
+                                </div>
                             </div>
                         </div>
+                    ))
+                ) : (
+                    <div>
+                        You haven't listed any jobs yet
                     </div>
-                ))
-            ) : (
-                <div>
-                    No data found
-                </div>
-            )}
+                )
+            }
         </div>
     );
 };

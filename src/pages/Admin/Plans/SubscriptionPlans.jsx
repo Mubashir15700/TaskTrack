@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import DataTable from "react-data-table-component";
+import { useState } from "react";
+import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 
 const columns = [
   {
@@ -83,22 +83,21 @@ const customStyles = {
 };
 
 const SubscriptionPlans = () => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(2);
+
   return (
-    <>
-      <div className="mt-3 w-75 mx-auto">
-        <div className="d-flex justify-content-between">
-          <h5>Subscription Plans</h5>
-          <Link to={`/admin/subscription-plans/add-plan`} className="btn btn-sm btn-outline-primary">
-            +
-          </Link>
-        </div>
-        <DataTable
-          columns={columns}
-          data={data}
-          customStyles={customStyles}
-        />
-      </div>
-    </>
+    <TableDataDisplay
+      heading={"Subscription Plans"}
+      itemsPerPage={itemsPerPage}
+      onItemsPerPageChange={(value) => setItemsPerPage(value)}
+      addLink={"/admin/subscription-plans/add-plan"}
+      dataTableColumns={columns}
+      dataTableData={data}
+      pageCount={pageCount}
+      onPageChange={({ selected }) => setCurrentPage(selected)}
+    />
   );
 };
 

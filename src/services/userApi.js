@@ -9,6 +9,7 @@ export const getActiveBanners = async () => {
     }
 };
 
+// profile
 export const updateProfile = async (data, id) => {
     try {
         return await axios.put(`/update-profile?id=${id}`, data);
@@ -45,6 +46,7 @@ export const deleteLocation = async (id) => {
     }
 };
 
+// laborers
 export const getLaborers = async () => {
     try {
         return await axios.get(`/get-laborers`);
@@ -63,20 +65,21 @@ export const getLaborer = async (data) => {
     }
 };
 
+// jobs
+export const getJobs = async (data) => {
+    try {
+        return await axios.get(`/get-jobs`, { params: data });
+    } catch (error) {
+        console.log("get jobs error: ", error);
+        return error.response;
+    }
+};
+
 export const getListedJobs = async (data) => {
     try {
         return await axios.get(`/get-listed-jobs/${data}`);
     } catch (error) {
         console.log("get listed jobs error: ", error);
-        return error.response;
-    }
-};
-
-export const getJobs = async () => {
-    try {
-        return await axios.get(`/get-jobs`);
-    } catch (error) {
-        console.log("get jobs error: ", error);
         return error.response;
     }
 };
@@ -90,11 +93,29 @@ export const getJob = async (data) => {
     }
 };
 
-export const editJob = async (id, data) => {
+export const getListedJob = async (data) => {
     try {
-        return await axios.put(`/edit-job/${id}`, data);
+        return await axios.get(`/get-listed-job/${data}`);
     } catch (error) {
-        console.log("edit job error: ", error);
+        console.log("get listed job error: ", error);
+        return error.response;
+    }
+};
+
+export const updateListedJob = async (data) => {
+    try {
+        return await axios.put(`/edit-listed-job`, data);
+    } catch (error) {
+        console.log("edit listed job error: ", error);
+        return error.response;
+    }
+};
+
+export const deleteListedJob = async (data) => {
+    try {
+        return await axios.delete(`/delete-listed-job/${data}`);
+    } catch (error) {
+        console.log("delete listed job error: ", error);
         return error.response;
     }
 };

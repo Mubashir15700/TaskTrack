@@ -26,7 +26,7 @@ const JobDetails = () => {
 
   return (
     <div className="col-md-8 col-10 my-3 mx-auto">
-      <h3 className="mb-4">Job</h3>
+      <h3 className="mb-4">{job.title}</h3>
       {
         job ? (
           <div className="card">
@@ -35,11 +35,17 @@ const JobDetails = () => {
             </div>
             <div className="card-body d-flex flex-column flex-md-row justify-content-between">
               <div>
-                <img src={`http://localhost:3000/uploads/profile/${job?.userDetails?.profile}`} alt="emp-profile" />
+                {job.userDetails?.profile ? (
+                  <img src={`http://localhost:3000/uploads/profile/${job?.userDetails?.profile}`} alt="emp-profile" />
+                ) : (
+                  <i className="bi bi-person-circle fs-1 mb-3"></i>
+                )}
                 <p className="">{job?.userDetails?.username}</p>
               </div>
               <div>
                 <p className="card-text">{job.description}</p>
+              </div>
+              <div>
                 <p className="">
                   Posted on: {new Date(job.postedAt).toLocaleString()}
                 </p>
@@ -65,6 +71,7 @@ const JobDetails = () => {
                       <p className="mb-1"><strong>Wage Per Hour:</strong> {field.wagePerHour}</p>
                     </div>
                     <div className="col-md-3">
+                      <p>Status: {job.status}</p>
                       <button className="btn btn-outline-primary">Express Interest</button>
                     </div>
                   </div>

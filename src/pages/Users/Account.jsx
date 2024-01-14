@@ -7,9 +7,9 @@ const Account = () => {
     const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
 
     return (
-        <div className="col-8 my-5 mx-auto d-md-flex align-items-center">
+        <div className="col-10 my-5 mx-auto d-md-flex align-items-center">
             {/* user profile view */}
-            <div className="card mb-3">
+            <div className="col-md-3 card mb-3">
                 <div className="card-body text-center">
                     {currentUser.profile ? (
                         <img

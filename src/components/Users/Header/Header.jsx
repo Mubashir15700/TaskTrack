@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoading, setLoggedIn, setSearchResults } from "../../../redux/slices/userSlice";
+import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/userSlice";
+import NavDropDown from "../../Common/NavDropDown";
+import SearchBar from "../../Common/SearchBar";
+import SweetAlert from "../../Common/SweetAlert";
 import { search } from "../../../services/adminApi";
 import { logout } from "../../../services/authApi";
 import logo from "../../../assets/images/logo.png";
@@ -17,23 +19,6 @@ const Header = () => {
 
   const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");
-
-  const confirmLogout = () => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Are you sure you want to log out?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancel",
-      confirmButtonText: "Logout",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleLogout();
-      }
-    });
-  };
 
   const handleSearch = async (e) => {
     try {
@@ -70,6 +55,23 @@ const Header = () => {
     }
   };
 
+  const changeSearchSelect = (selectedValue) => {
+    setSearchSelect(selectedValue);
+  };
+
+  const confirmLogout = async () => {
+    const result = await SweetAlert.confirmAction(
+      "Log Out",
+      "Are you sure you want to log out?",
+      "Logout",
+      "#d9534f"
+    );
+
+    if (result.isConfirmed) {
+      handleLogout();
+    }
+  };
+
   const handleLogout = async () => {
     dispatch(setLoading(true));
 
@@ -82,7 +84,7 @@ const Header = () => {
       console.log("logout error: ", response);
     }
     dispatch(setLoading(false));
-  }
+  };
 
   useEffect(() => {
     error && toast.error(error);
@@ -123,54 +125,21 @@ const Header = () => {
               </NavLink>
             </li>
           </ul>
-          {isLoggedIn &&
-            <div className="d-flex align-items-center mb-sm-3 mb-md-3 mb-lg-0">
+          {isLoggedIn && (
+            <>
               <NavLink to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit" >Post Job</NavLink>
-              <div className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i className="bi bi-caret-down-square-fill"></i>
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink to="/account" className="dropdown-item" aria-current="page">
-                      <i className="bi bi-person-circle"></i> Account
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink to="/notifications" className="dropdown-item" aria-current="page">
-                      <i className="bi bi-bell"></i> Notifications
-                    </NavLink>
-                  </li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button type="button" className="btn btn-danger logout-btn" onClick={confirmLogout}>
-                      <i className="bi bi-power"></i> Logout
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          }
-          <form className="d-flex input-group search-form" role="search">
-            <input
-              className="form-control search-input"
-              type="search" placeholder="Search"
-              aria-label="Search"
-              onChange={handleSearch}
-            />
-            <select
-              className="form-select search-select"
-              id="inputGroupSelect03"
-              onChange={(e) => setSearchSelect(e.target.value)}
-            >
-              <option value="laborers">Laborers</option>
-              <option value="jobs">Jobs</option>
-            </select>
-          </form>
+              <NavDropDown role={"user"} onLogoutClick={confirmLogout} />
+            </>
+          )}
+          <SearchBar role={"user"} onSearch={handleSearch} onSelect={changeSearchSelect} />
           {!isLoggedIn &&
             <div className="login-signup-btn-div">
-              <NavLink to="/login" type="button" className="btn btn-light header-login-btn">Login</NavLink>
-              <NavLink to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">Sign Up</NavLink>
+              <NavLink to="/login" type="button" className="btn btn-light header-login-btn">
+                Login
+              </NavLink>
+              <NavLink to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">
+                Sign Up
+              </NavLink>
             </div>
           }
         </div>

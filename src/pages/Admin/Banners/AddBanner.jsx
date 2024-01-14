@@ -70,45 +70,44 @@ const AddBanner = () => {
     };
 
     return (
-        <div className="col-md-8 my-3 mx-auto">
+        <div className="col-8 my-3 mx-auto">
             <div className="p-3 p-lg-5 border">
-                <div>
-                    <div className="col-md-12">
-                        <label>Title</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="title"
-                            onChange={handleInputChange}
-                        />
-                        {errors.title && <span className="error-display">{errors.title}</span>}
-                    </div>
-                    <div className="col-md-12">
-                        <label>Description</label>
-                        <textarea
-                            type="text"
-                            className="form-control"
-                            name="description"
-                            onChange={handleInputChange}
-                        />
-                        {errors.description && <span className="error-display">{errors.description}</span>}
-                    </div>
-                    <div className="col-md-12">
-                        <ImageCrop onNewImageUrl={addCropImage} purpose={"banner"} />
-                        {errors.image && <span className="error-display">{errors.image}</span>}
-                    </div>
-                    <button
-                        className={`btn btn-primary mt-3`}
-                        onClick={handleAddBanner}
-                    >
-                        Add Banner
-                    </button>
-                    {serverResponse && (
-                        <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
-                            {serverResponse.message}
-                        </div>
-                    )}
+                <h5 className="mb-3">Add Banner</h5>
+                <div className="col-md-12">
+                    <label>Title</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="title"
+                        onChange={handleInputChange}
+                    />
+                    {errors.title && <span className="error-display">{errors.title}</span>}
                 </div>
+                <div className="col-md-12">
+                    <label>Description</label>
+                    <textarea
+                        type="text"
+                        className="form-control"
+                        name="description"
+                        onChange={handleInputChange}
+                    />
+                    {errors.description && <span className="error-display">{errors.description}</span>}
+                </div>
+                <div className="col-md-12">
+                    <ImageCrop onNewImageUrl={addCropImage} purpose={"banner"} />
+                    {errors.image && <span className="error-display">{errors.image}</span>}
+                </div>
+                <button
+                    className={`btn btn-primary mt-3`}
+                    onClick={handleAddBanner}
+                >
+                    Add Banner
+                </button>
+                {serverResponse && (
+                    <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                        {serverResponse.message}
+                    </div>
+                )}
             </div>
         </div>
     );

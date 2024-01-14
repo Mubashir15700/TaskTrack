@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
-import DataTable from "react-data-table-component";
-import Pagination from "../../../components/Common/Pagination";
+import SweetAlert from "../../../components/Common/SweetAlert";
+import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 import { getUsers, userAction } from "../../../services/adminApi";
 
 const Users = () => {
@@ -46,21 +45,17 @@ const Users = () => {
     }
   }, [currentPage, searchResults, itemsPerPage]);
 
-  const confirmBlockUnblock = (userId, isBlocked) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancel",
-      confirmButtonText: isBlocked ? "Unblock" : "Block",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleBlockUnblock(userId);
-      }
-    });
+  const confirmBlockUnblock = async (userId, isBlocked) => {
+    const result = await SweetAlert.confirmAction(
+      `${isBlocked ? "Unblock" : "Block"}`,
+      `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
+      `${isBlocked ? "Unblock" : "Block"}`,
+      "#d9534f"
+    );
+
+    if (result.isConfirmed) {
+      handleBlockUnblock(userId);
+    }
   };
 
   const handleBlockUnblock = async (userId) => {
@@ -153,39 +148,15 @@ const Users = () => {
   ];
 
   return (
-    <div className="mt-3 w-75 mx-auto text-center">
-      <div className="d-md-flex justify-content-between flex-md-row flex-column">
-        <h5>Users</h5>
-        {/* Dropdown for selecting items per page */}
-        <div className="mb-3">
-          <label htmlFor="itemsPerPage" className="form-label">Items Per Page:</label>
-          <select
-            id="itemsPerPage"
-            className=""
-            value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-          </select>
-        </div>
-      </div>
-      <DataTable
-        columns={columns}
-        data={users}
-        className="mb-2"
-      />
-      {itemsPerPage > users.length && (
-        <p className="">No more data found</p>
-      )}
-      <Pagination
-        pageCount={pageCount}
-        onPageChange={
-          ({ selected }) => setCurrentPage(selected)
-        }
-      />
-    </div>
+    <TableDataDisplay
+      heading={"Users"}
+      itemsPerPage={itemsPerPage}
+      onItemsPerPageChange={(value) => setItemsPerPage(value)}
+      dataTableColumns={columns}
+      dataTableData={users}
+      pageCount={pageCount}
+      onPageChange={({ selected }) => setCurrentPage(selected)}
+    />
   );
 };
 

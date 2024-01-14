@@ -2,23 +2,22 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
-import Swal from "sweetalert2";
 import toast from "react-hot-toast";
-import DataTable from "react-data-table-component";
-import Pagination from "../../../components/Common/Pagination";
+import SweetAlert from "../../../components/Common/SweetAlert";
+import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 import { getBanners, bannerAction } from "../../../services/adminApi";
 
 const Banners = () => {
+
   const dispatch = useDispatch();
 
   const [banners, setBanners] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(1);
 
   const searchResults = useSelector(state => state.admin.searchResults);
-
-  const itemsPerPage = 3;
 
   useEffect(() => {
     const getAllBanners = async () => {
@@ -44,23 +43,19 @@ const Banners = () => {
     } else {
       getAllBanners();
     }
-  }, [currentPage, searchResults]);
+  }, [currentPage, searchResults, itemsPerPage]);
 
-  const confirmListUnlist = (bannerId, isActive) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: `Are you sure you want to ${isActive ? "Unlist" : "List"} this banner?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      cancelButtonText: "Cancel",
-      confirmButtonText: isActive ? "Unlist" : "List",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        handleListUnlist(bannerId);
-      }
-    });
+  const confirmListUnlist = async (bannerId, isActive) => {
+    const result = await SweetAlert.confirmAction(
+      `${isActive ? "Unlist" : "List"} banner`,
+      `Are you sure you want to ${isActive ? "Unlist" : "List"} this banner?`,
+      isActive ? "Unlist" : "List",
+      "#d9534f"
+    );
+
+    if (result.isConfirmed) {
+      handleListUnlist(bannerId);
+    }
   };
 
   const handleListUnlist = async (bannerId) => {
@@ -110,7 +105,7 @@ const Banners = () => {
         <img
           src={`http://localhost:3000/uploads/banner/${row?.image}`}
           alt="Banner"
-          style={{ width: "150px", height: "100px" }}
+          style={{ width: "150px", height: "100px", margin: "5px" }}
         />
       ),
     },
@@ -138,27 +133,16 @@ const Banners = () => {
   ];
 
   return (
-    <>
-      <div className="mt-3 w-75 mx-auto">
-        <div className="d-flex justify-content-between">
-          <h5>Banners</h5>
-          <Link to={`/admin/banners/add-banner`} className="btn btn-sm btn-outline-primary">
-            +
-          </Link>
-        </div>
-        <DataTable
-          columns={columns}
-          data={banners}
-          className="mb-2"
-        />
-        <Pagination
-          pageCount={pageCount}
-          onPageChange={
-            ({ selected }) => setCurrentPage(selected)
-          }
-        />
-      </div>
-    </>
+    <TableDataDisplay
+      heading={"Banners"}
+      itemsPerPage={itemsPerPage}
+      onItemsPerPageChange={(value) => setItemsPerPage(value)}
+      addLink={"/admin/banners/add-banner"}
+      dataTableColumns={columns}
+      dataTableData={banners}
+      pageCount={pageCount}
+      onPageChange={({ selected }) => setCurrentPage(selected)}
+    />
   );
 };
 
