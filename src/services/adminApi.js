@@ -85,7 +85,7 @@ export const bannerAction = async (data) => {
     }
 };
 
-export const getplans = async (itemsPerPage, currentPage) => {
+export const getPlans = async (itemsPerPage, currentPage) => {
     try {
         return await axios.get(
             `/admin/plans?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
@@ -116,7 +116,7 @@ export const addPlan = async (data) => {
 
 export const editPlan = async (data) => {
     try {
-        return await axios.put(`/admin/edit-plan/${data}`);
+        return await axios.put(`/admin/edit-plan/${data._id}`, data);
     } catch (error) {
         console.log("edit plan error: ", error);
         return error.response;
@@ -128,6 +128,26 @@ export const planAction = async (data) => {
         return await axios.patch(`/admin/plan-action/${data}`);
     } catch (error) {
         console.log("plan action error: ", error);
+        return error.response;
+    }
+};
+
+export const getRequests = async (itemsPerPage, currentPage) => {
+    try {
+        return await axios.get(
+            `/admin/requests?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
+        );
+    } catch (error) {
+        console.log("get requests error: ", error);
+        return error.response;
+    }
+};
+
+export const requestAction = async (id, data) => {
+    try {
+        return await axios.patch(`/admin/request-action/${id}`, data);
+    } catch (error) {
+        console.log("request action error: ", error);
         return error.response;
     }
 };

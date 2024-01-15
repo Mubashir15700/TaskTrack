@@ -11,6 +11,7 @@ const Contact = lazy(() => import("../pages/Users/Contact"));
 const Notifications = lazy(() => import("../pages/Users/Notifications"));
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
+const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
 const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
 const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
 const Dashboard = lazy(() => import("../pages/Admin/Dashboard"));
@@ -23,6 +24,9 @@ import Profile from "../pages/Users/Profile";
 import JobDetails from "../pages/Users/Job/JobDetails";
 import PostJob from "../pages/Users/Job/PostJob";
 import LaborerDetails from "../pages/Users/Laborer/LaborerDetails";
+import Requests from "../pages/Admin/Requests";
+import RequestDetails from "../pages/Admin/RequestDetails";
+import Form from "../pages/Users/Laborer/BecomeLaborerForm/Form";
 import Login from "../pages/Users/Auth/Login/Login";
 import SignUp from "../pages/Users/Auth/SignUp/SignUp";
 import Email from "../pages/Users/Auth/Email/Email";
@@ -81,9 +85,11 @@ const Routers = () => {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
           <Route path="/jobs/listed-jobs" element={isUserLoggedIn ? <ListedJobs /> : <Navigate to="/login" />} />
+          <Route path="/jobs/works-history" element={isUserLoggedIn ? <WorksHistory /> : <Navigate to="/login" />} />
           <Route path="/jobs/listed-jobs/:id" element={isUserLoggedIn ? <EditListedJob /> : <Navigate to="/login" />} />
           <Route path="/laborers" element={<Laborers />} />
           <Route path="/laborers/:id" element={<LaborerDetails />} />
+          <Route path="/become-laborer-form" element={isUserLoggedIn ? <Form /> : <Navigate to="/login" />} />
           <Route path="/login" element={!isUserLoggedIn ? <Login role={"user"} /> : <Navigate to="/" />} />
           <Route path="/sign-up" element={!isUserLoggedIn ? <SignUp /> : <Navigate to="/" />} />
           <Route path="/verify-email" element={!isUserLoggedIn ? <Email /> : <Navigate to="/" />} />
@@ -94,6 +100,8 @@ const Routers = () => {
           <Route path="/admin/login" element={!isAdminLoggedIn ? <Login role={"admin"} /> : <Navigate to="/admin" />} />
           <Route path="/admin/users" element={isAdminLoggedIn ? <Users /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/users/:id" element={isAdminLoggedIn ? <UserDetails /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/laborer-requests" element={isAdminLoggedIn ? <Requests /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/laborer-requests/view-request-details/:id" element={isAdminLoggedIn ? <RequestDetails /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/subscription-plans" element={isAdminLoggedIn ? <SubscriptionPlans /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/subscription-plans/add-plan" element={isAdminLoggedIn ? <AddPlan /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/subscription-plans/edit-plan/:id" element={isAdminLoggedIn ? <EditPlan /> : <Navigate to="/admin/login" />} />

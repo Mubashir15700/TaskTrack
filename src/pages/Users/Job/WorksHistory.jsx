@@ -1,0 +1,67 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getWorksHistory } from "../../../services/userApi";
+
+const WorksHistory = () => {
+    const currentUserId = useSelector((state) => state.user.userData._id);
+    const isJobSeeker = useSelector((state) => state.user.userData.isJobSeeker);
+
+    const [works, setWorks] = useState([]);
+
+    useEffect(() => {
+        const getAllWorksHistory = async () => {
+            try {
+                const response = await getWorksHistory(currentUserId);
+                if (response && response.data.status === "success") {
+                    setWorks(response.data.works);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getAllWorksHistory();
+    }, []);
+
+    return (
+        <div className="col-10 mx-auto mt-3">
+            <h3 className="mb-4">Your Work History</h3>
+            {
+                works.length ? (
+                    works.map((work, index) => (
+                        <div className="card mb-3" key={index}>
+                            <div className="card-header">
+                                {work.title}
+                            </div>
+                            <div className="card-body d-flex flex-wrap justify-content-between">
+                                <div className="col-md-6 col-12 mb-3">
+                                    <p className="card-text">{work.description}</p>
+                                    <p className="mb-1">Location: {work.location.village}, {work.location.district}</p>
+                                    <p className="mb-1">Posted on: {new Date(work.postedAt).toLocaleString()}</p>
+                                </div>
+                                <div className="col-md-3 col-12 mb-3">
+                                    <p>Status: {work.status}</p>
+                                    <Link to={`/jobs/listed-jobs/${work._id}`} className="btn btn-primary btn-block">
+                                        Edit
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <div className="d-flex justify-content-center align-items-center flex-column">
+                        <p>You haven't done any works yet</p>
+                        {!isJobSeeker && (
+                            <Link to="/become-laborer-form">
+                                You wanna Become a Laborer?
+                            </Link>
+                        )}
+                    </div>
+                )
+            }
+        </div>
+    );
+};
+
+export default WorksHistory;

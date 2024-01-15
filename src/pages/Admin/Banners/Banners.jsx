@@ -15,7 +15,7 @@ const Banners = () => {
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(2);
 
   const searchResults = useSelector(state => state.admin.searchResults);
 

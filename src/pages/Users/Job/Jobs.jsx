@@ -14,7 +14,6 @@ const Jobs = () => {
       try {
         const response = await getJobs({ currentUserId });
         if (response && response.data.status === "success") {
-          console.log(response.data.jobs);
           setJobs(response.data.jobs);
         }
       } catch (error) {
@@ -41,7 +40,7 @@ const Jobs = () => {
               </div>
               <div className="card-body d-flex flex-wrap justify-content-between">
                 <div className="col-md-3 col-12 mb-3">
-                  {job.userDetails.profile ? (
+                  {job.userDetails?.profile ? (
                     <img
                       src={`http://localhost:3000/uploads/profile/${job.userDetails?.profile}`}
                       alt="emp-profile"
@@ -51,11 +50,11 @@ const Jobs = () => {
                   ) : (
                     <i className="bi bi-person-circle fs-1 mb-3"></i>
                   )}
-                  <p>{job.userDetails.username}</p>
+                  <p>{job.userDetails?.username}</p>
                 </div>
                 <div className="col-md-6 col-12 mb-3">
                   <p className="card-text">{job.description}</p>
-                  <p className="mb-1">Location: {job.location.village}, {job.location.district}</p>
+                  <p className="mb-1">Location: {job.location?.village}, {job.location?.district}</p>
                   <p className="mb-1">Posted on: {new Date(job.postedAt).toLocaleString()}</p>
                 </div>
                 <div className="col-md-3 col-12 mb-3">

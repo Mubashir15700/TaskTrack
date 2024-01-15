@@ -14,7 +14,6 @@ const JobDetails = () => {
         const response = await getJob(id);
         if (response && response.data.status === "success") {
           setJob(response.data.job);
-          console.log(response.data.job);
         }
       } catch (error) {
         console.log(error);

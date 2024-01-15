@@ -31,7 +31,7 @@ const Account = () => {
                 <Link to="/jobs/listed-jobs" className="btn btn-outline-primary">
                     Listed Jobs
                 </Link>
-                <Link to="/work-history" className="btn btn-outline-primary">
+                <Link to="/jobs/works-history" className="btn btn-outline-primary">
                     Work History
                 </Link>
                 <Link to="/manage-subscription" className="btn btn-outline-primary">

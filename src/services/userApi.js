@@ -65,6 +65,15 @@ export const getLaborer = async (data) => {
     }
 };
 
+export const sendRequest = async (data) => {
+    try {
+        return await axios.post(`/send-request`, data);
+    } catch (error) {
+        console.log("send request error: ", error);
+        return error.response;
+    }
+};
+
 // jobs
 export const getJobs = async (data) => {
     try {
@@ -98,6 +107,15 @@ export const getListedJob = async (data) => {
         return await axios.get(`/get-listed-job/${data}`);
     } catch (error) {
         console.log("get listed job error: ", error);
+        return error.response;
+    }
+};
+
+export const getWorksHistory = async (data) => {
+    try {
+        return await axios.get(`/get-works-history/${data}`);
+    } catch (error) {
+        console.log("get works history error: ", error);
         return error.response;
     }
 };
