@@ -74,6 +74,33 @@ export const sendRequest = async (data) => {
     }
 };
 
+export const getPrevRequest = async (data) => {
+    try {
+        return await axios.get(`/get-prev-request/${data}`);
+    } catch (error) {
+        console.log("get prev request error: ", error);
+        return error.response;
+    }
+};
+
+export const updateRequest = async (data) => {
+    try {
+        return await axios.put(`/update-request`, data);
+    } catch (error) {
+        console.log("update request error: ", error);
+        return error.response;
+    }
+};
+
+export const cancelRequest = async (data) => {
+    try {
+        return await axios.patch(`/cancel-request`, data);
+    } catch (error) {
+        console.log("cancel request error: ", error);
+        return error.response;
+    }
+};
+
 // jobs
 export const getJobs = async (data) => {
     try {

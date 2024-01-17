@@ -45,20 +45,19 @@ const Requests = () => {
 
     const columns = [
         {
-            name: "Title",
-            selector: (row) => row.title,
+            name: "Requested On",
+            selector: (row) => new Date(row.createdAt).toLocaleString(),
             sortable: true,
         },
         {
-            name: "Description",
-            selector: (row) => row.description,
+            name: "Subject",
+            selector: () => "To become a laborer",
             sortable: true,
         },
         {
-            name: "Is Active",
-            selector: (row) => row.isActive,
+            name: "Status",
+            selector: (row) => row.status,
             sortable: true,
-            cell: row => row.isActive ? "Yes" : "No",
         },
         {
             name: "Actions",

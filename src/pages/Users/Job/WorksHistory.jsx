@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getWorksHistory } from "../../../services/userApi";
+import { getWorksHistory, getPrevRequest, cancelRequest } from "../../../services/userApi";
+import SweetAlert from "../../../components/Common/SweetAlert";
 
 const WorksHistory = () => {
     const currentUserId = useSelector((state) => state.user.userData._id);
     const isJobSeeker = useSelector((state) => state.user.userData.isJobSeeker);
 
     const [works, setWorks] = useState([]);
+    const [pendingRequest, setPendingRequest] = useState({});
 
     useEffect(() => {
         const getAllWorksHistory = async () => {
@@ -21,8 +24,64 @@ const WorksHistory = () => {
             }
         };
 
+        const getAnyPendingRequest = async () => {
+            try {
+                const response = await getPrevRequest(currentUserId);
+                if (response && response.data.status === "success") {
+                    const responseData = response.data.request;
+                    if (responseData) {
+                        const workData = {
+                            userId: responseData.userId,
+                            languages: responseData.languages,
+                            education: responseData.education,
+                            avlDays: responseData.avlDays,
+                            avlTimes: responseData.avlTimes,
+                            fields: responseData.fields,
+                            status: responseData.status,
+                        };
+                        setPendingRequest(workData);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
         getAllWorksHistory();
+        getAnyPendingRequest();
     }, []);
+
+    const confirmCancelRequest = async () => {
+        const result = await SweetAlert.confirmAction(
+            "Cancel Request",
+            "Are you sure you want to cancel this request?",
+            "Cancel",
+            "#d9534f"
+        );
+
+        if (result.isConfirmed) {
+            handleCancelRequest();
+        }
+    };
+
+    const handleCancelRequest = async () => {
+        try {
+            const response = await cancelRequest({ currentUserId });
+            if (response) {
+                if (response.data.status === "success") {
+                    toast.success("Cancelled request successfully");
+                    setPendingRequest(response.data.cancelResult);
+                } else {
+                    toast.error(response.data?.message);
+                }
+            } else {
+                toast.error("Failed to cancel request. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error cancelling request:", error);
+            toast.error("An error occurred while cancelling the request. Please try again.");
+        }
+    };
 
     return (
         <div className="col-10 mx-auto mt-3">
@@ -52,10 +111,27 @@ const WorksHistory = () => {
                 ) : (
                     <div className="d-flex justify-content-center align-items-center flex-column">
                         <p>You haven't done any works yet</p>
-                        {!isJobSeeker && (
-                            <Link to="/become-laborer-form">
-                                You wanna Become a Laborer?
-                            </Link>
+                        {(Object.values(pendingRequest).length > 0) && (pendingRequest.status === "pending") ? (
+                            <>
+                                <p>Your request to become laborer has been sent to admin</p>
+                                <div className="d-md-flex justify-content-between col-3">
+                                    <Link
+                                        to={"/become-laborer-form"}
+                                        {...(pendingRequest && { state: pendingRequest })}
+                                        className="btn btn-primary">
+                                        View Request
+                                    </Link>
+                                    <button className="btn btn-danger" onClick={confirmCancelRequest}>
+                                        Cancel Request
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            !isJobSeeker && (
+                                <Link to="/become-laborer-form">
+                                    You wanna become a laborer?
+                                </Link>
+                            )
                         )}
                     </div>
                 )

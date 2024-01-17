@@ -40,10 +40,6 @@ export const initializeUser = () => async (dispatch) => {
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
             const currentUser = response.data.currentUser;
-            if (response.data.currentUser.location) {
-                const locationObject = JSON.parse(response.data.currentUser.location);
-                currentUser.location = locationObject;
-            }
             dispatch(setUserData(currentUser));
         } else {
             dispatch(setLoggedIn(false));

@@ -32,6 +32,7 @@ const Layout = () => {
     "/admin/users",
     /^\/admin\/users\/[\w-]+\/?$/,
     "/admin/laborer-requests",
+    /^\/admin\/laborer-requests\/view-request-details\/[\w-]+\/?$/,
     "/admin/subscription-plans",
     "/admin/subscription-plans/add-plan",
     /^\/admin\/subscription-plans\/edit-plan\/([\w-]+)\/?$/,

@@ -143,9 +143,20 @@ export const getRequests = async (itemsPerPage, currentPage) => {
     }
 };
 
-export const requestAction = async (id, data) => {
+export const getRequest = async (data) => {
     try {
-        return await axios.patch(`/admin/request-action/${id}`, data);
+        return await axios.get(
+            `/admin/request/${data}`
+        );
+    } catch (error) {
+        console.log("get request error: ", error);
+        return error.response;
+    }
+};
+
+export const requestAction = async (id, type) => {
+    try {
+        return await axios.patch(`/admin/request-action/${id}`, type);
     } catch (error) {
         console.log("request action error: ", error);
         return error.response;

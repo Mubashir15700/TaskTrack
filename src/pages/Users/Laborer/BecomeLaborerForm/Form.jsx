@@ -1,36 +1,39 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { sendRequest } from "../../../../services/userApi";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserData as updateUserData } from "../../../../redux/slices/userSlice";
+import toast from "react-hot-toast";
+import { sendRequest, updateRequest } from "../../../../services/userApi";
 import { profileSchema, workSchema } from "../../../../validations/userValidations/becomeLaborerSchema";
 import SubForm1 from "./SubForm1";
 import SubForm2 from "./SubForm2";
 // import SubForm3 from "./SubForm3";
 
 function Form() {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const prevRequest = location.state;
+
     const currentUser = useSelector((state) => state.user.userData);
 
-    const [userData, setUserData] = useState({
-        username: currentUser?.username,
-        phone: currentUser?.phone,
-        email: currentUser?.email,
-        location: currentUser?.location
-    });
+    const [userData, setUserData] = useState(currentUser || {});
+
+    const defaultField = {
+        name: "",
+        worksDone: undefined,
+        wagePerHour: undefined,
+    };
 
     const [workData, setWorkData] = useState({
         userId: currentUser?._id,
-        languages: "",
-        education: "",
-        avlDays: null,
-        avlTimes: null,
-        fields: [
-            {
-                name: "",
-                worksDone: 0,
-                wagePerHour: undefined,
-            },
-        ],
+        languages: prevRequest?.languages ?? "",
+        education: prevRequest?.education ?? "",
+        avlDays: prevRequest?.avlDays,
+        avlTimes: prevRequest?.avlTimes,
+        fields: prevRequest?.fields ?? [defaultField],
     });
-
     // const [formData, setFormData] = useState({
     //     email: "",
     //     password: "",
@@ -62,7 +65,7 @@ function Form() {
     const handleAddField = () => {
         setWorkData({
             ...workData,
-            fields: [...workData.fields, { name: "", worksDone: 0, wagePerHour: undefined }],
+            fields: [...workData.fields, { name: "", worksDone: undefined, wagePerHour: undefined }],
         });
     };
 
@@ -100,6 +103,15 @@ function Form() {
             // />;
         }
     };
+
+    const isLastPage = page === FormTitles.length - 1;
+    const isUpdate = isLastPage && prevRequest;
+    const buttonLabel = isLastPage ?
+        isUpdate ?
+            "Update" :
+            "Submit"
+        :
+        "Next";
 
     const handleClick = async () => {
         try {
@@ -143,8 +155,31 @@ function Form() {
                     userData: (Object.keys(userDataToUpdate).length > 1 ? { ...userDataToUpdate } : {}),
                     ...workData
                 };
-                const response = await sendRequest({ formData });
-                console.log(response);
+
+                let response;
+                if (prevRequest && Object.values(prevRequest)?.length) {
+                    response = await updateRequest({ formData });
+                } else {
+                    response = await sendRequest({ formData });
+                }
+
+                if (response) {
+                    if (response.data.status === "success") {
+                        if (response.data?.updatedProfile) {
+                            const currentUser = response.data.updatedProfile;
+                            dispatch(updateUserData(currentUser));
+                        }
+                        if (response.data?.updatedRequest) {
+                            setWorkData(response.data.updatedRequest);
+                        }
+                        toast.success("Your request has been sent");
+                        navigate("/jobs/works-history");
+                    } else {
+                        toast.error(`Error: ${response.data.message}`);
+                    }
+                } else {
+                    toast.error("Unexpected response structure");
+                }
             } else {
                 // If no errors, proceed to the next form
                 setPage((currPage) => currPage + 1);
@@ -201,7 +236,7 @@ function Form() {
                         onClick={handleClick}
                         className="btn btn-primary"
                     >
-                        {page === FormTitles.length - 1 ? "Submit" : "Next"}
+                        {buttonLabel}
                     </button>
                 </div>
                 {serverResponse && (

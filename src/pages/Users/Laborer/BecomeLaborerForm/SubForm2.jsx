@@ -55,7 +55,7 @@ function SubForm2(
                 <div className="col-md-6">
                     <label>Available Days</label>
                     <Select
-                        defaultValue={formData.avlDays}
+                        defaultValue={SelectDayoptions.filter((option) => formData.avlDays?.includes(option.value))}
                         options={SelectDayoptions}
                         onChange={(selectedOptions) => {
                             // Extract the values from selectedOptions
@@ -71,7 +71,7 @@ function SubForm2(
                 <div className="col-md-6">
                     <label>Available Times</label>
                     <Select
-                        defaultValue={formData.avlTimes}
+                        defaultValue={SelectTimeoptions.filter((option) => formData.avlTimes?.includes(option.value))}
                         options={SelectTimeoptions}
                         onChange={(selectedOptions) => {
                             // Extract the values from selectedOptions
@@ -136,10 +136,10 @@ function SubForm2(
                         </div>
                     </div>
                 ))}
-                <button type="button" className="btn" onClick={handleAddField}>
-                    <i className="bi bi-plus-circle"></i>
-                </button>
             </div>
+            <button type="button" className="btn" onClick={handleAddField}>
+                <i className="bi bi-plus-circle"></i>
+            </button>
         </>
     );
 };
