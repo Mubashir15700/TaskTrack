@@ -8,6 +8,7 @@ import { profileSchema, workSchema } from "../../../../validations/userValidatio
 import SubForm1 from "./SubForm1";
 import SubForm2 from "./SubForm2";
 // import SubForm3 from "./SubForm3";
+import socket from "../../../../socket/socket";
 
 function Form() {
     const dispatch = useDispatch();
@@ -174,6 +175,8 @@ function Form() {
                         }
                         toast.success("Your request has been sent");
                         navigate("/jobs/works-history");
+
+                        socket.emit("form_submit", formData);
                     } else {
                         toast.error(`Error: ${response.data.message}`);
                     }

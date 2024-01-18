@@ -10,6 +10,7 @@ import { search } from "../../../services/adminApi";
 import { logout } from "../../../services/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./AdminHeader.css";
+import socket from "../../../socket/socket";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -17,6 +18,22 @@ const Header = () => {
 
     const [searchSelect, setSearchSelect] = useState("employers");
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        socket.on("connect", () => {
+            socket.emit("admin_connect", { socketId: socket.id, role: "admin" })
+        });
+
+        socket.on("notify_form_submit", (data) => {
+            console.log("notify form submit: ", data);
+
+            toast.success("A new request received!");
+        });
+
+        return () => {
+            socket.off("connect");
+        };
+    }, [dispatch]);
 
     const handleSearch = async (e) => {
         if (e.target.value !== "") {

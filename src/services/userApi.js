@@ -182,3 +182,12 @@ export const logout = async (data) => {
         return (error.response);
     }
 };
+
+export const getUserNotificationCount = async (id) => {
+    try {
+        return await axios.get(`/notifications-count/${id}`);
+    } catch (error) {
+        console.log("get user notifications count error: ", error);
+        return error.response;
+    }
+};

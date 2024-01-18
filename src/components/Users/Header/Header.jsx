@@ -10,10 +10,21 @@ import { search } from "../../../services/adminApi";
 import { logout } from "../../../services/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./Header.css";
+import socket from "../../../socket/socket";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      socket.emit("user_connect", { socketId: socket.id, role: "user" })
+    });
+
+    return () => {
+      socket.off("connect");
+    };
+  }, [dispatch]);
 
   const isLoggedIn = useSelector(state => state.user.isLoggedIn);
 

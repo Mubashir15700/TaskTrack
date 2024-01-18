@@ -162,3 +162,12 @@ export const requestAction = async (id, type) => {
         return error.response;
     }
 };
+
+export const getAdminNotificationCount = async () => {
+    try {
+        return await axios.get("/admin/notifications-count");
+    } catch (error) {
+        console.log("get admin notifications count error: ", error);
+        return error.response;
+    }
+};

@@ -9,6 +9,7 @@ const Home = lazy(() => import("../pages/Users/Home"));
 const About = lazy(() => import("../pages/Users/About"));
 const Contact = lazy(() => import("../pages/Users/Contact"));
 const Notifications = lazy(() => import("../pages/Users/Notifications"));
+const NotificationDetails = lazy(() => import("../pages/Users/NotificationDetails"));
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
 const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
@@ -81,6 +82,7 @@ const Routers = () => {
           <Route path="/account" element={isUserLoggedIn ? <Account /> : <Navigate to="/login" />} />
           <Route path="/profile" element={isUserLoggedIn ? <Profile /> : <Navigate to="/login" />} />
           <Route path="/notifications" element={isUserLoggedIn ? <Notifications /> : <Navigate to="/login" />} />
+          <Route path="/notifications/:id" element={isUserLoggedIn ? <NotificationDetails /> : <Navigate to="/login" />} />
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
@@ -109,6 +111,7 @@ const Routers = () => {
           <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/notifications" element={isAdminLoggedIn ? <Notifications /> : <Navigate to="/admin/login" />} />
+          <Route path="/notifications/:id" element={isUserLoggedIn ? <NotificationDetails /> : <Navigate to="/admin/login" />} />
           {/* Errors */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
