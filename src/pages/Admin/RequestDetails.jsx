@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { getRequest, requestAction } from "../../services/adminApi";
 import Address from "../../components/Users/Address";
 import SweetAlert from "../../components/Common/SweetAlert";
+import socket from "../../socket/socket";
 
 const RequestDetails = () => {
     const dispatch = useDispatch();
@@ -20,7 +21,6 @@ const RequestDetails = () => {
             try {
                 // dispatch(setLoading(true));
                 const response = await getRequest(id);
-                console.log(response.data.request);
                 if (response && response.data.status === "success" && response.data.request) {
                     setRequest(response.data.request);
                 } else {
@@ -41,7 +41,7 @@ const RequestDetails = () => {
         const result = await SweetAlert.confirmAction(
             `${action}`,
             `Are you sure you want to ${action} this request?`,
-            `${action}`,
+            `${action === "approve" ? "Approve" : "Reject"}`,
             "#d9534f"
         );
 
@@ -59,6 +59,10 @@ const RequestDetails = () => {
                     if (updatedRequest && updatedRequest.data.status === "success") {
                         toast.success("Request successfully updated");
                         setRequest(updatedRequest.data.request);
+
+                        socket.emit("request_action", {
+                            userId: request.user._id, message: "Admin responded"
+                        });
                     } else {
                         setError("Failed to fetch updated request data.");
                     }
@@ -80,7 +84,7 @@ const RequestDetails = () => {
         <div className="col-10 my-3 mx-auto">
             {request ? (
                 <div className="p-3 p-lg-5 border">
-                    <div>
+                    {/* <div>
                         {request.user.profile ? (
                             <img
                                 src={`http://localhost:3000/uploads/profile/${request.user?.profile}`}
@@ -93,7 +97,7 @@ const RequestDetails = () => {
                                 <i className="bi bi-person-circle fs-1"></i>
                             </div>
                         )}
-                    </div>
+                    </div> */}
                     <div>
                         <div className="form-group row">
                             <div className="col-md-6">
@@ -102,7 +106,7 @@ const RequestDetails = () => {
                                     type="text"
                                     className="form-control"
                                     name="username"
-                                    // value={user?.username}
+                                    value={request?.user?.username}
                                     disabled
                                 />
                             </div>
@@ -112,7 +116,7 @@ const RequestDetails = () => {
                                     type="number"
                                     className="form-control"
                                     name="phone"
-                                    // value={user?.phone}
+                                    value={request?.user?.phone}
                                     disabled
                                 />
                             </div>
@@ -124,29 +128,7 @@ const RequestDetails = () => {
                                     type="email"
                                     className="form-control"
                                     name="email"
-                                    // value={user?.email}
-                                    disabled
-                                />
-                            </div>
-                        </div>
-                        <div className="form-group row">
-                            <div className="col-md-6">
-                                <label>Is Verified</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="username"
-                                    // value={user?.isVerified}
-                                    disabled
-                                />
-                            </div>
-                            <div className="col-md-6">
-                                <label>Is Job Seeker</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    name="phone"
-                                    // value={user?.isJobSeeker}
+                                    value={request?.user?.email}
                                     disabled
                                 />
                             </div>
@@ -154,9 +136,64 @@ const RequestDetails = () => {
                         <div className="col-md-12">
                             <Address
                                 label={"Lives In"}
-                                // currentAddress={user.location}
+                                currentAddress={request?.user?.location}
                                 usage={"admin"}
                             />
+                        </div>
+                        <div className="col-md-12 mt-3">
+                            <label>Languages Known</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="languages"
+                                value={request?.languages}
+                                disabled
+                            />
+                        </div>
+                        <div className="col-md-12 mt-3">
+                            <label>Education</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="education"
+                                value={request?.education}
+                                disabled
+                            />
+                        </div>
+                        <div className="form-group row">
+                            <div className="col-md-6">
+                                <label>Available Days</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="username"
+                                    value={request?.avlDays}
+                                    disabled
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <label>Available Times</label>
+                                <input
+                                    type="number"
+                                    className="form-control"
+                                    name="phone"
+                                    value={request?.avlTimes}
+                                    disabled
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-3">
+                            {request.fields && request.fields.map((field, index) => (
+                                <div key={index} className="p-3 mb-3">
+                                    <p className="mb-3"><strong>Work Category: {field.name}</strong></p>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <p className="mb-1">Works Done: {field.worksDone}</p>
+                                            <p className="mb-1">Preferred Wage: {field.wagePerHour}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                         {request.status === "pending" && (
                             <>

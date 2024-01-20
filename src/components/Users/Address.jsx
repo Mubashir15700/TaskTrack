@@ -21,7 +21,6 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         setSelectedAddress(currentAddress || {});
     }, [currentAddress]);
 
-
     useEffect(() => {
         if (selectedAddress && selectedAddress.lat && selectedAddress.lon) {
             setMapVisible(true);
@@ -36,16 +35,20 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
     }, [selectedAddress]);
 
     const handleGetCurrentLocation = async () => {
-        setManualEntryVisible(false);
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-            const { latitude, longitude } = pos.coords;
-            const response = await getCurrentLocation({ latitude, longitude });
-            if (response) {
-                setMapVisible(true);
-                setSelectedAddress(response.data.fullAddress);
-                onAddressChange(response.data.fullAddress);
-            }
-        });
+        try {
+            setManualEntryVisible(false);
+            navigator.geolocation.getCurrentPosition(async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                const response = await getCurrentLocation({ latitude, longitude });
+                if (response) {
+                    setMapVisible(true);
+                    setSelectedAddress(response.data.fullAddress);
+                    onAddressChange(response.data.fullAddress);
+                }
+            });
+        } catch (error) {
+            console.log("Get current location error: ", error);
+        }
     };
 
     const handleEnterLocationManually = () => {
@@ -108,6 +111,12 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         </button>
                     ) : null}
                 </div>
+                {(usage === "admin" && currentAddress?.lat && currentAddress?.lon) ? (
+                    <DisplayMap
+                        latitude={currentAddress.lat}
+                        longitude={currentAddress.lon}
+                    />
+                ) : null}
                 {(mapVisible && selectedAddress.lat && selectedAddress.lon) ? (
                     <DisplayMap
                         latitude={selectedAddress.lat}

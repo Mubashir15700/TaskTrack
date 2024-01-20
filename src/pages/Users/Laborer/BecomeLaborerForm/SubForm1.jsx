@@ -1,7 +1,6 @@
 import Address from "../../../../components/Users/Address";
 
 function SubForm1({ formData, setFormData, errors }) {
-
     const newAddressSelected = (selectedAddress) => {
         setFormData({ ...formData, location: selectedAddress });
     };
@@ -52,7 +51,7 @@ function SubForm1({ formData, setFormData, errors }) {
                 <Address
                     userId={formData?._id}
                     label={"Lives In"}
-                    currentAddress={formData.location}
+                    currentAddress={formData.location && typeof formData.location === 'string' ? JSON.parse(formData.location) : formData.location}
                     onAddressChange={newAddressSelected}
                     usage={"form"}
                 />

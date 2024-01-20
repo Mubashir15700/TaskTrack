@@ -6,8 +6,8 @@ import { getJobs } from "../../../services/userApi";
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
 
-  const searchResults = useSelector(state => state.user.searchResults);
-  const currentUserId = useSelector(state => state.user.userData._id);
+  const searchResults = useSelector(state => state.user?.searchResults);
+  const currentUserId = useSelector(state => state.user?.userData?._id);
 
   useEffect(() => {
     const getAllJobs = async () => {

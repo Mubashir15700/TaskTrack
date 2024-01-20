@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { checkAuth } from "../../services/authApi";
+import { getUserNotificationCount } from "../../services/userApi";
 
 const userSlice = createSlice({
     name: "user",
     initialState: {
         isLoggedIn: false,
         userData: null,
+        userNotificationCount: 0,
         loading: false,
         searchResults: {
             searchOn: null,
@@ -19,6 +21,9 @@ const userSlice = createSlice({
         setUserData: (state, action) => {
             state.userData = action.payload;
         },
+        setUserNotificationCount: (state, action) => {
+            state.userNotificationCount = action.payload;
+        },
         setLoading: (state, action) => {
             state.loading = action.payload;
         },
@@ -29,7 +34,7 @@ const userSlice = createSlice({
 });
 
 // export admin actions and reducer
-export const { setLoggedIn, setUserData, setLoading, setSearchResults } = userSlice.actions;
+export const { setLoggedIn, setUserData, setUserNotificationCount, setLoading, setSearchResults } = userSlice.actions;
 export default userSlice.reducer;
 
 // Asynchronous initialization function
@@ -41,6 +46,14 @@ export const initializeUser = () => async (dispatch) => {
             dispatch(setLoggedIn(true));
             const currentUser = response.data.currentUser;
             dispatch(setUserData(currentUser));
+
+            // Fetch and set user notification count
+            const responseNotification = await getUserNotificationCount(currentUser._id);
+            if (responseNotification && responseNotification.data.status === "success") {
+                dispatch(setUserNotificationCount(responseNotification.data.count));
+            } else {
+                console.error("Failed to fetch user notification count");
+            }
         } else {
             dispatch(setLoggedIn(false));
         }

@@ -209,7 +209,7 @@ const UserDetails = () => {
               <Address
                 userId={currentUser?._id}
                 label={"Lives In"}
-                currentAddress={currentUser.location}
+                currentAddress={currentUser.location && typeof currentUser.location === 'string' ? JSON.parse(currentUser.location) : currentUser.location}
                 onAddressChange={newAddressSelected}
                 onLocationDeleted={deleteSuccess}
                 usage={"profile"}

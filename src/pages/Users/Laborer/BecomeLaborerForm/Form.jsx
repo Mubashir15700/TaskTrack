@@ -23,8 +23,8 @@ function Form() {
 
     const defaultField = {
         name: "",
-        worksDone: undefined,
-        wagePerHour: undefined,
+        worksDone: "",
+        wagePerHour: "",
     };
 
     const [workData, setWorkData] = useState({
@@ -176,7 +176,7 @@ function Form() {
                         toast.success("Your request has been sent");
                         navigate("/jobs/works-history");
 
-                        socket.emit("form_submit", formData);
+                        socket.emit("request_submit", formData.userId);
                     } else {
                         toast.error(`Error: ${response.data.message}`);
                     }

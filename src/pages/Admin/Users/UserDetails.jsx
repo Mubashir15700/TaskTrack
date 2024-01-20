@@ -23,7 +23,7 @@ const UserDetails = () => {
                 if (response && response.data.status === "success" && response.data.user) {
                     const user = response.data.user;
                     if (user.location && Object.values(user.location).length) {
-                        user.location = JSON.parse(user.location);
+                        user.location = user.location;
                     }
                     setUser(user);
                 } else {
@@ -155,7 +155,7 @@ const UserDetails = () => {
                         <div className="col-md-12">
                             <Address
                                 label={"Lives In"}
-                                currentAddress={user.location}
+                                currentAddress={user.location && JSON.parse(user.location)}
                                 usage={"admin"}
                             />
                         </div>

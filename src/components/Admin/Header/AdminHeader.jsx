@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/adminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoggedIn, setLoading, setAdminNotificationCount, setSearchResults } from "../../../redux/slices/adminSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
@@ -19,21 +19,31 @@ const Header = () => {
     const [searchSelect, setSearchSelect] = useState("employers");
     const [error, setError] = useState("");
 
+    const notificationsCount = useSelector((state) => state.admin.adminNotificationCount);
+
     useEffect(() => {
-        socket.on("connect", () => {
-            socket.emit("admin_connect", { socketId: socket.id, role: "admin" })
-        });
+        if (!socket.connected) {
+            socket.connect();
+            socket.emit("set_role", { role: "admin" });
+        }
 
-        socket.on("notify_form_submit", (data) => {
-            console.log("notify form submit: ", data);
-
+        const handleNotifyRequestSubmit = () => {
+            dispatch((dispatch) => {
+                const currentCount = notificationsCount;
+                dispatch(setAdminNotificationCount(currentCount + 1));
+            });
             toast.success("A new request received!");
-        });
+        };
+
+        socket.on("notify_request_submit", handleNotifyRequestSubmit);
 
         return () => {
-            socket.off("connect");
+            if (socket.connected) {
+                socket.disconnect();
+                socket.off("notify_request_submit", handleNotifyRequestSubmit);
+            }
         };
-    }, [dispatch]);
+    }, []);
 
     const handleSearch = async (e) => {
         if (e.target.value !== "") {

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSchema } from "../../../../validations/userValidations/loginSchema";
-import { setLoading, setUserData, setLoggedIn as setUserLoggedIn } from "../../../../redux/slices/userSlice";
-import { setLoggedIn as setAdminLoggedIn, setUsername as setAdmiDisplayName } from "../../../../redux/slices/adminSlice";
+import { setLoading, initializeUser } from "../../../../redux/slices/userSlice";
+import { initializeAdmin } from "../../../../redux/slices/adminSlice";
 import { adminLogin, userLogin } from "../../../../services/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./Login.css";
@@ -53,12 +53,10 @@ const Login = ({ role }) => {
         setServerResponse(response.data);
         if (response.data.status === "success") {
           if (role === "admin") {
-            dispatch(setAdminLoggedIn(true));
-            dispatch(setAdmiDisplayName(response.data.currentUser.username));
+            initializeAdmin(dispatch);
             navigate("/admin/");
           } else {
-            dispatch(setUserLoggedIn(true));
-            dispatch(setUserData(response.data.currentUser));
+            initializeUser(dispatch);
             navigate("/");
           }
         }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/userSlice";
+import { setLoggedIn, setLoading, setUserNotificationCount, setSearchResults } from "../../../redux/slices/userSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
@@ -16,17 +16,34 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  const currentUserId = useSelector(state => state.user.userData?._id);
+  const notificationsCount = useSelector((state) => state.user.userNotificationCount);
+
   useEffect(() => {
-    socket.on("connect", () => {
-      socket.emit("user_connect", { socketId: socket.id, role: "user" })
-    });
+    // Ensure currentUserId is available before connecting to the socket
+    if (currentUserId && !socket.connected) {
+      socket.connect();
+      socket.emit("set_role", { role: "user", userId: currentUserId });
+    }
+
+    const handleNotifyRequestAction = () => {
+      dispatch((dispatch) => {
+        const currentCount = notificationsCount;
+        dispatch(setUserNotificationCount(currentCount + 1));
+      });
+      toast.success("A new request received!");
+    };
+
+    socket.on("notify_request_action", handleNotifyRequestAction);
 
     return () => {
-      socket.off("connect");
+      if (socket.connected) {
+        socket.disconnect();
+        socket.off("notify_request_action", handleNotifyRequestAction);
+      }
     };
-  }, [dispatch]);
-
-  const isLoggedIn = useSelector(state => state.user.isLoggedIn);
+  }, [currentUserId]);
 
   const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");
@@ -37,6 +54,7 @@ const Header = () => {
 
       if (inputValue !== "") {
         const response = await search({
+          currentUserId,
           searchWith: inputValue,
           searchOn: searchSelect
         });

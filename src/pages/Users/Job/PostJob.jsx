@@ -22,7 +22,7 @@ const PostJob = () => {
         name: "",
         workers: 1,
         materialsRequired: "",
-        wagePerHour: undefined,
+        wagePerHour: "",
       },
     ],
   });

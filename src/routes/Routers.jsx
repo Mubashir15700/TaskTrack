@@ -111,7 +111,7 @@ const Routers = () => {
           <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/notifications" element={isAdminLoggedIn ? <Notifications /> : <Navigate to="/admin/login" />} />
-          <Route path="/notifications/:id" element={isUserLoggedIn ? <NotificationDetails /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/notifications/:id" element={isAdminLoggedIn ? <NotificationDetails /> : <Navigate to="/admin/login" />} />
           {/* Errors */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>

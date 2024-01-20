@@ -191,3 +191,30 @@ export const getUserNotificationCount = async (id) => {
         return error.response;
     }
 };
+
+export const getUserNotifications = async (id) => {
+    try {
+        return await axios.get(`/notifications/${id}`);
+    } catch (error) {
+        console.log("get user notifications error: ", error);
+        return error.response;
+    }
+};
+
+export const getUserNotificationDetails = async (id) => {
+    try {
+        return await axios.get(`/notification/${id}`);
+    } catch (error) {
+        console.log("get user notification error: ", error);
+        return error.response;
+    }
+};
+
+export const markNotificationOpened = async (id) => {
+    try {
+        return await axios.patch(`/notification/mark-read/${id}`);
+    } catch (error) {
+        console.log("mark user notification read error: ", error);
+        return error.response;
+    }
+};

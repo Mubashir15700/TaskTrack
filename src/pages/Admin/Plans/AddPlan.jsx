@@ -100,7 +100,7 @@ const AddPlan = () => {
                         {errors.type && <span className="error-display">{errors.type}</span>}
                     </div>
                     <div className="col-md-6 col-12">
-                        <label>Number of TYPE</label>
+                        <label>Number of Weeks</label>
                         <select
                             className="form-control"
                             name="number"

@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { checkAuth } from "../../services/authApi";
+import { getAdminNotificationCount } from "../../services/adminApi";
 
 const adminSlice = createSlice({
     name: "admin",
     initialState: {
         isLoggedIn: false,
         username: null,
+        adminNotificationCount: 0,
         loading: false,
         searchResults: {
             searchOn: null,
@@ -18,6 +20,9 @@ const adminSlice = createSlice({
         },
         setUsername: (state, action) => {
             state.username = action.payload;
+        },
+        setAdminNotificationCount: (state, action) => {
+            state.adminNotificationCount = action.payload;
         },
         setLoading: (state, action) => {
             state.loading = action.payload;
@@ -32,6 +37,7 @@ const adminSlice = createSlice({
 export const {
     setLoggedIn,
     setUsername,
+    setAdminNotificationCount,
     setLoading,
     setSearchResults
 } = adminSlice.actions;
@@ -46,6 +52,14 @@ export const initializeAdmin = () => async (dispatch) => {
         if (response && response.status === 201) {
             dispatch(setLoggedIn(true));
             dispatch(setUsername(response.data.currentUser.username));
+
+            // Fetch and set admin notification count
+            const responseNotification = await getAdminNotificationCount();
+            if (responseNotification && responseNotification.data.status === "success") {
+                dispatch(setAdminNotificationCount(responseNotification.data.count));
+            } else {
+                console.error("Failed to fetch admin notification count");
+            }
         } else {
             dispatch(setLoggedIn(false));
         }
@@ -53,6 +67,6 @@ export const initializeAdmin = () => async (dispatch) => {
         console.error("Authentication check failed:", error);
         dispatch(setLoggedIn(false));
     } finally {
-        dispatch(setLoading(false)); 
+        dispatch(setLoading(false));
     }
 };

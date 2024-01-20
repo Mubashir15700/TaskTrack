@@ -171,3 +171,30 @@ export const getAdminNotificationCount = async () => {
         return error.response;
     }
 };
+
+export const getAdminNotifications = async () => {
+    try {
+        return await axios.get("/admin/notifications");
+    } catch (error) {
+        console.log("get admin notification error: ", error);
+        return error.response;
+    }
+};
+
+export const getAdminNotificationDetails = async (id) => {
+    try {
+        return await axios.get(`/admin/notification/${id}`);
+    } catch (error) {
+        console.log("get admin notification error: ", error);
+        return error.response;
+    }
+};
+
+export const markNotificationOpened = async (id) => {
+    try {
+        return await axios.patch(`/admin/notification/mark-read/${id}`);
+    } catch (error) {
+        console.log("mark admin notification read error: ", error);
+        return error.response;
+    }
+};
