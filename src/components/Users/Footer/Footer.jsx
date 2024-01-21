@@ -3,10 +3,10 @@ import logo from "../../../assets/images/logo.png";
 const Footer = () => {
   return (
     <div className="footer-wrapper bg-body-tertiary mt-5">
-      <div className="d-flex flex-column flex-md-row m-3">
+      <div className="d-flex flex-column align-items-center flex-md-row m-3">
         <div className="footer-section-one w-md-25 p-3">
           <div className="footer-logo-container">
-            <img src={logo} alt="logo" />
+            <img src={logo} alt="logo" className="" style={{ height: "40px" }} />
           </div>
           <div className="footer-icons mt-3 mt-md-0 mx-3">
             <i className="bi bi-facebook me-2"></i>
@@ -25,9 +25,9 @@ const Footer = () => {
           </div>
           <div className="footer-section-columns d-flex flex-column w-100 w-md-25 mb-3 mb-md-0">
             <span className="text-muted mb-2">244-5333-7783</span>
-            <span className="text-muted mb-2">hello@tasktrack.com</span>
-            <span className="text-muted mb-2">press@tasktrack.com</span>
-            <span className="text-muted mb-2">contact@tasktrack.com</span>
+            <span className="text-muted mb-2 text-truncate">hello@tasktrack.com</span>
+            <span className="text-muted mb-2 text-truncate">press@tasktrack.com</span>
+            <span className="text-muted mb-2 text-truncate">contact@tasktrack.com</span>
           </div>
           <div className="footer-section-columns d-flex flex-column w-100 w-md-25">
             <span className="fw-bold mb-2">Terms & Conditions</span>

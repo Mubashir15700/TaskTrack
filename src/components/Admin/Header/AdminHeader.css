@@ -61,12 +61,12 @@
 }
 
 .search-input {
-    width: 50% !important;
+    margin-bottom: 10px;
 }
 
 .search-select {
     width: 15% !important;
-    margin-right: 5px;
+    margin: 0 5px 10px 0;
 }
 
 @media screen and (max-width: 1100px) {

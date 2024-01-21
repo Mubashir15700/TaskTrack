@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { checkAuth } from "../../services/authApi";
-import { getUserNotificationCount } from "../../services/userApi";
+import { checkAuth } from "../../api/sharedApi/authApi";
+import { getUserNotificationCount } from "../../api/userApi";
 
 const userSlice = createSlice({
     name: "user",

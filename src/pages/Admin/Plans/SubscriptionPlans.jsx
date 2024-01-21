@@ -5,7 +5,7 @@ import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getPlans, planAction } from "../../../services/adminApi";
+import { getPlans, planAction } from "../../../api/adminApi";
 
 const SubscriptionPlans = () => {
 

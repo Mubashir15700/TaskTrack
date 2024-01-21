@@ -4,41 +4,44 @@ import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { setLoading, initializeAdmin, setSearchResults } from "../redux/slices/adminSlice";
 import { initializeUser } from "../redux/slices/userSlice";
-// Lazy-loaded components
-const Home = lazy(() => import("../pages/Users/Home"));
-const About = lazy(() => import("../pages/Users/About"));
-const Contact = lazy(() => import("../pages/Users/Contact"));
-const Notifications = lazy(() => import("../pages/Users/Notifications"));
-const NotificationDetails = lazy(() => import("../pages/Users/NotificationDetails"));
-const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
-const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
-const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
-const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
-const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
-const Dashboard = lazy(() => import("../pages/Admin/Dashboard"));
+import Home from "../pages/Users/Home";
+import About from "../pages/Users/About";
+import Contact from "../pages/Users/Contact";
+import Dashboard from "../pages/Admin/Dashboard";
+// Lazy-loaded Admin Components
 const Users = lazy(() => import("../pages/Admin/Users/Users"));
+const UserDetails = lazy(() => import("../pages/Admin/Users/UserDetails"));
 const SubscriptionPlans = lazy(() => import("../pages/Admin/Plans/SubscriptionPlans"));
 const Banners = lazy(() => import("../pages/Admin/Banners/Banners"));
+const Requests = lazy(() => import("../pages/Admin/Requests"));
+const RequestDetails = lazy(() => import("../pages/Admin/RequestDetails"));
+// Lazy-loaded User Components
+const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
+const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
+const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
+const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
+const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
+const Account = lazy(() => import("../pages/Users/Account"));
+const Profile = lazy(() => import("../pages/Users/Profile"));
+const JobDetails = lazy(() => import("../pages/Users/Job/JobDetails"));
+const LaborerDetails = lazy(() => import("../pages/Users/Laborer/LaborerDetails"));
+// Lazy-loaded Common Components
+const Notifications = lazy(() => import("../pages/Users/Notifications"));
+const NotificationDetails = lazy(() => import("../pages/Users/NotificationDetails"));
+// Others
 import LoadingSpinner from "../components/Common/LoadingSpinner";
-import Account from "../pages/Users/Account";
-import Profile from "../pages/Users/Profile";
-import JobDetails from "../pages/Users/Job/JobDetails";
-import PostJob from "../pages/Users/Job/PostJob";
-import LaborerDetails from "../pages/Users/Laborer/LaborerDetails";
-import Requests from "../pages/Admin/Requests";
-import RequestDetails from "../pages/Admin/RequestDetails";
 import Form from "../pages/Users/Laborer/BecomeLaborerForm/Form";
+import PostJob from "../pages/Users/Job/PostJob";
+import AddPlan from "../pages/Admin/Plans/AddPlan";
+import EditPlan from "../pages/Admin/Plans/EditPlan";
+import AddBanner from "../pages/Admin/Banners/AddBanner";
+import EditBanner from "../pages/Admin/Banners/EditBanner";
 import Login from "../pages/Users/Auth/Login/Login";
 import SignUp from "../pages/Users/Auth/SignUp/SignUp";
 import Email from "../pages/Users/Auth/Email/Email";
 import OTP from "../pages/Users/Auth/OTP/OTP";
 import ResetPassword from "../pages/Users/Auth/ResetPassword/ResetPassword";
 import ErrorPage from "../pages/Users/ErrorPage";
-import UserDetails from "../pages/Admin/Users/UserDetails";
-import AddPlan from "../pages/Admin/Plans/AddPlan";
-import EditPlan from "../pages/Admin/Plans/EditPlan";
-import AddBanner from "../pages/Admin/Banners/AddBanner";
-import EditBanner from "../pages/Admin/Banners/EditBanner";
 
 const Routers = () => {
   const dispatch = useDispatch();

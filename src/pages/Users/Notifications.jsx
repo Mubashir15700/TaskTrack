@@ -4,8 +4,8 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminNotificationCount } from "../../redux/slices/adminSlice";
 import { setUserNotificationCount } from "../../redux/slices/userSlice";
-import { getAdminNotifications, markNotificationOpened } from "../../services/adminApi"
-import { getUserNotifications, markNotificationOpened as markUserNotificationOpened } from "../../services/userApi";
+import { getAdminNotifications, markNotificationOpened } from "../../api/adminApi"
+import { getUserNotifications, markNotificationOpened as markUserNotificationOpened } from "../../api/userApi";
 
 const Notifications = () => {
   const dispatch = useDispatch();

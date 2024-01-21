@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getActiveBanners } from "../../services/userApi";
+import { getActiveBanners } from "../../api/userApi";
 import defBanner from "../../assets/images/bnr-def.jfif";
 
 const Home = () => {
@@ -28,13 +28,14 @@ const Home = () => {
             <div className={index === 0 ? "carousel-item active" : "carousel-item"} key={banner._id}>
               <img
                 src={`http://localhost:3000/uploads/banner/${banner.image}`}
-                className="d-block w-100 h-100"
+                className="img-fluid mx-auto d-block w-100"
+                style={{ height: "500px", objectFit: "cover" }}
                 alt="Banner"
               />
               <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
               <div className="carousel-caption position-absolute top-50 start-50 translate-middle text-light">
-                <h1>{banner.title}</h1>
-                <p>{banner.description}</p>
+                <h1 className="h1">{banner.title}</h1>
+                <p className="p">{banner.description}</p>
               </div>
             </div>
           ))
@@ -47,8 +48,8 @@ const Home = () => {
             />
             <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
             <div className="carousel-caption position-absolute top-50 start-50 translate-middle text-light">
-              <h1>Sample Banner</h1>
-              <p>This is a sample banner</p>
+              <h1 className="display-4">Sample Banner</h1>
+              <p className="lead">This is a sample banner</p>
             </div>
           </div>
         )}

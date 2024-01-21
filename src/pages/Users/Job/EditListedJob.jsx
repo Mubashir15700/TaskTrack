@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getListedJob, updateListedJob, deleteListedJob } from "../../../services/userApi";
+import { getListedJob, updateListedJob, deleteListedJob } from "../../../api/userApi";
 import { jobSchema } from "../../../validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 import SweetAlert from "../../../components/Common/SweetAlert";

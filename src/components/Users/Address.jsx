@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import DisplayMap from "../../components/Users/DisplayMap";
-import { getCurrentLocation, deleteLocation } from "../../services/userApi";
+import { getCurrentLocation, deleteLocation } from "../../api/userApi";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
 
 const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => {

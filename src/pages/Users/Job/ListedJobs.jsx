@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getListedJobs } from "../../../services/userApi";
+import { getListedJobs } from "../../../api/userApi";
 
 const ListedJobs = () => {
     const currentUserId = useSelector((state) => state.user.userData._id);

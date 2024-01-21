@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import TableDataDisplay from "../../components/Admin/TableDataDisplay";
-import { getRequests } from "../../services/adminApi";
+import { getRequests } from "../../api/adminApi";
 
 const Requests = () => {
 

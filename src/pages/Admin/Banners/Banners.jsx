@@ -5,7 +5,7 @@ import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getBanners, bannerAction } from "../../../services/adminApi";
+import { getBanners, bannerAction } from "../../../api/adminApi";
 
 const Banners = () => {
 
@@ -100,12 +100,13 @@ const Banners = () => {
     },
     {
       name: "Banner",
+      width: "200px",
       selector: (row) => row.image,
       cell: row => (
         <img
           src={`http://localhost:3000/uploads/banner/${row?.image}`}
           alt="Banner"
-          style={{ width: "150px", height: "100px", margin: "5px" }}
+          style={{ maxWidth: "150px", height: "auto", margin: "5px" }}
         />
       ),
     },

@@ -34,6 +34,7 @@ const TableDataDisplay = ({
             <DataTable
                 columns={dataTableColumns}
                 data={dataTableData}
+                responsive={true}
                 className="mb-2"
             />
             {itemsPerPage > dataTableData.length && (

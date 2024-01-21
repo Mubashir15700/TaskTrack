@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { postNewJob } from "../../../services/userApi";
+import { postNewJob } from "../../../api/userApi";
 import { jobSchema } from "../../../validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 

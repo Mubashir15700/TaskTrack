@@ -19,7 +19,6 @@ const SearchBar = ({ role, onSearch, onSelect }) => {
                         <option value="laborers">Laborers</option>
                         <option value="jobs">Jobs</option>
                     </>
-
                 ) : (
                     <>
                         <option value="employers">Employers</option>

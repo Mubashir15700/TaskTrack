@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getWorksHistory, getPrevRequest, cancelRequest } from "../../../services/userApi";
+import { getWorksHistory, getPrevRequest, cancelRequest } from "../../../api/userApi";
 import SweetAlert from "../../../components/Common/SweetAlert";
 
 const WorksHistory = () => {

@@ -1,13 +1,4 @@
-import axios from "./axiosConfig";
-
-export const search = async (data) => {
-    try {
-        return await axios.get(`/admin/search`, { params: data });
-    } catch (error) {
-        console.log("search error: ", error);
-        return error.response;
-    }
-};
+import axios from "../config/axiosConfig";
 
 export const getUsers = async (itemsPerPage, currentPage) => {
     try {

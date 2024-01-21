@@ -6,8 +6,8 @@ import { setLoggedIn, setLoading, setAdminNotificationCount, setSearchResults } 
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
-import { search } from "../../../services/adminApi";
-import { logout } from "../../../services/authApi";
+import { search } from "../../../api/sharedApi/utilityApi";
+import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./AdminHeader.css";
 import socket from "../../../socket/socket";

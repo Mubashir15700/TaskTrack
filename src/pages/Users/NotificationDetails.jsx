@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminNotificationCount } from "../../redux/slices/adminSlice";
-import { getAdminNotificationDetails, markNotificationRead } from "../../services/adminApi";
+import { getAdminNotificationDetails, markNotificationRead } from "../../api/adminApi";
 
 const NotificationDetails = () => {
   const dispatch = useDispatch();

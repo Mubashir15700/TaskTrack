@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { addBanner } from "../../../services/adminApi";
+import { addBanner } from "../../../api/adminApi";
 import ImageCrop from "../../../components/Common/ImageCrop";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 

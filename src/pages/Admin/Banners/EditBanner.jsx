@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getBanner, editBanner } from "../../../services/adminApi";
+import { getBanner, editBanner } from "../../../api/adminApi";
 import ImageCrop from "../../../components/Common/ImageCrop";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 

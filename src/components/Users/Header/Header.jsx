@@ -6,8 +6,8 @@ import { setLoggedIn, setLoading, setUserNotificationCount, setSearchResults } f
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
-import { search } from "../../../services/adminApi";
-import { logout } from "../../../services/authApi";
+import { search } from "../../../api/sharedApi/utilityApi";
+import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./Header.css";
 import socket from "../../../socket/socket";
@@ -122,7 +122,7 @@ const Header = () => {
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
       <div className="container-fluid">
-        <img src={logo} alt="logo" className="mt-3" style={{ height: "40px" }} />
+        <img src={logo} alt="logo" className="mt-2" style={{ height: "45px" }} />
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>

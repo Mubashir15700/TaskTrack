@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getLaborers } from "../../../services/userApi";
+import { getLaborers } from "../../../api/userApi";
 import prfPlaceholder from "../../../assets/images/prf-placeholder.jfif";
 
 const Laborers = () => {

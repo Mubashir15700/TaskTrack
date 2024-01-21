@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { loginSchema } from "../../../../validations/userValidations/loginSchema";
 import { setLoading, initializeUser } from "../../../../redux/slices/userSlice";
 import { initializeAdmin } from "../../../../redux/slices/adminSlice";
-import { adminLogin, userLogin } from "../../../../services/authApi";
+import { adminLogin, userLogin } from "../../../../api/sharedApi/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./Login.css";
 

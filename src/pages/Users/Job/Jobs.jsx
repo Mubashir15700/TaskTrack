@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getJobs } from "../../../services/userApi";
+import { getJobs } from "../../../api/userApi";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);

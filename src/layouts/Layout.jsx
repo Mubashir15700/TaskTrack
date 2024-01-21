@@ -70,7 +70,7 @@ const Layout = () => {
       ) : shouldDisplayHeaderFooter && userRole === "user" ? (
         <Header />
       ) : null}
-      <main style={{ paddingTop: shouldDisplayHeaderFooter ? "70px" : "0" }}>
+      <main style={{ paddingTop: shouldDisplayHeaderFooter ? "71px" : "0" }}>
         <Routers />
       </main>
       {shouldDisplayHeaderFooter && userRole === "user" && <Footer />}

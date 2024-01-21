@@ -5,7 +5,7 @@ import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getUsers, userAction } from "../../../services/adminApi";
+import { getUsers, userAction } from "../../../api/adminApi";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -96,11 +96,11 @@ const Users = () => {
           <img
             src={`http://localhost:3000/uploads/profile/${row?.profile}`}
             alt="Profile"
-            style={{ width: "50px", height: "50px" }}
+            style={{ width: "50px", height: "40px" }}
             className="rounded-5"
           />
         ) : (
-          <i className="bi bi-person-circle fs-1 mb-1"></i>
+          <i className="bi bi-person-circle fs-1"></i>
         )
       ),
     },

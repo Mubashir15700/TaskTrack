@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData as updateUserData } from "../../../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { sendRequest, updateRequest } from "../../../../services/userApi";
+import { sendRequest, updateRequest } from "../../../../api/userApi";
 import { profileSchema, workSchema } from "../../../../validations/userValidations/becomeLaborerSchema";
 import SubForm1 from "./SubForm1";
 import SubForm2 from "./SubForm2";

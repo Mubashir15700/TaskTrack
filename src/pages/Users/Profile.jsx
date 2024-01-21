@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { profileSchema } from "../../validations/userValidations/profileSchema";
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { updateProfile, deleteUserProfileImage } from "../../services/userApi";
+import { updateProfile, deleteUserProfileImage } from "../../api/userApi";
 import ImageCrop from "../../components/Common/ImageCrop";
 import Address from "../../components/Users/Address";
 

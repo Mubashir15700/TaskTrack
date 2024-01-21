@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getPlan, editPlan } from "../../../services/adminApi";
+import { getPlan, editPlan } from "../../../api/adminApi";
 import planSchema from "../../../validations/adminValidations/planSchema";
 
 const EditPlan = () => {

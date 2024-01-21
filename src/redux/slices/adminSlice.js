@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { checkAuth } from "../../services/authApi";
-import { getAdminNotificationCount } from "../../services/adminApi";
+import { checkAuth } from "../../api/sharedApi/authApi";
+import { getAdminNotificationCount } from "../../api/adminApi";
 
 const adminSlice = createSlice({
     name: "admin",

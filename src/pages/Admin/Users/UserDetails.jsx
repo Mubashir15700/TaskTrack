@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
-import { getUser, userAction } from "../../../services/adminApi";
+import { getUser, userAction } from "../../../api/adminApi";
 import Address from "../../../components/Users/Address";
 import SweetAlert from "../../../components/Common/SweetAlert";
 

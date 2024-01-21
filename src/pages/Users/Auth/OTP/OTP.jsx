@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { otpSchema } from "../../../../validations/userValidations/otpSchema";
 import { setLoading, setLoggedIn } from "../../../../redux/slices/userSlice";
-import { verifyOtp, resendOtp } from "../../../../services/authApi";
+import { verifyOtp, resendOtp } from "../../../../api/sharedApi/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./OTP.css";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getJob } from "../../../services/userApi";
+import { getJob } from "../../../api/userApi";
 import Address from "../../../components/Users/Address";
 
 const JobDetails = () => {
