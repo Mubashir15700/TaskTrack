@@ -4,7 +4,7 @@ function SubForm1({ formData, setFormData, errors }) {
     const newAddressSelected = (selectedAddress) => {
         setFormData({ ...formData, location: selectedAddress });
     };
-
+    
     return (
         <>
             <h5 className="mb-2">Basic Information</h5>
@@ -51,7 +51,7 @@ function SubForm1({ formData, setFormData, errors }) {
                 <Address
                     userId={formData?._id}
                     label={"Lives In"}
-                    currentAddress={formData.location && typeof formData.location === 'string' ? JSON.parse(formData.location) : formData.location}
+                    currentAddress={formData?.location}
                     onAddressChange={newAddressSelected}
                     usage={"form"}
                 />

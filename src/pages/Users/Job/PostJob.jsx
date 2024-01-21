@@ -75,6 +75,10 @@ const PostJob = () => {
 
   const handlePostJob = async () => {
     try {
+      console.log(postData);
+      if (typeof postData.location === "string") {
+        postData.location = JSON.parse(postData.location);
+      }
       await jobSchema.validate(postData, { abortEarly: false });
       const response = await postNewJob(postData);
       if (response) {
@@ -101,7 +105,7 @@ const PostJob = () => {
 
   return (
     <JobPostForm
-      heading={'Post New Job'}
+      heading={"Post New Job"}
       postData={postData}
       handleInputChange={handleInputChange}
       errors={errors}

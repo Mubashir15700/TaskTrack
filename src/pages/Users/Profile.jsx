@@ -91,10 +91,6 @@ const UserDetails = () => {
       const response = await updateProfile(formData, currentUser?._id);
 
       if (response && response.data?.status === "success") {
-        const updatedUser = response.data.updatedUser;
-        if (response.data.updatedUser.location) {
-          updatedUser.location = JSON.parse(response.data.updatedUser.location);
-        }
         dispatch(setUpdatedUserData(response.data.updatedUser));
         navigate("/account");
         toast.success("Updated profile successfully");
@@ -207,7 +203,7 @@ const UserDetails = () => {
               <Address
                 userId={currentUser?._id}
                 label={"Lives In"}
-                currentAddress={currentUser.location && typeof currentUser.location === 'string' ? JSON.parse(currentUser.location) : currentUser.location}
+                currentAddress={currentUser?.location || {}}
                 onAddressChange={newAddressSelected}
                 onLocationDeleted={deleteSuccess}
                 usage={"profile"}

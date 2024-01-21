@@ -19,7 +19,17 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        setSelectedAddress(currentAddress || {});
+        let addressToSet;
+        if (currentAddress) {
+            if (typeof currentAddress === "string") {
+                addressToSet = JSON.parse(currentAddress);
+            } else {
+                addressToSet = currentAddress;
+            }
+        } else {
+            addressToSet = {};
+        }
+        setSelectedAddress(addressToSet);
     }, [currentAddress]);
 
     useEffect(() => {
@@ -90,7 +100,6 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         try {
             // Validate manualEntry against the address schema
             await locationSchema.validate(manualEntry, { abortEarly: false });
-
             // If validation passes, update the selected address
             setSelectedAddress(manualEntry);
             onAddressChange(manualEntry);
