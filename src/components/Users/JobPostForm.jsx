@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import Address from "./Address";
 
 const JobPostForm = ({
     heading,
-    postData,
+    postData: initialData,
     handleInputChange,
     errors,
     newAddressSelected,
@@ -15,6 +16,12 @@ const JobPostForm = ({
     handleDeleteJob,
     serverResponse
 }) => {
+    const [postData, setPostData] = useState(initialData || {});
+
+    useEffect(() => {
+        setPostData(initialData);
+    }, [initialData]);
+
     return (
         <div className="col-10 my-3 mx-auto">
             <div className="p-3 p-lg-5 border">
@@ -25,7 +32,7 @@ const JobPostForm = ({
                         type="text"
                         className="form-control"
                         name="title"
-                        value={postData?.title}
+                        value={postData?.title || ""}
                         onChange={handleInputChange}
                     />
                     {errors.title && <span className="error-display">{errors.title}</span>}
@@ -36,7 +43,7 @@ const JobPostForm = ({
                         type="text"
                         className="form-control"
                         name="description"
-                        value={postData?.description}
+                        value={postData?.description || ""}
                         onChange={handleInputChange}
                     />
                     {errors.description && <span className="error-display">{errors.description}</span>}
@@ -48,7 +55,7 @@ const JobPostForm = ({
                             type="date"
                             className="form-control"
                             name="date"
-                            value={postData?.date ? new Date(postData.date).toISOString().split('T')[0] : ''}
+                            value={postData?.date ? new Date(postData.date).toISOString().split("T")[0] : ""}
                             onChange={handleInputChange}
                         />
                         {errors.date && <span className="error-display">{errors.date}</span>}
@@ -59,7 +66,7 @@ const JobPostForm = ({
                             type="time"
                             className="form-control"
                             name="time"
-                            value={postData?.time}
+                            value={postData?.time || ""}
                             onChange={handleInputChange}
                         />
                         {errors.time && <span className="error-display">{errors.time}</span>}
@@ -70,7 +77,7 @@ const JobPostForm = ({
                             type="number"
                             className="form-control"
                             name="duration"
-                            value={postData?.duration}
+                            value={postData?.duration || ""}
                             onChange={handleInputChange}
                         />
                         {errors.duration && <span className="error-display">{errors.duration}</span>}
@@ -93,7 +100,7 @@ const JobPostForm = ({
                                     type="text"
                                     className="form-control"
                                     placeholder={`Field ${index + 1} Name`}
-                                    value={field.name}
+                                    value={field.name || ""}
                                     onChange={(e) => handleFieldChange(index, { name: e.target.value })}
                                 />
                                 {errors.hasOwnProperty(`fields[${index}].name`) && (
@@ -105,7 +112,7 @@ const JobPostForm = ({
                                     type="number"
                                     className="form-control"
                                     placeholder="Number of Workers"
-                                    value={field.workers}
+                                    value={field.workers || ""}
                                     onChange={(e) => handleFieldChange(index, { workers: e.target.value })}
                                 />
                                 {errors.hasOwnProperty(`fields[${index}].workers`) && (
@@ -117,7 +124,7 @@ const JobPostForm = ({
                                     type="text"
                                     className="form-control"
                                     placeholder="Materials Required"
-                                    value={field.materialsRequired}
+                                    value={field.materialsRequired || ""}
                                     onChange={(e) => handleFieldChange(index, { materialsRequired: e.target.value })}
                                 />
                             </div>
@@ -126,7 +133,7 @@ const JobPostForm = ({
                                     type="number"
                                     className="form-control"
                                     placeholder="Hourly Wage"
-                                    value={field.wagePerHour}
+                                    value={field.wagePerHour || ""}
                                     onChange={(e) => handleFieldChange(index, { wagePerHour: e.target.value })}
                                 />
                                 {errors.hasOwnProperty(`fields[${index}].wagePerHour`) && (
@@ -145,7 +152,7 @@ const JobPostForm = ({
                     </button>
                 </div>
                 {/* End of Fields Section */}
-                {heading !== 'Post New Job' && (
+                {heading !== "Post New Job" && (
                     <div className="form-group row">
                         <div className="col-md-4">
                             <label>Status</label>
@@ -166,7 +173,7 @@ const JobPostForm = ({
                         </div>
                     </div>
                 )}
-                {(heading === 'Post New Job' || isChanged) && (
+                {(heading === "Post New Job" || isChanged) && (
                     <button
                         className="btn btn-primary mt-3"
                         onClick={handleSubmit}

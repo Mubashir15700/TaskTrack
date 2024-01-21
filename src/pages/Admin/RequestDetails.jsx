@@ -12,6 +12,7 @@ const RequestDetails = () => {
     const dispatch = useDispatch();
 
     const [request, setRequest] = useState();
+    console.log("req: ", request);
     const [error, setError] = useState();
 
     const { id } = useParams();
@@ -39,7 +40,7 @@ const RequestDetails = () => {
 
     const confirmApproveReject = async (action) => {
         const result = await SweetAlert.confirmAction(
-            `${action}`,
+            `${action === "approve" ? "Approve" : "Reject"}`,
             `Are you sure you want to ${action} this request?`,
             `${action === "approve" ? "Approve" : "Reject"}`,
             "#d9534f"
@@ -61,7 +62,7 @@ const RequestDetails = () => {
                         setRequest(updatedRequest.data.request);
 
                         socket.emit("request_action", {
-                            userId: request.user._id, message: "Admin responded"
+                            userId: request.user._id, message: `Your request has been ${type.action}ed`
                         });
                     } else {
                         setError("Failed to fetch updated request data.");

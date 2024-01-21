@@ -11,6 +11,7 @@ import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./AdminHeader.css";
 import socket from "../../../socket/socket";
+import { handleNotifyRequestSubmit } from "../../../socket/adminSocketEvents";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -27,20 +28,14 @@ const Header = () => {
             socket.emit("set_role", { role: "admin" });
         }
 
-        const handleNotifyRequestSubmit = () => {
-            dispatch((dispatch) => {
-                const currentCount = notificationsCount;
-                dispatch(setAdminNotificationCount(currentCount + 1));
-            });
-            toast.success("A new request received!");
-        };
-
-        socket.on("notify_request_submit", handleNotifyRequestSubmit);
+        const newCount = notificationsCount + 1;
+        // Create a wrapper function to pass dispatch to handleNotifyRequestAction
+        const notifySubmitHandler = (data) => handleNotifyRequestSubmit(data, dispatch, newCount);
+        socket.on("notify_request_submit", notifySubmitHandler);
 
         return () => {
             if (socket.connected) {
                 socket.disconnect();
-                socket.off("notify_request_submit", handleNotifyRequestSubmit);
             }
         };
     }, []);

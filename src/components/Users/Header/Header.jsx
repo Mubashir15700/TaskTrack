@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoggedIn, setLoading, setUserNotificationCount, setSearchResults } from "../../../redux/slices/userSlice";
+import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/userSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
@@ -11,6 +11,7 @@ import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./Header.css";
 import socket from "../../../socket/socket";
+import { handleNotifyRequestAction } from "../../../socket/userSocketEvents";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -21,29 +22,22 @@ const Header = () => {
   const notificationsCount = useSelector((state) => state.user.userNotificationCount);
 
   useEffect(() => {
-    // Ensure currentUserId is available before connecting to the socket
     if (currentUserId && !socket.connected) {
       socket.connect();
       socket.emit("set_role", { role: "user", userId: currentUserId });
     }
 
-    const handleNotifyRequestAction = () => {
-      dispatch((dispatch) => {
-        const currentCount = notificationsCount;
-        dispatch(setUserNotificationCount(currentCount + 1));
-      });
-      toast.success("A new request received!");
-    };
-
-    socket.on("notify_request_action", handleNotifyRequestAction);
+    const newCount = notificationsCount + 1;
+    // Create a wrapper function to pass dispatch to handleNotifyRequestAction
+    const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
+    socket.on("notify_request_action", notifyActionHandler);
 
     return () => {
       if (socket.connected) {
         socket.disconnect();
-        socket.off("notify_request_action", handleNotifyRequestAction);
       }
     };
-  }, [currentUserId]);
+  }, []);
 
   const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");

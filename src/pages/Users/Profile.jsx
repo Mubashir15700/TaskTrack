@@ -96,7 +96,7 @@ const UserDetails = () => {
           updatedUser.location = JSON.parse(response.data.updatedUser.location);
         }
         dispatch(setUpdatedUserData(response.data.updatedUser));
-        navigate("/profile");
+        navigate("/account");
         toast.success("Updated profile successfully");
         setChanged(false);
       } else {
@@ -123,10 +123,8 @@ const UserDetails = () => {
     try {
       const response = await deleteUserProfileImage(currentUser?._id, currentUser.profile);
       if (response && response.data.status === "success") {
-        const locationObject = JSON.parse(response.data.updatedUser.location);
         const updatedUser = response.data.updatedUser;
-        updatedUser.location = locationObject;
-        dispatch(setUpdatedUserData(response.data.updatedUser));
+        dispatch(setUpdatedUserData(updatedUser));
         navigate("/profile");
         toast.success("Deleted profile image successfully");
       } else {
@@ -149,8 +147,8 @@ const UserDetails = () => {
             <img
               src={imageUrl}
               alt="Profile"
-              style={{ height: "130px", width: "150px" }}
-              className="rounded-3"
+              style={{ maxHeight: "130px", width: "150px" }}
+              className="rounded-3 img-fluid"
             />
           )}
           {currentUser.profile && (

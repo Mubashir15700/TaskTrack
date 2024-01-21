@@ -155,7 +155,7 @@ const UserDetails = () => {
                         <div className="col-md-12">
                             <Address
                                 label={"Lives In"}
-                                currentAddress={user.location && JSON.parse(user.location)}
+                                currentAddress={user.location}
                                 usage={"admin"}
                             />
                         </div>

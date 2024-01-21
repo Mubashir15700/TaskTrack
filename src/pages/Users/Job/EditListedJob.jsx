@@ -79,6 +79,7 @@ const EditListedJob = () => {
             ...postData,
             location: address,
         });
+        setChanged(true);
     };
 
     const handleEditJob = async () => {

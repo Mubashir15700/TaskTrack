@@ -21,7 +21,7 @@ export const updateProfile = async (data, id) => {
 
 export const deleteUserProfileImage = async (id, image) => {
     try {
-        return await axios.delete(`/delete-profile-image?id=${id}`, { image });
+        return await axios.delete(`/delete-profile-image?id=${id}&image=${image}`);
     } catch (error) {
         console.log("profile image delete error: ", error);
         return error.response;
@@ -39,9 +39,9 @@ export const getCurrentLocation = async (data) => {
 
 export const deleteLocation = async (id) => {
     try {
-        return await axios.delete(`/delete-current-location`, id);
+        return await axios.delete(`/delete-current-location/${id}`);
     } catch (error) {
-        console.log("get current location error: ", error);
+        console.log("delete current location error: ", error);
         return error.response;
     }
 };

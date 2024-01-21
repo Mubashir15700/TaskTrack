@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import DisplayMap from "../../components/Users/DisplayMap";
 import { getCurrentLocation, deleteLocation } from "../../api/userApi";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
@@ -37,16 +38,30 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
     const handleGetCurrentLocation = async () => {
         try {
             setManualEntryVisible(false);
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                const { latitude, longitude } = pos.coords;
-                const response = await getCurrentLocation({ latitude, longitude });
-                if (response) {
-                    setMapVisible(true);
-                    setSelectedAddress(response.data.fullAddress);
-                    onAddressChange(response.data.fullAddress);
+            navigator.geolocation.getCurrentPosition(
+                async (pos) => {
+                    if (pos && pos.coords) {
+                        const { latitude, longitude } = pos.coords;
+                        const response = await getCurrentLocation({ latitude, longitude });
+
+                        if (response && response.data) {
+                            setMapVisible(true);
+                            setSelectedAddress(response.data.fullAddress);
+                            onAddressChange(response.data.fullAddress);
+                        } else {
+                            toast.error("Error while getting your current location");
+                        }
+                    } else {
+                        toast.error("Error while getting your current location");
+                    }
+                },
+                (error) => {
+                    toast.error("Error while getting your current location");
+                    console.log("Geolocation error: ", error);
                 }
-            });
+            );
         } catch (error) {
+            toast.error("Error while getting your current location");
             console.log("Get current location error: ", error);
         }
     };
@@ -64,7 +79,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
     };
 
     const handleDeleteLocation = async () => {
-        const response = await deleteLocation({ userId });
+        const response = await deleteLocation(userId);
         if (response.data.status === "success") {
             setSelectedAddress({});
             onLocationDeleted(response.data.deleteResult);
