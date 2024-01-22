@@ -23,6 +23,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         if (currentAddress) {
             if (typeof currentAddress === "string") {
                 addressToSet = JSON.parse(currentAddress);
+                onAddressChange(addressToSet);
             } else {
                 addressToSet = currentAddress;
             }

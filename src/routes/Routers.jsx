@@ -23,6 +23,7 @@ const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
 const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
 const Account = lazy(() => import("../pages/Users/Account"));
 const Profile = lazy(() => import("../pages/Users/Profile"));
+const LaborerProfile = lazy(() => import("../pages/Users/Laborer/LaborerProfile"));
 const JobDetails = lazy(() => import("../pages/Users/Job/JobDetails"));
 const LaborerDetails = lazy(() => import("../pages/Users/Laborer/LaborerDetails"));
 // Lazy-loaded Common Components
@@ -94,6 +95,7 @@ const Routers = () => {
           <Route path="/jobs/listed-jobs/:id" element={isUserLoggedIn ? <EditListedJob /> : <Navigate to="/login" />} />
           <Route path="/laborers" element={<Laborers />} />
           <Route path="/laborers/:id" element={<LaborerDetails />} />
+          <Route path="/laborer-profile" element={isUserLoggedIn ? <LaborerProfile /> : <Navigate to="/login" />} />
           <Route path="/become-laborer-form" element={isUserLoggedIn ? <Form /> : <Navigate to="/login" />} />
           <Route path="/login" element={!isUserLoggedIn ? <Login role={"user"} /> : <Navigate to="/" />} />
           <Route path="/sign-up" element={!isUserLoggedIn ? <SignUp /> : <Navigate to="/" />} />

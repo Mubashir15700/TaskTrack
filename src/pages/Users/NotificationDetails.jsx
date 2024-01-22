@@ -21,7 +21,7 @@ const NotificationDetails = () => {
           setNotification(response.data.notification);
           const markResponse = await markNotificationRead(id);
           if (markResponse && markResponse.data.status === "success") {
-            await dispatch(setAdminNotificationCount(notificationsCount - 1));
+            dispatch(setAdminNotificationCount(notificationsCount - 1));
           }
         } else {
           toast.error("Error while fetching notification");

@@ -19,6 +19,7 @@ const Layout = () => {
     "/jobs/works-history",
     "/laborers",
     /^\/laborers\/[\w-]+?$/,
+    "/laborer-profile",
     "/become-laborer-form",
     "/account",
     "/profile",

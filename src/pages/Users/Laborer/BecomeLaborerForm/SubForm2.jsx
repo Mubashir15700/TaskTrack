@@ -6,7 +6,7 @@ const SelectDayoptions = [
     { value: "tuesday", label: "Tuesday" },
     { value: "Wednesday", label: "wednesday" },
     { value: "thursday", label: "Thursday" },
-    { value: "Friday", label: "Friday" },
+    { value: "friday", label: "Friday" },
     { value: "saturday", label: "Saturday" },
 ];
 
@@ -16,15 +16,15 @@ const SelectTimeoptions = [
     { value: "mornings", label: "Mornings" },
     { value: "afternoons", label: "Afternoons" },
     { value: "evenings", label: "Evenings" },
-    { value: "Friday", label: "On Call" },
+    { value: "on call", label: "On Call" },
 ];
 
 function SubForm2(
-    { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, }
+    { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, purpose, setChanged }
 ) {
     return (
         <>
-            <h5 className="mb-2">Sub 2</h5>
+            <h5 className="mb-2">Laborer Details</h5>
             <div className="col-md-12 mt-3">
                 <label>Known Languages</label>
                 <input
@@ -33,6 +33,7 @@ function SubForm2(
                     name="languages"
                     value={formData.languages}
                     onChange={(e) => {
+                        setChanged && setChanged(true);
                         setFormData({ ...formData, languages: e.target.value });
                     }}
                 />
@@ -46,6 +47,7 @@ function SubForm2(
                     name="education"
                     value={formData.education}
                     onChange={(e) => {
+                        setChanged && setChanged(true);
                         setFormData({ ...formData, education: e.target.value });
                     }}
                 />
@@ -55,7 +57,9 @@ function SubForm2(
                 <div className="col-md-6">
                     <label>Available Days</label>
                     <Select
-                        defaultValue={SelectDayoptions.filter((option) => formData.avlDays?.includes(option.value))}
+                        defaultValue={SelectDayoptions.filter((option) =>
+                            formData.avlDays?.includes(option.value)
+                        )}
                         options={SelectDayoptions}
                         onChange={(selectedOptions) => {
                             // Extract the values from selectedOptions
@@ -63,6 +67,7 @@ function SubForm2(
 
                             // Update the state with the selected values
                             setFormData({ ...formData, avlDays: selectedValues });
+                            setChanged && setChanged(true);
                         }}
                         isMulti
                     />
@@ -71,7 +76,8 @@ function SubForm2(
                 <div className="col-md-6">
                     <label>Available Times</label>
                     <Select
-                        defaultValue={SelectTimeoptions.filter((option) => formData.avlTimes?.includes(option.value))}
+                        defaultValue={SelectTimeoptions.filter((option) =>
+                            formData.avlTimes?.includes(option.value))}
                         options={SelectTimeoptions}
                         onChange={(selectedOptions) => {
                             // Extract the values from selectedOptions
@@ -79,6 +85,7 @@ function SubForm2(
 
                             // Update the state with the selected values
                             setFormData({ ...formData, avlTimes: selectedValues });
+                            setChanged && setChanged(true);
                         }}
                         isMulti
                     />
@@ -98,8 +105,8 @@ function SubForm2(
                                     value={field.name}
                                     onChange={(e) => handleFieldChange(index, { name: e.target.value })}
                                 />
-                                {errors.hasOwnProperty(`fields[${index}].name`) && (
-                                    <p className="error-display">Field name is required</p>
+                                {errors?.["fields[0].name"] && (
+                                    <p className="error-display">{errors["fields[0].name"]}</p>
                                 )}
                             </div>
                             <div className="col-md-6">
@@ -110,8 +117,8 @@ function SubForm2(
                                     value={field.worksDone}
                                     onChange={(e) => handleFieldChange(index, { worksDone: e.target.value })}
                                 />
-                                {errors.hasOwnProperty(`fields[${index}].worksDone`) && (
-                                    <p className="error-display">Number of works done must be a positive number</p>
+                                {errors?.["fields[0].worksDone"] && (
+                                    <p className="error-display">{errors["fields[0].worksDone"]}</p>
                                 )}
                             </div>
                         </div>
@@ -124,8 +131,8 @@ function SubForm2(
                                     value={field.wagePerHour}
                                     onChange={(e) => handleFieldChange(index, { wagePerHour: e.target.value })}
                                 />
-                                {errors.hasOwnProperty(`fields[${index}].wagePerHour`) && (
-                                    <p className="error-display">Wage per hour must be a positive number</p>
+                                {errors?.["fields[0].wagePerHour"] && (
+                                    <p className="error-display">{errors["fields[0].wagePerHour"]}</p>
                                 )}
                             </div>
                             <div className="col-md-1">
@@ -136,6 +143,7 @@ function SubForm2(
                         </div>
                     </div>
                 ))}
+                {errors.fields && <p className="error-display">{errors.fields}</p>}
             </div>
             <button type="button" className="btn" onClick={handleAddField}>
                 <i className="bi bi-plus-circle"></i>

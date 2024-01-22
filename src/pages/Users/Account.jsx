@@ -1,10 +1,41 @@
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+import { getLaborer } from "../../api/userApi";
 
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
     // the profile image URL
     const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
+
+    const navigate = useNavigate();
+
+    const goToLaborerProfile = async () => {
+        try {
+            const response = await getLaborer(currentUser._id);
+            if (response && response.data.status === "success") {
+                // Extract relevant data from the response
+                const { languages, education, avlDays, avlTimes, fields } = response.data.laborer;
+
+                const laborerProfileData = {
+                    userId: currentUser._id,
+                    languages: languages ?? "",
+                    education: education ?? "",
+                    avlDays: avlDays,
+                    avlTimes: avlTimes,
+                    fields: fields || [defaultField],
+                };
+
+                navigate("/laborer-profile", { state: { laborerProfileData } });
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error("An error occurerd while fetching data");
+            console.log("Get laborer profile error: ", error);
+        }
+    };
 
     return (
         <div className="col-10 my-5 mx-auto d-md-flex align-items-center">
@@ -26,6 +57,13 @@ const Account = () => {
                         View
                     </Link>
                 </div>
+                {currentUser.isJobSeeker && (
+                    <div className="d-flex justify-content-center">
+                        <Link onClick={goToLaborerProfile}>
+                            Manage Laborer Profile
+                        </Link>
+                    </div>
+                )}
             </div>
             <div className="d-grid gap-2 col-md-6 mx-auto">
                 <Link to="/jobs/listed-jobs" className="btn btn-outline-primary">

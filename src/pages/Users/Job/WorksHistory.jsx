@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { getWorksHistory, getPrevRequest, cancelRequest } from "../../../api/userApi";
 import SweetAlert from "../../../components/Common/SweetAlert";
 
 const WorksHistory = () => {
+    const navigate = useNavigate();
     const currentUserId = useSelector((state) => state.user.userData._id);
     const isJobSeeker = useSelector((state) => state.user.userData.isJobSeeker);
 
@@ -70,7 +71,7 @@ const WorksHistory = () => {
             if (response) {
                 if (response.data.status === "success") {
                     toast.success("Cancelled request successfully");
-                    setPendingRequest(response.data.cancelResult);
+                    navigate("/account");
                 } else {
                     toast.error(response.data?.message);
                 }
@@ -111,18 +112,26 @@ const WorksHistory = () => {
                 ) : (
                     <div className="d-flex justify-content-center align-items-center flex-column">
                         <p>You haven't done any works yet</p>
-                        {(Object.values(pendingRequest).length > 0) && (pendingRequest.status === "pending") ? (
+                        {Object.values(pendingRequest).length > 0 ? (
                             <>
-                                <p>Your request to become laborer has been sent to admin</p>
-                                <div className="d-md-flex justify-content-between col-3">
+                                <p>
+                                    {pendingRequest.status === "pending" ?
+                                        "Your request to become laborer has been sent to admin." :
+                                        `Your request to become laborer has been ${pendingRequest.status}`}
+                                </p>
+                                <div className="d-md-flex justify-content-between col-6">
                                     <Link
-                                        to={"/become-laborer-form"}
+                                        to={pendingRequest.status === "approved" ? "/laborer-profile" : "/become-laborer-form"}
                                         {...(pendingRequest && { state: pendingRequest })}
-                                        className="btn btn-primary">
-                                        View Request
+                                        className="btn btn-primary col-12 col-md-5">
+                                        {pendingRequest.status === "approved" ? "Manage Laborer Profile" : "View Request"}
                                     </Link>
-                                    <button className="btn btn-danger" onClick={confirmCancelRequest}>
-                                        Cancel Request
+                                    <button
+                                        className="btn btn-danger col-12 col-md-5"
+                                        onClick={confirmCancelRequest}
+                                        disabled={pendingRequest.status !== "pending"}
+                                    >
+                                        Cancel
                                     </button>
                                 </div>
                             </>

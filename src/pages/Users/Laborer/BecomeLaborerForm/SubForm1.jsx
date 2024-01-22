@@ -4,7 +4,7 @@ function SubForm1({ formData, setFormData, errors }) {
     const newAddressSelected = (selectedAddress) => {
         setFormData({ ...formData, location: selectedAddress });
     };
-    
+
     return (
         <>
             <h5 className="mb-2">Basic Information</h5>

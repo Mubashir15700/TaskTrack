@@ -19,6 +19,15 @@ export const updateProfile = async (data, id) => {
     }
 };
 
+export const updateLaborerProfile = async (data) => {
+    try {
+        return await axios.put("/update-laborer-profile", { data });
+    } catch (error) {
+        console.log(error);
+        return error.response;
+    }
+};
+
 export const deleteUserProfileImage = async (id, image) => {
     try {
         return await axios.delete(`/delete-profile-image?id=${id}&image=${image}`);

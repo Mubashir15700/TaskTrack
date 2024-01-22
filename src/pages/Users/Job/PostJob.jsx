@@ -75,7 +75,6 @@ const PostJob = () => {
 
   const handlePostJob = async () => {
     try {
-      console.log(postData);
       if (typeof postData.location === "string") {
         postData.location = JSON.parse(postData.location);
       }

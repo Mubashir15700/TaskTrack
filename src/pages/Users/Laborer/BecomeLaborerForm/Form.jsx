@@ -66,7 +66,7 @@ function Form() {
     const handleAddField = () => {
         setWorkData({
             ...workData,
-            fields: [...workData.fields, { name: "", worksDone: undefined, wagePerHour: undefined }],
+            fields: [...workData.fields, { name: "", worksDone: "", wagePerHour: "" }],
         });
     };
 

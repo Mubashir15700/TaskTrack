@@ -26,7 +26,7 @@ export const workSchema = Yup.object().shape({
             worksDone: Yup.number().required("Number of works done is required").min(0, "Number of works done must be at least 0"),
             wagePerHour: Yup.number().required("Wage per hour is required").min(0, "Wage per hour must be at least 0"),
         })
-    ).required("At least one field of work is required"),
+    ).min(1, "At least one field of work is required"),
 });
 
 export const someOtherSchema = Yup.object().shape({
