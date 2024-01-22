@@ -39,7 +39,7 @@ function SubForm2(
                 />
                 {errors.languages && <span className="error-display">{errors.languages}</span>}
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 mt-3">
                 <label>Education</label>
                 <input
                     type="text"
@@ -53,7 +53,7 @@ function SubForm2(
                 />
                 {errors.education && <span className="error-display">{errors.education}</span>}
             </div>
-            <div className="form-group row">
+            <div className="form-group row mt-3">
                 <div className="col-md-6">
                     <label>Available Days</label>
                     <Select
@@ -92,7 +92,7 @@ function SubForm2(
                     {errors.avlTimes && <span className="error-display">{errors.avlTimes}</span>}
                 </div>
             </div>
-            <div className="form-group row mt-5">
+            <div className="form-group row mt-3">
                 <label>Fields of work</label>
                 {formData.fields?.map((field, index) => (
                     <div key={index} className="field-container form-group row col-md-12 mb-2">
@@ -135,11 +135,13 @@ function SubForm2(
                                     <p className="error-display">{errors["fields[0].wagePerHour"]}</p>
                                 )}
                             </div>
-                            <div className="col-md-1">
-                                <button type="button" className="btn" onClick={() => handleRemoveField(index)}>
-                                    <i className="bi bi-x-circle text-danger"></i>
-                                </button>
-                            </div>
+                            {formData.fields.length > 1 && (
+                                <div className="col-md-1">
+                                    <button type="button" className="btn" onClick={() => handleRemoveField(index)}>
+                                        <i className="bi bi-x-circle text-danger"></i>
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}

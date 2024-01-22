@@ -114,6 +114,15 @@ export const editPlan = async (data) => {
     }
 };
 
+export const updateBannerOrder = async (data) => {
+    try {
+        return await axios.patch("/admin/update-banner-order", { data });
+    } catch (error) {
+        console.log("update banner order error: ", error);
+        return error.response;
+    }
+};
+
 export const planAction = async (data) => {
     try {
         return await axios.patch(`/admin/plan-action/${data}`);

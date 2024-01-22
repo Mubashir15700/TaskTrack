@@ -1,16 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
-import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getBanners, bannerAction } from "../../../api/adminApi";
+import ItemsPerPageCount from "../../../components/Common/ItemsPerPageCount";
+import Pagination from "../../../components/Common/Pagination";
+import { getBanners, bannerAction, updateBannerOrder } from "../../../api/adminApi";
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-const Banners = () => {
-
-  const dispatch = useDispatch();
-
+const Banner = () => {
   const [banners, setBanners] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -87,64 +93,141 @@ const Banners = () => {
     error && toast.error(error);
   }, [error]);
 
-  const columns = [
-    {
-      name: "Title",
-      selector: (row) => row.title,
-      sortable: true,
-    },
-    {
-      name: "Description",
-      selector: (row) => row.description,
-      sortable: true,
-    },
-    {
-      name: "Banner",
-      width: "200px",
-      selector: (row) => row.image,
-      cell: row => (
-        <img
-          src={`http://localhost:3000/uploads/banner/${row?.image}`}
-          alt="Banner"
-          style={{ maxWidth: "150px", height: "auto", margin: "5px" }}
-        />
-      ),
-    },
-    {
-      name: "Is Active",
-      selector: (row) => row.isActive,
-      sortable: true,
-      cell: row => row.isActive ? "Yes" : "No",
-    },
-    {
-      name: "Actions",
-      width: "190px",
-      cell: row => (
-        <div className="d-flex gap-2">
-          <Link to={`/admin/banners/edit-banner/${row._id}`} className="btn btn-primary">
-            Edit
-          </Link>
-          <button className={`btn ${row.isActive ? "btn-danger" : "btn-warning"}`}
-            onClick={() => confirmListUnlist(row._id, row.isActive)}>
-            {row.isActive ? "Unlist" : "List"}
-          </button>
-        </div>
-      ),
-    },
-  ];
+  const onPageChange = ({ selected }) => {
+    setCurrentPage(selected);
+  };
+
+  const onItemsPerPageChange = (value) => {
+    setItemsPerPage(value);
+  };
+
+  const onDragEnd = async (event) => {
+    const { active, over } = event;
+    if (active.id === over.id) {
+      return;
+    }
+
+    try {
+      const oldIndex = banners.findIndex((banner) => banner._id === active.id);
+      const newIndex = banners.findIndex((banner) => banner._id === over.id);
+
+      // Extract information about the dragged banner
+      const data = {
+        draggedBannerId: banners[oldIndex]._id,
+        prevOrder: oldIndex,
+        newOrder: newIndex,
+      };
+
+      const reOrderBannersResponse = await updateBannerOrder(data);
+
+      if (!reOrderBannersResponse || reOrderBannersResponse.data.status !== "success") {
+        toast.error("Error while updating banner's order");
+        return;
+      }
+
+      setBanners((prevBanners) => {
+        // Ensure that prevBanners is an array before using map
+        const updatedBanners = Array.isArray(prevBanners) ? arrayMove(prevBanners, oldIndex, newIndex) : prevBanners;
+        return updatedBanners;
+      });
+    } catch (error) {
+      console.error("Error updating banner order:", error);
+      toast.error("Error while updating banner's order");
+    }
+  };
+
+  const SortableBanner = ({ banner }) => {
+    const {
+      attributes,
+      listeners,
+      setNodeRef,
+      transform,
+      transition,
+    } = useSortable({ id: banner._id });
+    const style = {
+      transition,
+      transform: CSS.Transform.toString(transform),
+    };
+
+    return (
+      <tr
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className="banner">
+        <td>{banner.title}</td>
+        <td>{banner.description}</td>
+        <td>
+          <img
+            src={`http://localhost:3000/uploads/banner/${banner?.image}`}
+            alt="Banner"
+            style={{ maxWidth: "150px", height: "auto", margin: "5px" }}
+          />
+        </td>
+        <td>{banner.isActive ? "Yes" : "No"}</td>
+        <td>
+          <div className="d-flex gap-2 justify-content-center">
+            <Link to={`/admin/banners/edit-banner/${banner._id}`} className="btn btn-primary">
+              Edit
+            </Link>
+            <button className={`btn ${banner.isActive ? "btn-danger" : "btn-warning"}`}
+              onClick={() => confirmListUnlist(banner._id, banner.isActive)}>
+              {banner.isActive ? "Unlist" : "List"}
+            </button>
+          </div>
+        </td>
+      </tr>
+    );
+  };
 
   return (
-    <TableDataDisplay
-      heading={"Banners"}
-      itemsPerPage={itemsPerPage}
-      onItemsPerPageChange={(value) => setItemsPerPage(value)}
-      addLink={"/admin/banners/add-banner"}
-      dataTableColumns={columns}
-      dataTableData={banners}
-      pageCount={pageCount}
-      onPageChange={({ selected }) => setCurrentPage(selected)}
-    />
+    <div className="mt-3 col-10 mx-auto text-center">
+      <div className="col-12 d-flex flex-column flex-md-row justify-content-between mt-3 mt-md-0">
+        <h5 className="mt-4 mb-3 mb-md-0">Banners</h5>
+        <div className="col-md-3 d-flex justify-content-between">
+          <div className="mt-4">
+            <ItemsPerPageCount
+              value={itemsPerPage}
+              onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
+            />
+          </div>
+          <Link to={"/admin/banners/add-banner"} className="btn btn-sm btn-outline-primary align-self-center">
+            +
+          </Link>
+        </div>
+      </div>
+      <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <SortableContext items={banners} strategy={verticalListSortingStrategy}>
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Banner</th>
+                  <th scope="col">Is Active</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {banners?.map((banner) => (
+                  <SortableBanner key={banner._id} banner={banner} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SortableContext>
+      </DndContext>
+      {itemsPerPage > banners.length && (
+        <p>No more data found</p>
+      )}
+      <Pagination
+        pageCount={pageCount}
+        onPageChange={onPageChange}
+      />
+    </div>
   );
 };
 
-export default Banners;
+export default Banner;

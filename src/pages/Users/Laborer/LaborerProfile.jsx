@@ -12,12 +12,12 @@ const LaborerProfile = () => {
     const laborerProfileData = location.state?.laborerProfileData;
 
     const [laborerData, setLaborerData] = useState({
-        userId: laborerProfileData.userId,
-        languages: laborerProfileData.languages,
-        education: laborerProfileData.education,
-        avlDays: laborerProfileData.avlDays,
-        avlTimes: laborerProfileData.avlTimes,
-        fields: laborerProfileData.fields ?? [defaultField],
+        userId: laborerProfileData?.userId,
+        languages: laborerProfileData?.languages,
+        education: laborerProfileData?.education,
+        avlDays: laborerProfileData?.avlDays,
+        avlTimes: laborerProfileData?.avlTimes,
+        fields: laborerProfileData?.fields ?? [defaultField],
     });
 
     const [changed, setChanged] = useState(false);

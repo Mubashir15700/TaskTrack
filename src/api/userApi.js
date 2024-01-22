@@ -56,9 +56,9 @@ export const deleteLocation = async (id) => {
 };
 
 // laborers
-export const getLaborers = async () => {
+export const getLaborers = async (currentUserId) => {
     try {
-        return await axios.get(`/get-laborers`);
+        return await axios.get(`/get-laborers?userId=${currentUserId}`);
     } catch (error) {
         console.log("get laborers error: ", error);
         return error.response;
