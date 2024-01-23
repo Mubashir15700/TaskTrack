@@ -25,6 +25,7 @@ const Layout = () => {
     "/profile",
     "/notifications",
     /^\/notifications\/[\w-]+?$/,
+    /^\/chat\/[\w-]+\/[\w-]+$/
   ];
 
   // List of admin routes where Header and Footer should be displayed

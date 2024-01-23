@@ -21,7 +21,7 @@ const Requests = () => {
             try {
                 // dispatch(setLoading(true));
                 const response = await getRequests(itemsPerPage, currentPage);
-                if (response && response.data.status === "success" && response.data.requests) {
+                if (response && response.data.status === "success") {
                     // console.log(response.data.requests);
                     setRequests(response.data.requests);
                     setPageCount(response.data.totalPages);

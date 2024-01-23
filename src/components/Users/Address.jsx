@@ -136,10 +136,10 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         </button>
                     ) : null}
                 </div>
-                {(usage === "admin" && currentAddress?.lat && currentAddress?.lon) ? (
+                {(usage === "admin" && selectedAddress?.lat && selectedAddress?.lon) ? (
                     <DisplayMap
-                        latitude={currentAddress.lat}
-                        longitude={currentAddress.lon}
+                        latitude={selectedAddress.lat}
+                        longitude={selectedAddress.lon}
                     />
                 ) : null}
                 {(mapVisible && selectedAddress.lat && selectedAddress.lon) ? (

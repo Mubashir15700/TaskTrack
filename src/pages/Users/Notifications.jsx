@@ -41,15 +41,15 @@ const Notifications = () => {
     getAllNotifications();
   }, []);
 
-  const handleButtonClick = async (id) => {
+  const handleButtonClick = async (id, redirectTo) => {
     try {
       if (role === "admin") {
         await markNotificationOpened(id);
-        navigate("/admin/laborer-requests");
       } else {
         await markUserNotificationOpened(id);
-        navigate("/jobs/works-history");
       }
+      console.log(redirectTo);
+      navigate(redirectTo);
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +80,7 @@ const Notifications = () => {
               <div className="col-md-3 col-12 mb-3">
                 <button
                   className="btn btn-primary btn-block me-5"
-                  onClick={() => handleButtonClick(notification._id)}
+                  onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
                 >
                   View More
                 </button>

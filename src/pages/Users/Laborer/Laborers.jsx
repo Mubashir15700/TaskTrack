@@ -56,9 +56,6 @@ const Laborers = () => {
                   <h6 className="card-subtitle text-muted mb-2">{laborer.user.username}</h6>
                   <p>Job Skills: {laborer.fields.map(field => field.name).join(', ')}</p>
                   <p>{laborer.user.location.district}, {laborer.user.location.state}</p>
-                  {/* <Link to={`/laborers/${laborer.user._id}`} className="btn btn-primary">
-                    View
-                  </Link> */}
                 </div>
               </div>
             </Link>

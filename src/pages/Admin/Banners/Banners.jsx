@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
@@ -17,6 +17,8 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 const Banner = () => {
+  const navigate = useNavigate();
+
   const [banners, setBanners] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -102,6 +104,8 @@ const Banner = () => {
   };
 
   const onDragEnd = async (event) => {
+    console.log("Scvnxkvhisuhkj");
+
     const { active, over } = event;
     if (active.id === over.id) {
       return;
@@ -155,7 +159,8 @@ const Banner = () => {
         style={style}
         {...attributes}
         {...listeners}
-        className="banner">
+        className="banner"
+      >
         <td>{banner.title}</td>
         <td>{banner.description}</td>
         <td>
@@ -168,11 +173,20 @@ const Banner = () => {
         <td>{banner.isActive ? "Yes" : "No"}</td>
         <td>
           <div className="d-flex gap-2 justify-content-center">
-            <Link to={`/admin/banners/edit-banner/${banner._id}`} className="btn btn-primary">
+            <button
+              className="btn btn-primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/admin/banners/edit-banner/${banner._id}`);
+              }}
+            >
               Edit
-            </Link>
+            </button>
             <button className={`btn ${banner.isActive ? "btn-danger" : "btn-warning"}`}
-              onClick={() => confirmListUnlist(banner._id, banner.isActive)}>
+              onClick={(e) => {
+                e.stopPropagation();
+                confirmListUnlist(banner._id, banner.isActive);
+              }}>
               {banner.isActive ? "Unlist" : "List"}
             </button>
           </div>

@@ -47,6 +47,14 @@ const LaborerDetails = () => {
                 <p>{laborer.user?.username}</p>
               </div>
             </div>
+            <div className="d-flex justify-content-center align-items-center me-5">
+              <Link
+                to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
+                className="btn btn-outline-primary"
+              >
+                Message
+              </Link>
+            </div>
             <div className="px-1">
               <Address
                 label={"Location"}

@@ -11,7 +11,7 @@ import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./Header.css";
 import socket from "../../../socket/socket";
-import { handleNotifyRequestAction } from "../../../socket/userSocketEvents";
+import { handleNotifyRequestAction, handleNotifyChatMessage } from "../../../socket/userSocketEvents";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,22 +22,60 @@ const Header = () => {
   const notificationsCount = useSelector((state) => state.user.userNotificationCount);
 
   useEffect(() => {
+    console.log("1");
     if (currentUserId && !socket.connected) {
+      console.log("2");
+      // Listen for the "connect" event
+      socket.on("connect", () => {
+        console.log("3");
+        // Once connected, emit the "set_role" event
+        socket.emit("set_role", { role: "user", userId: currentUserId });
+      });
+
+      // Connect the socket
       socket.connect();
-      socket.emit("set_role", { role: "user", userId: currentUserId });
     }
 
     const newCount = notificationsCount + 1;
     // Create a wrapper function to pass dispatch to handleNotifyRequestAction
     const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
     socket.on("notify_request_action", notifyActionHandler);
+    console.log("4");
+    const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
+    socket.on("chat_notification", notifyChatMessage);
 
     return () => {
+      console.log("5");
       if (socket.connected) {
         socket.disconnect();
       }
     };
-  }, []);
+  }, [currentUserId, dispatch, notificationsCount, socket]);
+
+
+  // useEffect(() => {
+  //   console.log("1");
+  //   if (currentUserId && !socket.connected) {
+  //     console.log("2");
+  //     socket.connect();
+  //     socket.emit("set_role", { role: "user", userId: currentUserId });
+  //   }
+  //   console.log("3");
+  //   const newCount = notificationsCount + 1;
+  //   // Create a wrapper function to pass dispatch to handleNotifyRequestAction
+  //   const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
+  //   socket.on("notify_request_action", notifyActionHandler);
+  //   console.log("4");
+  //   const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
+  //   socket.on("chat_notification", notifyChatMessage);
+
+  //   return () => {
+  //     console.log("5");
+  //     if (socket.connected) {
+  //       socket.disconnect();
+  //     }
+  //   };
+  // }, []);
 
   const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");

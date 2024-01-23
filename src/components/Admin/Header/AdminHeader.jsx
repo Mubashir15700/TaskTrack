@@ -24,12 +24,18 @@ const Header = () => {
 
     useEffect(() => {
         if (!socket.connected) {
+            // Listen for the "connect" event
+            socket.on("connect", () => {
+                // Once connected, emit the "set_role" event
+                socket.emit("set_role", { role: "admin" });
+            });
+
+            // Connect the socket
             socket.connect();
-            socket.emit("set_role", { role: "admin" });
         }
 
         const newCount = notificationsCount + 1;
-        // Create a wrapper function to pass dispatch to handleNotifyRequestAction
+        // Create a wrapper function to pass dispatch to handleNotifyRequestSubmit
         const notifySubmitHandler = (data) => handleNotifyRequestSubmit(data, dispatch, newCount);
         socket.on("notify_request_submit", notifySubmitHandler);
 
@@ -38,7 +44,26 @@ const Header = () => {
                 socket.disconnect();
             }
         };
-    }, []);
+    }, [dispatch, notificationsCount, socket]);
+
+
+    // useEffect(() => {
+    //     if (!socket.connected) {
+    //         socket.connect();
+    //         socket.emit("set_role", { role: "admin" });
+    //     }
+
+    //     const newCount = notificationsCount + 1;
+    //     // Create a wrapper function to pass dispatch to handleNotifyRequestAction
+    //     const notifySubmitHandler = (data) => handleNotifyRequestSubmit(data, dispatch, newCount);
+    //     socket.on("notify_request_submit", notifySubmitHandler);
+
+    //     return () => {
+    //         if (socket.connected) {
+    //             socket.disconnect();
+    //         }
+    //     };
+    // }, []);
 
     const handleSearch = async (e) => {
         if (e.target.value !== "") {
