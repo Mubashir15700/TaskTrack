@@ -62,7 +62,8 @@ const RequestDetails = () => {
                         setRequest(updatedRequest.data.request);
 
                         socket.emit("request_action", {
-                            userId: request.user._id, message: `Your request has been ${type.action}ed`
+                            userId: request.user._id, message:
+                                `Your request has been ${type.action === "approve" ? "approved" : "rejected"}`
                         });
                     } else {
                         setError("Failed to fetch updated request data.");

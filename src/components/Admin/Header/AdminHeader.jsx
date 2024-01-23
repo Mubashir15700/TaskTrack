@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoggedIn, setLoading, setAdminNotificationCount, setSearchResults } from "../../../redux/slices/adminSlice";
+import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/adminSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
 import SweetAlert from "../../Common/SweetAlert";
@@ -36,7 +36,7 @@ const Header = () => {
 
         const newCount = notificationsCount + 1;
         // Create a wrapper function to pass dispatch to handleNotifyRequestSubmit
-        const notifySubmitHandler = (data) => handleNotifyRequestSubmit(data, dispatch, newCount);
+        const notifySubmitHandler = () => handleNotifyRequestSubmit(dispatch, newCount);
         socket.on("notify_request_submit", notifySubmitHandler);
 
         return () => {
@@ -45,25 +45,6 @@ const Header = () => {
             }
         };
     }, [dispatch, notificationsCount, socket]);
-
-
-    // useEffect(() => {
-    //     if (!socket.connected) {
-    //         socket.connect();
-    //         socket.emit("set_role", { role: "admin" });
-    //     }
-
-    //     const newCount = notificationsCount + 1;
-    //     // Create a wrapper function to pass dispatch to handleNotifyRequestAction
-    //     const notifySubmitHandler = (data) => handleNotifyRequestSubmit(data, dispatch, newCount);
-    //     socket.on("notify_request_submit", notifySubmitHandler);
-
-    //     return () => {
-    //         if (socket.connected) {
-    //             socket.disconnect();
-    //         }
-    //     };
-    // }, []);
 
     const handleSearch = async (e) => {
         if (e.target.value !== "") {

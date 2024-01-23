@@ -17,7 +17,7 @@ const LaborerProfile = () => {
         education: laborerProfileData?.education,
         avlDays: laborerProfileData?.avlDays,
         avlTimes: laborerProfileData?.avlTimes,
-        fields: laborerProfileData?.fields ?? [defaultField],
+        fields: laborerProfileData?.fields,
     });
 
     const [changed, setChanged] = useState(false);

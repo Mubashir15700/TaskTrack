@@ -37,13 +37,25 @@ const Chat = () => {
 
     const sendMessage = () => {
         if (currentMessage.trim() !== "") {
+            // Update the messageList immediately
+            setMessageList((list) => [
+                ...list,
+                {
+                    senderId: currentUser._id,
+                    receiverId: id,
+                    message: currentMessage,
+                    username: currentUser.username,
+                    time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
+                },
+            ]);
+
             // Emit the message to the server
             socket.emit("send_message", {
                 senderId: currentUser._id,
                 receiverId: id,
                 message: currentMessage,
                 username: currentUser.username,
-                time: new Date().toLocaleTimeString(),
+                time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
             });
 
             setCurrentMessage("");
@@ -60,18 +72,23 @@ const Chat = () => {
             </div>
             <div className="chat-body">
                 <ScrollToBottom className="message-container">
-                    {messageList.map((messageContent) => {
+                    {messageList.map((messageContent, index) => {
                         return (
                             <div
                                 className="message"
                                 id={currentUser._id === messageContent?.senderId ? "you" : "other"}
+                                key={index}
                             >
                                 <div>
                                     <div className="message-content">
                                         <p>{messageContent.message}</p>
                                     </div>
                                     <div className="message-meta">
-                                        <p id="time">{new Date(messageContent.timestamp).toLocaleString()}</p>
+                                        {messageContent.time ? (
+                                            <p id="time">{new Date().toLocaleString()}</p>
+                                        ) : (
+                                            <p id="time">{new Date(messageContent.timestamp).toLocaleString()}</p>
+                                        )}
                                     </div>
                                 </div>
                             </div>

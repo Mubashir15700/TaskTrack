@@ -29,7 +29,7 @@ const Home = () => {
               <img
                 src={`http://localhost:3000/uploads/banner/${banner.image}`}
                 className="img-fluid mx-auto d-block w-100"
-                style={{ height: "500px", objectFit: "cover" }}
+                style={{ maxHeight: "500px", objectFit: "cover" }}
                 alt="Banner"
               />
               <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>

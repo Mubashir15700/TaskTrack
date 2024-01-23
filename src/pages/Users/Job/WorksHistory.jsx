@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { getWorksHistory, getPrevRequest, cancelRequest } from "../../../api/userApi";
+import { getWorksHistory, getPrevRequest, cancelRequest, getLaborer } from "../../../api/userApi";
 import SweetAlert from "../../../components/Common/SweetAlert";
 
 const WorksHistory = () => {
@@ -65,6 +65,32 @@ const WorksHistory = () => {
         }
     };
 
+    const handleLinkClick = async () => {
+        try {
+            const response = await getLaborer(currentUserId);
+            if (response && response.data.status === "success") {
+                // Extract relevant data from the response
+                const { languages, education, avlDays, avlTimes, fields } = response.data.laborer;
+
+                const laborerProfileData = {
+                    userId: currentUserId,
+                    languages: languages ?? "",
+                    education: education ?? "",
+                    avlDays: avlDays,
+                    avlTimes: avlTimes,
+                    fields: fields,
+                };
+
+                navigate("/laborer-profile", { state: { laborerProfileData } });
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error("An error occurerd while fetching data");
+            console.log("Get laborer profile error: ", error);
+        }
+    };
+
     const handleCancelRequest = async () => {
         try {
             const response = await cancelRequest({ currentUserId });
@@ -120,12 +146,22 @@ const WorksHistory = () => {
                                         `Your request to become laborer has been ${pendingRequest.status}`}
                                 </p>
                                 <div className="d-md-flex justify-content-between col-6">
-                                    <Link
-                                        to={pendingRequest.status === "approved" ? "/laborer-profile" : "/become-laborer-form"}
-                                        {...(pendingRequest && { state: pendingRequest })}
-                                        className="btn btn-primary col-12 col-md-5">
-                                        {pendingRequest.status === "approved" ? "Manage Laborer Profile" : "View Request"}
-                                    </Link>
+                                    {pendingRequest.status !== "approved" ? (
+                                        <Link
+                                            to="/become-laborer-form"
+                                            {...(pendingRequest && { state: pendingRequest })}
+                                            className="btn btn-primary col-12 col-md-5"
+                                        >
+                                            View Request
+                                        </Link>
+                                    ) : (
+                                        <Link
+                                            onClick={() => handleLinkClick()}
+                                            className="btn btn-primary col-12 col-md-5"
+                                        >
+                                            Manage Laborer Profile
+                                        </Link>
+                                    )}
                                     <button
                                         className="btn btn-danger col-12 col-md-5"
                                         onClick={confirmCancelRequest}

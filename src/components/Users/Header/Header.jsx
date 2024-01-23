@@ -22,12 +22,9 @@ const Header = () => {
   const notificationsCount = useSelector((state) => state.user.userNotificationCount);
 
   useEffect(() => {
-    console.log("1");
     if (currentUserId && !socket.connected) {
-      console.log("2");
       // Listen for the "connect" event
       socket.on("connect", () => {
-        console.log("3");
         // Once connected, emit the "set_role" event
         socket.emit("set_role", { role: "user", userId: currentUserId });
       });
@@ -40,12 +37,11 @@ const Header = () => {
     // Create a wrapper function to pass dispatch to handleNotifyRequestAction
     const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
     socket.on("notify_request_action", notifyActionHandler);
-    console.log("4");
+    
     const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
     socket.on("chat_notification", notifyChatMessage);
 
     return () => {
-      console.log("5");
       if (socket.connected) {
         socket.disconnect();
       }
