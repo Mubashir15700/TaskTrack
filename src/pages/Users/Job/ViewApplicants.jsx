@@ -1,7 +1,9 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { applicantAction } from "../../../api/userApi";
+import socket from "../../../socket/socket";
 
 const ViewApplicants = () => {
     const location = useLocation();
@@ -10,6 +12,8 @@ const ViewApplicants = () => {
     const jobId = location.state?.jobId;
     const jobStatus = location.state?.status;
     const fieldName = location.state?.fieldName;
+
+    const currentUserId = useSelector((state) => state.user.userData?._id);
 
     const takeApplicantAction = async (laborerId, action) => {
         try {
@@ -30,6 +34,8 @@ const ViewApplicants = () => {
                         return applicant;
                     });
                 });
+
+                socket.emit("application_action", { laborerId, jobId, actionTook });
             } else {
                 toast.error(`Failed to ${action} applicant`);
             }
@@ -70,7 +76,7 @@ const ViewApplicants = () => {
                                     <p>Status: {applicant?.status}</p>
                                 </div>
                                 {(jobStatus !== "closed" && applicant?.status === "pending") && (
-                                    <>
+                                    <div className="d-flex flex-column flex-sm-row">
                                         <button
                                             className="btn btn-warning my-3 me-2"
                                             onClick={() => takeApplicantAction(applicant?.userId?._id, "accept")}
@@ -83,7 +89,7 @@ const ViewApplicants = () => {
                                         >
                                             Reject
                                         </button>
-                                    </>
+                                    </div>
                                 )}
                             </div>
                         </div>

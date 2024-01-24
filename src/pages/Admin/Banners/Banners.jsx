@@ -162,7 +162,7 @@ const Banner = () => {
         className="banner"
       >
         <td>{banner.title}</td>
-        <td>{banner.description}</td>
+        <td>{banner.description.substring(0, 30)}...</td>
         <td>
           <img
             src={`http://localhost:3000/uploads/banner/${banner?.image}`}

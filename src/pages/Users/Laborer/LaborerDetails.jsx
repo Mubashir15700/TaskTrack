@@ -52,7 +52,7 @@ const LaborerDetails = () => {
                 to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
                 className="btn btn-outline-primary"
               >
-                Message
+                <i className="bi bi-chat-dots"></i>
               </Link>
             </div>
             <div className="px-1">

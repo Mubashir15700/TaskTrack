@@ -111,7 +111,7 @@ const JobDetails = () => {
                   to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
                   className="btn btn-outline-primary"
                 >
-                  Message
+                  <i className="bi bi-chat-dots"></i>
                 </Link>
               </div>
               <div>

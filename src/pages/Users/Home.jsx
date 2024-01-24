@@ -35,7 +35,7 @@ const Home = () => {
               <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
               <div className="carousel-caption position-absolute top-50 start-50 translate-middle text-light">
                 <h1 className="h1">{banner.title}</h1>
-                <p className="p">{banner.description}</p>
+                <p className="p d-none d-sm-block">{banner.description}</p>
               </div>
             </div>
           ))

@@ -23,9 +23,16 @@ const handleNotifyApplicationCancel = (data, dispatch, newCount) => {
     toast.success(data.message);
 };
 
+const handleNotifyApplicationAction = (data, dispatch, newCount) => {
+    dispatch(setUserNotificationCount(newCount));
+    console.log("action", data);
+    toast.success(data.message);
+};
+
 export {
     handleNotifyRequestAction,
     handleNotifyChatMessage,
     handleNotifyNewApplication,
-    handleNotifyApplicationCancel
+    handleNotifyApplicationCancel,
+    handleNotifyApplicationAction
 };

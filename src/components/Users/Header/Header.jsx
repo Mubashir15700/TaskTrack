@@ -15,7 +15,8 @@ import {
   handleNotifyRequestAction,
   handleNotifyChatMessage,
   handleNotifyNewApplication,
-  handleNotifyApplicationCancel
+  handleNotifyApplicationCancel,
+  handleNotifyApplicationAction
 } from "../../../socket/userSocketEvents";
 
 const Header = () => {
@@ -51,6 +52,9 @@ const Header = () => {
 
     const notifyApplicationCancel = (data) => handleNotifyApplicationCancel(data, dispatch, newCount);
     socket.on("notify_application_cancel", notifyApplicationCancel);
+
+    const notifyApplicationAction = (data) => handleNotifyApplicationAction(data, dispatch, newCount);
+    socket.on("notify_application_action", notifyApplicationAction);
 
     return () => {
       if (socket.connected) {
