@@ -128,8 +128,8 @@ const WorksHistory = () => {
                                 </div>
                                 <div className="col-md-3 col-12 mb-3">
                                     <p>Status: {work.status}</p>
-                                    <Link to={`/jobs/listed-jobs/${work._id}`} className="btn btn-primary btn-block">
-                                        Edit
+                                    <Link to={`/jobs/${work._id}`} className="btn btn-primary btn-block">
+                                        View
                                     </Link>
                                 </div>
                             </div>

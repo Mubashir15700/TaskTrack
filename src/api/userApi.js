@@ -138,11 +138,47 @@ export const getJob = async (data) => {
     }
 };
 
+export const applyJob = async (data) => {
+    try {
+        return await axios.post("/apply-job", data);
+    } catch (error) {
+        console.log("apply job error: ", error);
+        return error.response;
+    }
+};
+
+export const cancelApplication = async (data) => {
+    try {
+        return await axios.post("/cancel-job-application", data);
+    } catch (error) {
+        console.log("cancel job application error: ", error);
+        return error.response;
+    }
+};
+
 export const getListedJob = async (data) => {
     try {
         return await axios.get(`/get-listed-job/${data}`);
     } catch (error) {
         console.log("get listed job error: ", error);
+        return error.response;
+    }
+};
+
+export const getApplicants = async (data) => {
+    try {
+        return await axios.get(`/get-applicants/${data.jobId}/${data.fieldName}`);
+    } catch (error) {
+        console.log("get listed job error: ", error);
+        return error.response;
+    }
+};
+
+export const applicantAction = async (data) => {
+    try {
+        return await axios.patch("/applicant-action", data);
+    } catch (error) {
+        console.log("take applicant action error: ", error);
         return error.response;
     }
 };

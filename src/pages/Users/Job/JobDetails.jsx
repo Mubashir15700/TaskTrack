@@ -1,27 +1,92 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { getJob } from "../../../api/userApi";
+import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import SweetAlert from "../../../components/Common/SweetAlert";
+import { getJob, applyJob, cancelApplication } from "../../../api/userApi";
 import Address from "../../../components/Users/Address";
+import socket from "../../../socket/socket";
 
 const JobDetails = () => {
   const [job, setJob] = useState({});
 
+  const currentUserId = useSelector(state => state.user?.userData?._id);
+  const isJobSeeker = useSelector(state => state.user?.userData?.isJobSeeker);
   const { id } = useParams();
 
-  useEffect(() => {
-    const getJobDetails = async () => {
-      try {
-        const response = await getJob(id);
-        if (response && response.data.status === "success") {
-          setJob(response.data.job);
-        }
-      } catch (error) {
-        console.log(error);
+  const getJobDetails = async () => {
+    try {
+      const response = await getJob(id);
+      if (response && response.data.status === "success") {
+        setJob(response.data.job);
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
     getJobDetails();
   }, [id]);
+
+  const confirmAction = async (title, text, fieldName) => {
+
+    const result = await SweetAlert.confirmAction(
+      title,
+      text,
+      "Confirm",
+      "#d9534f"
+    );
+
+    if (result.isConfirmed) {
+      if (title === "Express Interest") {
+        expressInterest(fieldName);
+      } else {
+        removeInterest(fieldName);
+      }
+    }
+  };
+
+  const expressInterest = async (field) => {
+    if (isJobSeeker) {
+      try {
+        const response = await applyJob({ jobId: id, field, laborerId: currentUserId });
+        if (response && response.data.status) {
+          toast.success("Successfully applied for this job");
+          getJobDetails();
+          socket.emit("new_applicant", { empId: job.userId, jobId: id });
+        } else {
+          toast.error("Failed to apply for this job");
+        }
+      } catch (error) {
+        console.log("Error while applying job:", error);
+        toast.error("An error occurred while applying for this job");
+      }
+    } else {
+      toast.error("You are not a laborer");
+    }
+  };
+
+  const removeInterest = async (field) => {
+    try {
+      const response = await cancelApplication({ jobId: id, field, laborerId: currentUserId });
+      if (response && response.data.status) {
+        toast.success("Successfully cancelled application for this job");
+        getJobDetails();
+        socket.emit("application_cancel", { empId: job.userId, jobId: id });
+      } else {
+        toast.error("Failed to cancel application for this job");
+      }
+    } catch (error) {
+      console.log("Error while cancelling job applicaton:", error);
+      toast.error("An error occurred while cancelling application for this job");
+    }
+  };
+
+  // Helper function to check if the user has expressed interest in a field
+  const hasExpressedInterest = (field, currentUserId) => {
+    return field.applicants.some(applicant => applicant.userId === currentUserId);
+  };
 
   return (
     <div className="col-md-8 col-10 my-3 mx-auto">
@@ -40,6 +105,14 @@ const JobDetails = () => {
                   <i className="bi bi-person-circle fs-1 mb-3"></i>
                 )}
                 <p className="">{job?.userDetails?.username}</p>
+              </div>
+              <div className="d-flex justify-content-center align-items-center me-5">
+                <Link
+                  to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
+                  className="btn btn-outline-primary"
+                >
+                  Message
+                </Link>
               </div>
               <div>
                 <p className="card-text">{job.description}</p>
@@ -71,7 +144,23 @@ const JobDetails = () => {
                     </div>
                     <div className="col-md-3">
                       <p>Status: {job.status}</p>
-                      <button className="btn btn-outline-primary">Express Interest</button>
+                      {job.status !== "closed" && (
+                        hasExpressedInterest(field, currentUserId) ? (
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => confirmAction("Cancel Application", "Are you sure you want to cancel this application?", field.name)}
+                          >
+                            Cancel Application
+                          </button>
+                        ) : (
+                          <button
+                            className="btn btn-outline-primary"
+                            onClick={() => confirmAction("Express Interest", "Are you sure you want to express interest in this field?", field.name)}
+                          >
+                            Express Interest
+                          </button>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>

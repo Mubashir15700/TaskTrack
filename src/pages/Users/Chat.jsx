@@ -38,16 +38,16 @@ const Chat = () => {
     const sendMessage = () => {
         if (currentMessage.trim() !== "") {
             // Update the messageList immediately
-            setMessageList((list) => [
-                ...list,
-                {
-                    senderId: currentUser._id,
-                    receiverId: id,
-                    message: currentMessage,
-                    username: currentUser.username,
-                    time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
-                },
-            ]);
+            // setMessageList((list) => [
+            //     ...list,
+            //     {
+            //         senderId: currentUser._id,
+            //         receiverId: id,
+            //         message: currentMessage,
+            //         username: currentUser.username,
+            //         time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
+            //     },
+            // ]);
 
             // Emit the message to the server
             socket.emit("send_message", {

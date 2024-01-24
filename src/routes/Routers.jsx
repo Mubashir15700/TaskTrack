@@ -19,6 +19,7 @@ const RequestDetails = lazy(() => import("../pages/Admin/RequestDetails"));
 // Lazy-loaded User Components
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
+const ViewApplicants = lazy(() => import("../pages/Users/Job/ViewApplicants"));
 const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
 const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
 const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
@@ -92,6 +93,7 @@ const Routers = () => {
           <Route path="/jobs/:id" element={<JobDetails />} />
           <Route path="/jobs/post-job" element={isUserLoggedIn ? <PostJob /> : <Navigate to="/login" />} />
           <Route path="/jobs/listed-jobs" element={isUserLoggedIn ? <ListedJobs /> : <Navigate to="/login" />} />
+          <Route path="/jobs/view-applicants" element={isUserLoggedIn ? <ViewApplicants /> : <Navigate to="/login" />} />
           <Route path="/jobs/works-history" element={isUserLoggedIn ? <WorksHistory /> : <Navigate to="/login" />} />
           <Route path="/jobs/listed-jobs/:id" element={isUserLoggedIn ? <EditListedJob /> : <Navigate to="/login" />} />
           <Route path="/laborers" element={<Laborers />} />

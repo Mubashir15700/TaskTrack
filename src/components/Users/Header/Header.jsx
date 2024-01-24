@@ -11,7 +11,12 @@ import { logout } from "../../../api/sharedApi/authApi";
 import logo from "../../../assets/images/logo.png";
 import "./Header.css";
 import socket from "../../../socket/socket";
-import { handleNotifyRequestAction, handleNotifyChatMessage } from "../../../socket/userSocketEvents";
+import {
+  handleNotifyRequestAction,
+  handleNotifyChatMessage,
+  handleNotifyNewApplication,
+  handleNotifyApplicationCancel
+} from "../../../socket/userSocketEvents";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -37,9 +42,15 @@ const Header = () => {
     // Create a wrapper function to pass dispatch to handleNotifyRequestAction
     const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
     socket.on("notify_request_action", notifyActionHandler);
-    
+
     const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
     socket.on("chat_notification", notifyChatMessage);
+
+    const notifyNewApplicant = (data) => handleNotifyNewApplication(data, dispatch, newCount);
+    socket.on("notify_new_applicant", notifyNewApplicant);
+
+    const notifyApplicationCancel = (data) => handleNotifyApplicationCancel(data, dispatch, newCount);
+    socket.on("notify_application_cancel", notifyApplicationCancel);
 
     return () => {
       if (socket.connected) {

@@ -11,4 +11,21 @@ const handleNotifyChatMessage = (data, dispatch, newCount) => {
     toast.success(data.message);
 };
 
-export { handleNotifyRequestAction, handleNotifyChatMessage };
+const handleNotifyNewApplication = (data, dispatch, newCount) => {
+    dispatch(setUserNotificationCount(newCount));
+    console.log("apply", data);
+    toast.success(data.message);
+};
+
+const handleNotifyApplicationCancel = (data, dispatch, newCount) => {
+    dispatch(setUserNotificationCount(newCount));
+    console.log("cancel", data);
+    toast.success(data.message);
+};
+
+export {
+    handleNotifyRequestAction,
+    handleNotifyChatMessage,
+    handleNotifyNewApplication,
+    handleNotifyApplicationCancel
+};

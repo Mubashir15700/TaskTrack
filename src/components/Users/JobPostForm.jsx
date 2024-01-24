@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import Address from "./Address";
+import { getApplicants } from "../../api/userApi";
 
 const JobPostForm = ({
     heading,
@@ -16,11 +19,35 @@ const JobPostForm = ({
     handleDeleteJob,
     serverResponse
 }) => {
+    const navigate = useNavigate();
+
     const [postData, setPostData] = useState(initialData || {});
 
     useEffect(() => {
         setPostData(initialData);
     }, [initialData]);
+
+    const getJobApplicants = async (fieldName) => {
+        try {
+            const response = await getApplicants({ jobId: postData._id, fieldName });
+            if (response && response.data.status === "success") {
+                navigate("/jobs/view-applicants", { 
+                    state: { 
+                        applicantsData: response.data.applicants, 
+                        job: postData.title, 
+                        jobId: postData._id,
+                        status: postData.status, 
+                        fieldName 
+                    } 
+                });
+            } else {
+                toast.error("Failed to fetch applicants");
+            }
+        } catch (error) {
+            toast.error("An error occured while fetching applicants");
+            console.log("Get applicants error: ", error);
+        }
+    };
 
     return (
         <div className="col-10 my-3 mx-auto">
@@ -140,10 +167,15 @@ const JobPostForm = ({
                                     <p className="error-display">Wage per hour must be a positive number</p>
                                 )}
                             </div>
-                            <div className="col-md-2">
+                            <div className="col-md-6">
                                 <button type="button" className="btn" onClick={() => handleRemoveField(index)}>
                                     <i className="bi bi-x-circle text-danger"></i>
                                 </button>
+                                {field.applicants?.length && (
+                                    <Link onClick={() => getJobApplicants(field.name)}>
+                                        {`View (${field.applicants.length})Applicants`}
+                                    </Link>
+                                )}
                             </div>
                         </div>
                     ))}
