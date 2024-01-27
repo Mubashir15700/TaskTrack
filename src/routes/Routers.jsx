@@ -1,49 +1,53 @@
+// Standard Imports
 import { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
+import { Toaster } from "react-hot-toast";
+// Redux Imports
 import { setLoading, initializeAdmin, setSearchResults } from "../redux/slices/adminSlice";
 import { initializeUser } from "../redux/slices/userSlice";
+// User Components
 import Home from "../pages/Users/Home";
 import About from "../pages/Users/About";
 import Contact from "../pages/Users/Contact";
-import Dashboard from "../pages/Admin/Dashboard";
-const Chat = lazy(() => import("../pages/Users/Chat"));
-// Lazy-loaded Admin Components
-const Users = lazy(() => import("../pages/Admin/Users/Users"));
-const UserDetails = lazy(() => import("../pages/Admin/Users/UserDetails"));
-const SubscriptionPlans = lazy(() => import("../pages/Admin/Plans/SubscriptionPlans"));
-const Banners = lazy(() => import("../pages/Admin/Banners/Banners"));
-const Requests = lazy(() => import("../pages/Admin/Requests"));
-const RequestDetails = lazy(() => import("../pages/Admin/RequestDetails"));
-// Lazy-loaded User Components
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
+import PostJob from "../pages/Users/Job/PostJob";
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
 const ViewApplicants = lazy(() => import("../pages/Users/Job/ViewApplicants"));
 const EditListedJob = lazy(() => import("../pages/Users/Job/EditListedJob"));
 const WorksHistory = lazy(() => import("../pages/Users/Job/WorksHistory"));
 const Laborers = lazy(() => import("../pages/Users/Laborer/Laborers"));
+import Form from "../pages/Users/Laborer/BecomeLaborerForm/Form";
 const Account = lazy(() => import("../pages/Users/Account"));
 const Profile = lazy(() => import("../pages/Users/Profile"));
 const LaborerProfile = lazy(() => import("../pages/Users/Laborer/LaborerProfile"));
 const JobDetails = lazy(() => import("../pages/Users/Job/JobDetails"));
 const LaborerDetails = lazy(() => import("../pages/Users/Laborer/LaborerDetails"));
-// Lazy-loaded Common Components
-const Notifications = lazy(() => import("../pages/Users/Notifications"));
-const NotificationDetails = lazy(() => import("../pages/Users/NotificationDetails"));
-// Others
-import LoadingSpinner from "../components/Common/LoadingSpinner";
-import Form from "../pages/Users/Laborer/BecomeLaborerForm/Form";
-import PostJob from "../pages/Users/Job/PostJob";
+const Chat = lazy(() => import("../pages/Users/Chat"));
+// Admin Components
+import Dashboard from "../pages/Admin/Dashboard";
+const Users = lazy(() => import("../pages/Admin/Users/Users"));
+const UserDetails = lazy(() => import("../pages/Admin/Users/UserDetails"));
+const SubscriptionPlans = lazy(() => import("../pages/Admin/Plans/SubscriptionPlans"));
 import AddPlan from "../pages/Admin/Plans/AddPlan";
 import EditPlan from "../pages/Admin/Plans/EditPlan";
+const Banners = lazy(() => import("../pages/Admin/Banners/Banners"));
 import AddBanner from "../pages/Admin/Banners/AddBanner";
 import EditBanner from "../pages/Admin/Banners/EditBanner";
+const Requests = lazy(() => import("../pages/Admin/Requests"));
+const RequestDetails = lazy(() => import("../pages/Admin/RequestDetails"));
+// Auth Components
 import Login from "../pages/Users/Auth/Login/Login";
 import SignUp from "../pages/Users/Auth/SignUp/SignUp";
 import Email from "../pages/Users/Auth/Email/Email";
 import OTP from "../pages/Users/Auth/OTP/OTP";
 import ResetPassword from "../pages/Users/Auth/ResetPassword/ResetPassword";
+// Common Components
+const Notifications = lazy(() => import("../pages/Users/Notifications"));
+const NotificationDetails = lazy(() => import("../pages/Users/NotificationDetails"));
+// Others
+import LoadingSpinner from "../components/Common/LoadingSpinner";
+import ErrorBoundary from "../components/Common/ErrorBoundary";
 import ErrorPage from "../pages/Users/ErrorPage";
 
 const Routers = () => {
@@ -76,7 +80,7 @@ const Routers = () => {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       {/* toast ui */}
       <Toaster position="top-center" reverseOrder={false} />
       <Suspense fallback={<LoadingSpinner />}>
@@ -125,7 +129,7 @@ const Routers = () => {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Suspense>
-    </>
+    </ErrorBoundary>
   );
 };
 
