@@ -54,6 +54,7 @@ const Banner = () => {
   }, [currentPage, searchResults, itemsPerPage]);
 
   const confirmListUnlist = async (bannerId, isActive) => {
+    console.log("confirmListUnlist");
     const result = await SweetAlert.confirmAction(
       `${isActive ? "Unlist" : "List"} banner`,
       `Are you sure you want to ${isActive ? "Unlist" : "List"} this banner?`,
@@ -68,6 +69,7 @@ const Banner = () => {
 
   const handleListUnlist = async (bannerId) => {
     try {
+      console.log("handleListUnlist");
       const response = await bannerAction(bannerId);
       if (response) {
         if (response.data.status === "success") {
@@ -104,7 +106,7 @@ const Banner = () => {
   };
 
   const onDragEnd = async (event) => {
-    console.log("Scvnxkvhisuhkj");
+    console.log("onDragEnd");
 
     const { active, over } = event;
     if (active.id === over.id) {
@@ -177,6 +179,8 @@ const Banner = () => {
               className="btn btn-primary"
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
+                console.log("edit button");
                 navigate(`/admin/banners/edit-banner/${banner._id}`);
               }}
             >
@@ -185,6 +189,7 @@ const Banner = () => {
             <button className={`btn ${banner.isActive ? "btn-danger" : "btn-warning"}`}
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 confirmListUnlist(banner._id, banner.isActive);
               }}>
               {banner.isActive ? "Unlist" : "List"}

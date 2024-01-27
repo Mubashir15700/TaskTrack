@@ -23,6 +23,8 @@ const Header = () => {
     const notificationsCount = useSelector((state) => state.admin.adminNotificationCount);
 
     useEffect(() => {
+        let notifySubmitHandler;
+
         if (!socket.connected) {
             // Listen for the "connect" event
             socket.on("connect", () => {
@@ -30,16 +32,19 @@ const Header = () => {
                 socket.emit("set_role", { role: "admin" });
             });
 
+            const newCount = notificationsCount + 1;
+            // Create a wrapper function to pass dispatch to handleNotifyRequestSubmit
+            notifySubmitHandler = () => handleNotifyRequestSubmit(dispatch, newCount);
+            socket.on("notify_request_submit", notifySubmitHandler);
+
             // Connect the socket
             socket.connect();
         }
 
-        const newCount = notificationsCount + 1;
-        // Create a wrapper function to pass dispatch to handleNotifyRequestSubmit
-        const notifySubmitHandler = () => handleNotifyRequestSubmit(dispatch, newCount);
-        socket.on("notify_request_submit", notifySubmitHandler);
-
         return () => {
+            // Remove the event listener when the component is unmounted
+            socket.off("notify_request_submit", notifySubmitHandler);
+
             if (socket.connected) {
                 socket.disconnect();
             }

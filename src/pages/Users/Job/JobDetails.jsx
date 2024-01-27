@@ -98,26 +98,28 @@ const JobDetails = () => {
               {job.title}
             </div>
             <div className="card-body d-flex flex-column flex-md-row justify-content-between">
-              <div>
+              <div className="col-md-3">
                 {job.userDetails?.profile ? (
                   <img src={`http://localhost:3000/uploads/profile/${job?.userDetails?.profile}`} alt="emp-profile" />
                 ) : (
                   <i className="bi bi-person-circle fs-1 mb-3"></i>
                 )}
-                <p className="">{job?.userDetails?.username}</p>
+                <div>
+                  <p className="">{job?.userDetails?.username}</p>
+                  <div className="d-flex align-items-center me-3">
+                    <Link
+                      to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
+                      className="btn btn-outline-primary"
+                    >
+                      <i className="bi bi-chat-dots"></i>
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <div className="d-flex justify-content-center align-items-center me-5">
-                <Link
-                  to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
-                  className="btn btn-outline-primary"
-                >
-                  <i className="bi bi-chat-dots"></i>
-                </Link>
-              </div>
-              <div>
+              <div className="d-flex align-items-center col-md-6">
                 <p className="card-text">{job.description}</p>
               </div>
-              <div>
+              <div className="d-flex align-items-center col-md-3">
                 <p className="">
                   Posted on: {new Date(job.postedAt).toLocaleString()}
                 </p>

@@ -28,6 +28,12 @@ const Header = () => {
   const notificationsCount = useSelector((state) => state.user.userNotificationCount);
 
   useEffect(() => {
+    let notifyActionHandler;
+    let notifyChatMessage;
+    let notifyNewApplicant;
+    let notifyApplicationCancel;
+    let notifyApplicationAction;
+
     if (currentUserId && !socket.connected) {
       // Listen for the "connect" event
       socket.on("connect", () => {
@@ -40,53 +46,36 @@ const Header = () => {
     }
 
     const newCount = notificationsCount + 1;
-    // Create a wrapper function to pass dispatch to handleNotifyRequestAction
-    const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
+
+    // Create wrapper functions to pass dispatch to the respective handlers
+    notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
     socket.on("notify_request_action", notifyActionHandler);
 
-    const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
+    notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
     socket.on("chat_notification", notifyChatMessage);
 
-    const notifyNewApplicant = (data) => handleNotifyNewApplication(data, dispatch, newCount);
+    notifyNewApplicant = (data) => handleNotifyNewApplication(data, dispatch, newCount);
     socket.on("notify_new_applicant", notifyNewApplicant);
 
-    const notifyApplicationCancel = (data) => handleNotifyApplicationCancel(data, dispatch, newCount);
+    notifyApplicationCancel = (data) => handleNotifyApplicationCancel(data, dispatch, newCount);
     socket.on("notify_application_cancel", notifyApplicationCancel);
 
-    const notifyApplicationAction = (data) => handleNotifyApplicationAction(data, dispatch, newCount);
+    notifyApplicationAction = (data) => handleNotifyApplicationAction(data, dispatch, newCount);
     socket.on("notify_application_action", notifyApplicationAction);
 
+    // Cleanup function
     return () => {
+      socket.off("notify_request_action", notifyActionHandler);
+      socket.off("chat_notification", notifyChatMessage);
+      socket.off("notify_new_applicant", notifyNewApplicant);
+      socket.off("notify_application_cancel", notifyApplicationCancel);
+      socket.off("notify_application_action", notifyApplicationAction);
+
       if (socket.connected) {
         socket.disconnect();
       }
     };
   }, [currentUserId, dispatch, notificationsCount, socket]);
-
-
-  // useEffect(() => {
-  //   console.log("1");
-  //   if (currentUserId && !socket.connected) {
-  //     console.log("2");
-  //     socket.connect();
-  //     socket.emit("set_role", { role: "user", userId: currentUserId });
-  //   }
-  //   console.log("3");
-  //   const newCount = notificationsCount + 1;
-  //   // Create a wrapper function to pass dispatch to handleNotifyRequestAction
-  //   const notifyActionHandler = (data) => handleNotifyRequestAction(data, dispatch, newCount);
-  //   socket.on("notify_request_action", notifyActionHandler);
-  //   console.log("4");
-  //   const notifyChatMessage = (data) => handleNotifyChatMessage(data, dispatch, newCount);
-  //   socket.on("chat_notification", notifyChatMessage);
-
-  //   return () => {
-  //     console.log("5");
-  //     if (socket.connected) {
-  //       socket.disconnect();
-  //     }
-  //   };
-  // }, []);
 
   const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");
