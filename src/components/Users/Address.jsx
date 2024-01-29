@@ -19,18 +19,20 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        let addressToSet;
-        if (currentAddress) {
-            if (typeof currentAddress === "string") {
-                addressToSet = JSON.parse(currentAddress);
-                onAddressChange(addressToSet);
+        if (!Object.values(selectedAddress).length) {
+            let addressToSet;
+            if (currentAddress) {
+                if (typeof currentAddress === "string") {
+                    addressToSet = JSON.parse(currentAddress);
+                    onAddressChange(addressToSet);
+                } else {
+                    addressToSet = currentAddress;
+                }
             } else {
-                addressToSet = currentAddress;
+                addressToSet = {};
             }
-        } else {
-            addressToSet = {};
+            setSelectedAddress(addressToSet);
         }
-        setSelectedAddress(addressToSet);
     }, [currentAddress]);
 
     useEffect(() => {
@@ -39,7 +41,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         }
 
         setTextareaValue(
-            (Object.values(selectedAddress).length) ? (
+            (selectedAddress && Object.values(selectedAddress).length) ? (
                 `${selectedAddress.road}, ${selectedAddress.village}, \n ${selectedAddress.district}, ${selectedAddress.state}, ${selectedAddress.postcode}`
             ) : "No Location provided"
         );
@@ -142,7 +144,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         longitude={selectedAddress.lon}
                     />
                 ) : null}
-                {(mapVisible && selectedAddress.lat && selectedAddress.lon) ? (
+                {(mapVisible && selectedAddress && selectedAddress.lat && selectedAddress.lon) ? (
                     <DisplayMap
                         latitude={selectedAddress.lat}
                         longitude={selectedAddress.lon}

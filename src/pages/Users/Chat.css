@@ -16,7 +16,6 @@
     /* Adjust as needed */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     /* Add a subtle shadow */
-    width: 500px;
     height: 450px;
 }
 
@@ -146,7 +145,6 @@
     padding: 0 0.7em;
     font-size: 1em;
     border-right: 1px dotted #607d8b;
-
     outline: none;
     font-family: "Open Sans", sans-serif;
 }

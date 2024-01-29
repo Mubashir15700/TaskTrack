@@ -23,6 +23,7 @@ const Layout = () => {
     "/become-laborer-form",
     "/account",
     "/profile",
+    "/manage-subscription",
     "/notifications",
     /^\/notifications\/[\w-]+?$/,
     /^\/chat\/[\w-]+\/[\w-]+$/
@@ -75,7 +76,10 @@ const Layout = () => {
       <main style={{ paddingTop: shouldDisplayHeaderFooter ? "71px" : "0" }}>
         <Routers />
       </main>
-      {shouldDisplayHeaderFooter && userRole === "user" && <Footer />}
+      {
+        (shouldDisplayHeaderFooter && userRole === "user" && !location.pathname.includes("chat")) &&
+        <Footer />
+      }
     </>
   );
 };

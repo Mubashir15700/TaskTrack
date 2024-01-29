@@ -4,7 +4,7 @@ export const checkAuth = async (data) => {
     try {
         return await axios.get(`/auth/checkauth`, { params: data });
     } catch (error) {
-        console.log("check auth error: ", error);
+        console.log("check auth error: ", error.message);
         return error.response;
     }
 };
