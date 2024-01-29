@@ -7,8 +7,8 @@ import prfPlaceholder from "../../../assets/images/prf-placeholder.jfif";
 const Laborers = () => {
   const [laborers, setLaborers] = useState([]);
 
-  const searchResults = useSelector(state => state.user.searchResults);
-  const currentUserId = useSelector(state => state.user.userData._id);
+  const searchResults = useSelector(state => state.user?.searchResults);
+  const currentUserId = useSelector(state => state.user.userData?._id);
 
   useEffect(() => {
     const getAllLaborers = async () => {
