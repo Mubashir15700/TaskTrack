@@ -263,3 +263,21 @@ export const markNotificationOpened = async (id) => {
         return error.response;
     }
 };
+
+export const getPlans = async () => {
+    try {
+        return await axios.get("/plans");
+    } catch (error) {
+        console.log("get plans error: ", error);
+        return error.response;
+    }
+};
+
+export const createSubscription = async (data) => {
+    try {
+        return await axios.post("/create-subscription", data);
+    } catch (error) {
+        console.log("create subscription error: ", error);
+        return error.response;
+    }
+};

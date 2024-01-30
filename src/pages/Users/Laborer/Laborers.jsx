@@ -33,7 +33,7 @@ const Laborers = () => {
     <div className="col-10 mx-auto mt-3">
       <h3 className="mb-4">Laborers</h3>
       <div className="row">
-        {laborers.length ? (
+        {laborers?.length ? (
           laborers.map((laborer, index) => (
             <Link to={`/laborers/${laborer.user._id}`} className="col-md-4 text-decoration-none" key={index}>
               <div className="card">
