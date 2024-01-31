@@ -104,11 +104,6 @@ const SubscriptionPlans = () => {
       sortable: true,
     },
     {
-      name: "Number",
-      selector: (row) => row.number,
-      sortable: true,
-    },
-    {
       name: "Amount",
       selector: (row) => row.amount,
       sortable: true,

@@ -9,8 +9,8 @@ const EditPlan = () => {
         name: "",
         description: "",
         type: "",
-        number: undefined,
-        amount: undefined
+        amount: undefined,
+        numberOfJobPosts: undefined
     });
     const [errors, setErrors] = useState({});
     const [serverResponse, setServerResponse] = useState("");
@@ -115,40 +115,33 @@ const EditPlan = () => {
                             value={planData.type}
                             onChange={handleInputChange}
                         >
-                            <option value="weekly">Weekly</option>
                             <option value="monthly">Monthly</option>
                             <option value="yearly">Yearly</option>
                         </select>
                         {errors.type && <span className="error-display">{errors.type}</span>}
                     </div>
                     <div className="col-md-6 col-12">
-                        <label>Number of TYPE</label>
-                        <select
+                        <label>Amount</label>
+                        <input
+                            type="number"
                             className="form-control"
-                            name="number"
-                            value={planData.number}
+                            name="amount"
+                            value={planData.amount}
                             onChange={handleInputChange}
-                        >
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                        </select>
-                        {errors.number && <span className="error-display">{errors.number}</span>}
+                        />
+                        {errors.amount && <span className="error-display">{errors.amount}</span>}
                     </div>
                 </div>
                 <div className="col-md-12">
-                    <label>Amount</label>
+                    <label>Number of job posts</label>
                     <input
                         type="number"
                         className="form-control"
-                        name="amount"
-                        value={planData.amount}
+                        name="numberOfJobPosts"
+                        value={planData.numberOfJobPosts}
                         onChange={handleInputChange}
                     />
-                    {errors.amount && <span className="error-display">{errors.amount}</span>}
+                    {errors.numberOfJobPosts && <span className="error-display">{errors.numberOfJobPosts}</span>}
                 </div>
             </div>
             <button

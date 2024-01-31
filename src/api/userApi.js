@@ -281,3 +281,12 @@ export const createSubscription = async (data) => {
         return error.response;
     }
 };
+
+export const saveSubscription = async () => {
+    try {
+        return await axios.post("/save-subscription-result");
+    } catch (error) {
+        console.log("save subscription error: ", error);
+        return error.response;
+    }
+};

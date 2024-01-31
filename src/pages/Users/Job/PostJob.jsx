@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { postNewJob } from "../../../api/userApi";
@@ -103,19 +103,30 @@ const PostJob = () => {
   };
 
   return (
-    <JobPostForm
-      heading={"Post New Job"}
-      postData={postData}
-      handleInputChange={handleInputChange}
-      errors={errors}
-      newAddressSelected={newAddressSelected}
-      handleFieldChange={handleFieldChange}
-      handleRemoveField={handleRemoveField}
-      handleAddField={handleAddField}
-      buttonText={"Post Job"}
-      handleSubmit={handlePostJob}
-      serverResponse={serverResponse}
-    />
+    <>
+      {currentUser.currentSubscription !== null ? (
+        <JobPostForm
+          heading={"Post New Job"}
+          postData={postData}
+          handleInputChange={handleInputChange}
+          errors={errors}
+          newAddressSelected={newAddressSelected}
+          handleFieldChange={handleFieldChange}
+          handleRemoveField={handleRemoveField}
+          handleAddField={handleAddField}
+          buttonText={"Post Job"}
+          handleSubmit={handlePostJob}
+          serverResponse={serverResponse}
+        />
+      ) : (
+        <div className="col-10 my-3 mx-auto">
+          <p>No active subscription found.</p>
+          <Link to="/manage-subscription">
+            Upgrade to Unlock Premium Features!
+          </Link>
+        </div>
+      )}
+    </>
   );
 };
 

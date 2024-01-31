@@ -12,7 +12,7 @@ const userSlice = createSlice({
         searchResults: {
             searchOn: null,
             results: null,
-        }
+        },
     },
     reducers: {
         setLoggedIn: (state, action) => {
@@ -34,7 +34,9 @@ const userSlice = createSlice({
 });
 
 // export admin actions and reducer
-export const { setLoggedIn, setUserData, setUserNotificationCount, setLoading, setSearchResults } = userSlice.actions;
+export const {
+    setLoggedIn, setUserData, setUserNotificationCount, setLoading, setSearchResults
+} = userSlice.actions;
 export default userSlice.reducer;
 
 // Asynchronous initialization function

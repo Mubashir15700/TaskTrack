@@ -43,7 +43,8 @@ const Home = () => {
           <div className="carousel-item active">
             <img
               src={defBanner}
-              className="d-block w-100 h-100"
+              className="img-fluid mx-auto d-block w-100"
+              style={{ maxHeight: "500px", objectFit: "cover" }}
               alt="Banner"
             />
             <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>

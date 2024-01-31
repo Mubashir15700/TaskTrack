@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { getPlans } from "../../api/userApi";
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from "react-hot-toast";
+import Cookies from "js-cookie";
+import { getPlans, createSubscription } from "../../api/userApi";
 import { loadStripe } from "@stripe/stripe-js/pure";
 
 const Subscription = () => {
     const [plans, setPlans] = useState([]);
 
-    const currentSubscription = useSelector(
-        (state) => state.user.userData?.currentSubscription
-    );
+    const userData = useSelector((state) => state.user.userData);
+
+    // Destructure the userData object to get _id, email, and currentSubscription
+    const { _id, email, currentSubscription } = userData || {};
 
     useEffect(() => {
         const getAllPlans = async () => {
@@ -25,47 +28,41 @@ const Subscription = () => {
         getAllPlans();
     }, []);
 
-    const makePayment = async () => {
+    const makePayment = async (plan) => {
         try {
             const stripe = await loadStripe("pk_test_51OdorbSBs8zQZ4vVMEdwVQpUgEDvXBlLoHM0PPVQSTZt33l46puwOaZjUX6KefQZ0Pc9WNIykcdRXTXiI8CcgD3400oQsZpVHc");
 
-            const body = {
-                items: plans
+            const data = {
+                item: plan,
+                user: {
+                    userId: _id,
+                    email
+                }
             };
 
-            const headers = {
-                "Content-Type": "application/json"
-            };
+            const response = await createSubscription(data);
 
-            const response = await fetch("http://localhost:3000/create-subscription", {
-                method: "POST",
-                headers: headers,
-                body: JSON.stringify(body)
-            });
+            if (response.data && response.data.id) {
+                const sessionId = response.data ? response.data.id : null;
 
-            console.log("resp: ", response);
+                // Store sessionId in a cookie
+                Cookies.set("sessionId", sessionId, { expires: 7 });
 
-            // Check if the response is successful (status code 2xx)
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+                if (!response.data.status === "success") {
+                    throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+                }
+
+                if (!response.data.id) {
+                    throw new Error("Invalid response from the server");
+                }
+
+                await stripe.redirectToCheckout({
+                    sessionId: response.data.id
+                });
             }
-
-            // Parse the response as JSON
-            const session = await response.json();
-
-            // Check if the session ID is present in the response
-            if (!session.id) {
-                throw new Error("Invalid response from the server");
-            }
-
-            const result = await stripe.redirectToCheckout({
-                sessionId: session.id
-            });
-
-            // Check the result of the redirectToCheckout call if needed
-            console.log(result);
         } catch (error) {
             console.error(error);
+            toast.error("An error occured");
             // Handle the error appropriately, show a message to the user, etc.
         }
     };
@@ -104,10 +101,8 @@ const Subscription = () => {
                                                     <div className="detail-pricing">
                                                         <span className="float-left">
                                                             {" "}
-                                                            <i className="bi bi-check2-circle"></i> Number photo
-                                                        </span>
-                                                        <span className="float-right">50 - 200</span>
-                                                    </div>
+                                                            <i className="bi bi-check2-circle"></i>{" "}
+                                                            {`Can Post ${plan.numberOfJobPosts} jobs`}</span></div>
                                                     <div className="detail-pricing">
                                                         <span className="float-left">
                                                             {" "}
@@ -118,7 +113,7 @@ const Subscription = () => {
                                                     </div>
                                                     <button
                                                         className="btn btn-secondary my-3"
-                                                        onClick={makePayment}
+                                                        onClick={() => makePayment(plan)}
                                                     >
                                                         Choose Plan
                                                     </button>

@@ -21,6 +21,8 @@ import Form from "../pages/Users/Laborer/BecomeLaborerForm/Form";
 const Account = lazy(() => import("../pages/Users/Account"));
 const Profile = lazy(() => import("../pages/Users/Profile"));
 const Subscription = lazy(() => import("../pages/Users/Subscription"));
+const Success = lazy(() => import("../pages/Users/Success"));
+const Cancel = lazy(() => import("../pages/Users/Cancel"));
 const LaborerProfile = lazy(() => import("../pages/Users/Laborer/LaborerProfile"));
 const JobDetails = lazy(() => import("../pages/Users/Job/JobDetails"));
 const LaborerDetails = lazy(() => import("../pages/Users/Laborer/LaborerDetails"));
@@ -93,6 +95,8 @@ const Routers = () => {
           <Route path="/account" element={isUserLoggedIn ? <Account /> : <Navigate to="/login" />} />
           <Route path="/profile" element={isUserLoggedIn ? <Profile /> : <Navigate to="/login" />} />
           <Route path="/manage-subscription" element={isUserLoggedIn ? <Subscription /> : <Navigate to="/login" />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
           <Route path="/notifications" element={isUserLoggedIn ? <Notifications /> : <Navigate to="/login" />} />
           <Route path="/notifications/:id" element={isUserLoggedIn ? <NotificationDetails /> : <Navigate to="/login" />} />
           <Route path="/jobs" element={<Jobs />} />
