@@ -48,7 +48,6 @@ export const initializeUser = () => async (dispatch) => {
             dispatch(setLoggedIn(true));
             const currentUser = response.data.currentUser;
             dispatch(setUserData(currentUser));
-
             // Fetch and set user notification count
             const responseNotification = await getUserNotificationCount(currentUser._id);
             if (responseNotification && responseNotification.data.status === "success") {

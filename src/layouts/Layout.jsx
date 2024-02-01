@@ -39,6 +39,7 @@ const Layout = () => {
     "/admin/subscription-plans",
     "/admin/subscription-plans/add-plan",
     /^\/admin\/subscription-plans\/edit-plan\/([\w-]+)\/?$/,
+    "/admin/subscriptions",
     "/admin/banners",
     "/admin/banners/add-banner",
     /^\/admin\/banners\/edit-banner\/[\w-]+?$/,

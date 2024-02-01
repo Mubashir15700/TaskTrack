@@ -290,3 +290,21 @@ export const saveSubscription = async () => {
         return error.response;
     }
 };
+
+export const getActivePlan = async (data) => {
+    try {
+        return await axios.get(`/get-active-plan?subscriptionId=${data}`);
+    } catch (error) {
+        console.log("get active plan error: ", error);
+        return error.response;
+    }
+};
+
+export const cancelActivePlan = async (data) => {
+    try {
+        return await axios.post("/cancel-active-plan", data);
+    } catch (error) {
+        console.log("cancel active plan error: ", error);
+        return error.response;
+    }
+};

@@ -34,6 +34,7 @@ const UserDetails = lazy(() => import("../pages/Admin/Users/UserDetails"));
 const SubscriptionPlans = lazy(() => import("../pages/Admin/Plans/SubscriptionPlans"));
 import AddPlan from "../pages/Admin/Plans/AddPlan";
 import EditPlan from "../pages/Admin/Plans/EditPlan";
+const Subscriptions = lazy(() => import("../pages/Admin/Plans/Subscriptions"));
 const Banners = lazy(() => import("../pages/Admin/Banners/Banners"));
 import AddBanner from "../pages/Admin/Banners/AddBanner";
 import EditBanner from "../pages/Admin/Banners/EditBanner";
@@ -126,6 +127,7 @@ const Routers = () => {
           <Route path="/admin/subscription-plans" element={isAdminLoggedIn ? <SubscriptionPlans /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/subscription-plans/add-plan" element={isAdminLoggedIn ? <AddPlan /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/subscription-plans/edit-plan/:id" element={isAdminLoggedIn ? <EditPlan /> : <Navigate to="/admin/login" />} />
+          <Route path="/admin/subscriptions" element={isAdminLoggedIn ? <Subscriptions /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/banners" element={isAdminLoggedIn ? <Banners /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/banners/add-banner" element={isAdminLoggedIn ? <AddBanner /> : <Navigate to="/admin/login" />} />
           <Route path="/admin/banners/edit-banner/:id" element={isAdminLoggedIn ? <EditBanner /> : <Navigate to="/admin/login" />} />

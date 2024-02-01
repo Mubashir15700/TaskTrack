@@ -1,14 +1,24 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { initializeUser } from "../../redux/slices/userSlice";
 import { saveSubscription } from "../../api/userApi";
 
 const Success = () => {
+    const dispatch = useDispatch();
+
+    const currentUser = useSelector((state) => state.user?.userData);
 
     useEffect(() => {
         const saveSubscriptionResult = async () => {
             try {
-                await saveSubscription();
+                const saveResponse = await saveSubscription();
+                if (saveResponse && saveResponse.data.status === "success") {
+                    if (currentUser.currentSubscription === null) {
+                        dispatch(initializeUser());
+                    }
+                }
             } catch (error) {
                 toast.error("Failed to save subscription data");
                 console.log("Save subscription result error: ", error);
@@ -16,7 +26,7 @@ const Success = () => {
         };
 
         saveSubscriptionResult();
-    }, []);
+    }, [currentUser]);
 
     return (
         <div className="container d-flex justify-content-center align-items-center vh-100">

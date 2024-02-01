@@ -114,6 +114,17 @@ export const editPlan = async (data) => {
     }
 };
 
+export const getSubscriptions = async (itemsPerPage, currentPage) => {
+    try {
+        return await axios.get(
+            `/admin/subscriptions?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
+        );
+    } catch (error) {
+        console.log("get subscriptions error: ", error);
+        return error.response;
+    }
+};
+
 export const updateBannerOrder = async (data) => {
     try {
         return await axios.patch("/admin/update-banner-order", { data });

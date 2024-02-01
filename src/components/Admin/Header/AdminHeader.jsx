@@ -138,8 +138,8 @@ const Header = () => {
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/admin/transactions" className="nav-link" aria-current="page">
-                                Transactions
+                            <NavLink to="/admin/subscriptions" className="nav-link" aria-current="page">
+                                Subscriptions
                             </NavLink>
                         </li>
                         <li className="nav-item">
