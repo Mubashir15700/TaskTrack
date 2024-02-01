@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { postNewJob } from "../../../api/userApi";
+import { postNewJob, getRemainingPosts } from "../../../api/userApi";
 import { jobSchema } from "../../../validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 
@@ -26,10 +26,30 @@ const PostJob = () => {
       },
     ],
   });
+  const [remainingPosts, setRemainingPosts] = useState(0);
   const [errors, setErrors] = useState({});
   const [serverResponse, setServerResponse] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getRemainingPostsCount = async () => {
+      try {
+        const response = await getRemainingPosts(currentUser?._id);
+        if (response && response.data.status === "success") {
+          setRemainingPosts(response.data.remainingPosts);
+        } else {
+          console.log(response.data.message);
+          toast.error("Failed to fetch remaining post's count");
+        }
+      } catch (error) {
+        toast.error("An error occured while fetching remaining post's count");
+        console.log(error);
+      }
+    };
+
+    getRemainingPostsCount();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -105,19 +125,30 @@ const PostJob = () => {
   return (
     <>
       {currentUser.currentSubscription !== null ? (
-        <JobPostForm
-          heading={"Post New Job"}
-          postData={postData}
-          handleInputChange={handleInputChange}
-          errors={errors}
-          newAddressSelected={newAddressSelected}
-          handleFieldChange={handleFieldChange}
-          handleRemoveField={handleRemoveField}
-          handleAddField={handleAddField}
-          buttonText={"Post Job"}
-          handleSubmit={handlePostJob}
-          serverResponse={serverResponse}
-        />
+        remainingPosts > 0 ? (
+          <JobPostForm
+            heading={"Post New Job"}
+            postData={postData}
+            handleInputChange={handleInputChange}
+            errors={errors}
+            newAddressSelected={newAddressSelected}
+            handleFieldChange={handleFieldChange}
+            handleRemoveField={handleRemoveField}
+            handleAddField={handleAddField}
+            buttonText={"Post Job"}
+            handleSubmit={handlePostJob}
+            serverResponse={serverResponse}
+          />
+        ) : (
+          <div className="col-10 my-3 mx-auto">
+            <p>
+              You have reached the maximum allowed number of job posts for your current subscription.
+            </p>
+            <Link to="/manage-subscription">
+              Manage Subscription!
+            </Link>
+          </div>
+        )
       ) : (
         <div className="col-10 my-3 mx-auto">
           <p>No active subscription found.</p>

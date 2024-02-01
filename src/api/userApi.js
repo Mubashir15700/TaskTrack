@@ -210,6 +210,15 @@ export const deleteListedJob = async (data) => {
     }
 };
 
+export const getRemainingPosts = async (userId) => {
+    try {
+        return await axios.get(`/get-remainig-posts?userId=${userId}`);
+    } catch (error) {
+        console.log("get remaining post's count error: ", error);
+        return error.response;
+    }
+};
+
 export const postNewJob = async (data) => {
     try {
         return await axios.post(`/post-job`, data);

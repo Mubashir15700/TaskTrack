@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
+import { initializeUser } from "../../redux/slices/userSlice";
 import SweetAlert from "../../components/Common/SweetAlert";
 import { getPlans, getActivePlan, createSubscription, cancelActivePlan } from "../../api/userApi";
 import { loadStripe } from "@stripe/stripe-js/pure";
@@ -9,6 +10,8 @@ import { loadStripe } from "@stripe/stripe-js/pure";
 const Subscription = () => {
     const [activePlan, setActivePlan] = useState({});
     const [plans, setPlans] = useState([]);
+
+    const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.user.userData);
 
@@ -31,6 +34,7 @@ const Subscription = () => {
             try {
                 const activePlanResponse = await getActivePlan(currentSubscription);
                 if (activePlanResponse && activePlanResponse.data.status === "success") {
+                    console.log(activePlanResponse.data.currentPlan);
                     setActivePlan(activePlanResponse.data.currentPlan);
                 }
             } catch (error) {
@@ -56,24 +60,30 @@ const Subscription = () => {
 
             const response = await createSubscription(data);
 
+            if (response.status === 409 && response.data.redirectUrl) {
+                // User already has a subscription, redirect them to the billing portal
+                window.location.href = response.data.redirectUrl;
+                return;
+            }
+
             if (response.data && response.data.id) {
                 const sessionId = response.data ? response.data.id : null;
 
                 // Store sessionId in a cookie
                 Cookies.set("sessionId", sessionId, { expires: 7 });
-
-                if (!response.data.status === "success") {
-                    throw new Error(`Server error: ${response.status} - ${response.statusText}`);
-                }
-
-                if (!response.data.id) {
-                    throw new Error("Invalid response from the server");
-                }
-
-                await stripe.redirectToCheckout({
-                    sessionId: response.data.id
-                });
             }
+
+            if (!response.data.status === "success") {
+                throw new Error(`Server error: ${response.status} - ${response.statusText}`);
+            }
+
+            if (!response.data.id) {
+                throw new Error("Invalid response from the server");
+            }
+
+            await stripe.redirectToCheckout({
+                sessionId: response.data.id
+            });
         } catch (error) {
             console.error(error);
             toast.error("An error occured");
@@ -102,6 +112,7 @@ const Subscription = () => {
             if (response && response.data.status === "success") {
                 toast.success(response.data.message);
                 setActivePlan({});
+                dispatch(initializeUser());
             } else {
                 toast.error("Failed to cancel subscription: ", response.data.message);
                 console.log("Failed to cancel subscription: ", response.data.message);
@@ -132,7 +143,8 @@ const Subscription = () => {
                             <div className="col-md-6 col-12 mb-3">
                                 <p className="card-text"></p>
                                 <p className="mb-1">{activePlan?.planId?.description}</p>
-                                <p className="mb-1">Can post upto {activePlan?.planId?.numberOfJobPosts} Jobs</p>
+                                <p className="mb-1">Total job posts: {activePlan?.planId?.numberOfJobPosts}</p>
+                                <p className="mb-1">Remainig job posts: {activePlan?.planId?.numberOfJobPosts - activePlan?.jobPostsCount}</p>
                             </div>
                             <div className="col-md-3 col-12 mb-3">
                                 <p>Status: {activePlan?.isActive ? "Active" : "Inactive"}</p>
@@ -167,7 +179,7 @@ const Subscription = () => {
                                         <div className="wrap-price">
                                             <div className="price-innerdetail text-center">
                                                 <h5>{plan.name}</h5>
-                                                <p className="prices">{plan.amount}$</p>
+                                                <p className="prices">₹{plan.amount}</p>
                                                 <div className="detail-pricing">
                                                     <span className="float-left">
                                                         {plan.description}
