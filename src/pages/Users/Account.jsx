@@ -42,7 +42,7 @@ const Account = () => {
             {/* user profile view */}
             <div className="col-md-3 card mb-3">
                 <div className="card-body text-center">
-                    {currentUser.profile ? (
+                    {currentUser?.profile ? (
                         <img
                             src={imageUrl}
                             alt="Profile"
@@ -52,7 +52,7 @@ const Account = () => {
                     ) : (
                         <i className="bi bi-person-circle fs-1 mb-3"></i>
                     )}
-                    <h6 className="card-subtitle text-muted mb-2">{currentUser.username}</h6>
+                    <h6 className="card-subtitle text-muted mb-2">{currentUser?.username}</h6>
                     <Link to="/profile" className="btn btn-primary">
                         View
                     </Link>

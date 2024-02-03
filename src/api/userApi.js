@@ -1,8 +1,9 @@
 import axios from "../config/axiosConfig";
 
+// home page
 export const getActiveBanners = async () => {
     try {
-        return await axios.get(`/get-active-banners`);
+        return await axios.get("/banners");
     } catch (error) {
         console.log("get active banners error: ", error);
         return error.response;
@@ -13,15 +14,6 @@ export const getActiveBanners = async () => {
 export const updateProfile = async (data, id) => {
     try {
         return await axios.put(`/update-profile?id=${id}`, data);
-    } catch (error) {
-        console.log(error);
-        return error.response;
-    }
-};
-
-export const updateLaborerProfile = async (data) => {
-    try {
-        return await axios.put("/update-laborer-profile", { data });
     } catch (error) {
         console.log(error);
         return error.response;
@@ -39,7 +31,7 @@ export const deleteUserProfileImage = async (id, image) => {
 
 export const getCurrentLocation = async (data) => {
     try {
-        return await axios.get(`/get-current-location`, { params: data });
+        return await axios.get("/current-location", { params: data });
     } catch (error) {
         console.log("get current location error: ", error);
         return error.response;
@@ -55,10 +47,19 @@ export const deleteLocation = async (id) => {
     }
 };
 
+export const updateLaborerProfile = async (data) => {
+    try {
+        return await axios.put("/update-laborer-profile", { data });
+    } catch (error) {
+        console.log(error);
+        return error.response;
+    }
+};
+
 // laborers
 export const getLaborers = async (currentUserId) => {
     try {
-        return await axios.get(`/get-laborers?userId=${currentUserId}`);
+        return await axios.get(`/laborers?userId=${currentUserId}`);
     } catch (error) {
         console.log("get laborers error: ", error);
         return error.response;
@@ -67,7 +68,7 @@ export const getLaborers = async (currentUserId) => {
 
 export const getLaborer = async (data) => {
     try {
-        return await axios.get(`/get-laborer/${data}`);
+        return await axios.get(`/laborer/${data}`);
     } catch (error) {
         console.log("get laborer error: ", error);
         return error.response;
@@ -76,7 +77,7 @@ export const getLaborer = async (data) => {
 
 export const sendRequest = async (data) => {
     try {
-        return await axios.post(`/send-request`, data);
+        return await axios.post("/send-request", data);
     } catch (error) {
         console.log("send request error: ", error);
         return error.response;
@@ -85,7 +86,7 @@ export const sendRequest = async (data) => {
 
 export const getPrevRequest = async (data) => {
     try {
-        return await axios.get(`/get-prev-request/${data}`);
+        return await axios.get(`/prev-request/${data}`);
     } catch (error) {
         console.log("get prev request error: ", error);
         return error.response;
@@ -94,7 +95,7 @@ export const getPrevRequest = async (data) => {
 
 export const updateRequest = async (data) => {
     try {
-        return await axios.put(`/update-request`, data);
+        return await axios.put("/update-request", data);
     } catch (error) {
         console.log("update request error: ", error);
         return error.response;
@@ -103,7 +104,7 @@ export const updateRequest = async (data) => {
 
 export const cancelRequest = async (data) => {
     try {
-        return await axios.patch(`/cancel-request`, data);
+        return await axios.patch("/cancel-request", data);
     } catch (error) {
         console.log("cancel request error: ", error);
         return error.response;
@@ -113,25 +114,16 @@ export const cancelRequest = async (data) => {
 // jobs
 export const getJobs = async (data) => {
     try {
-        return await axios.get(`/get-jobs`, { params: data });
+        return await axios.get("/jobs", { params: data });
     } catch (error) {
         console.log("get jobs error: ", error);
         return error.response;
     }
 };
 
-export const getListedJobs = async (data) => {
-    try {
-        return await axios.get(`/get-listed-jobs/${data}`);
-    } catch (error) {
-        console.log("get listed jobs error: ", error);
-        return error.response;
-    }
-};
-
 export const getJob = async (data) => {
     try {
-        return await axios.get(`/get-job/${data}`);
+        return await axios.get(`/job/${data}`);
     } catch (error) {
         console.log("get job error: ", error);
         return error.response;
@@ -156,38 +148,38 @@ export const cancelApplication = async (data) => {
     }
 };
 
+export const getRemainingPosts = async (userId) => {
+    try {
+        return await axios.get(`/remainig-posts?userId=${userId}`);
+    } catch (error) {
+        console.log("get remaining post's count error: ", error);
+        return error.response;
+    }
+};
+
+export const postNewJob = async (data) => {
+    try {
+        return await axios.post("/post-job", data);
+    } catch (error) {
+        console.log("post job error: ", error);
+        return error.response;
+    }
+};
+
+export const getListedJobs = async (data) => {
+    try {
+        return await axios.get(`/listed-jobs/${data}`);
+    } catch (error) {
+        console.log("get listed jobs error: ", error);
+        return error.response;
+    }
+};
+
 export const getListedJob = async (data) => {
     try {
-        return await axios.get(`/get-listed-job/${data}`);
+        return await axios.get(`/listed-job/${data}`);
     } catch (error) {
         console.log("get listed job error: ", error);
-        return error.response;
-    }
-};
-
-export const getApplicants = async (data) => {
-    try {
-        return await axios.get(`/get-applicants/${data.jobId}/${data.fieldName}`);
-    } catch (error) {
-        console.log("get listed job error: ", error);
-        return error.response;
-    }
-};
-
-export const applicantAction = async (data) => {
-    try {
-        return await axios.patch("/applicant-action", data);
-    } catch (error) {
-        console.log("take applicant action error: ", error);
-        return error.response;
-    }
-};
-
-export const getWorksHistory = async (data) => {
-    try {
-        return await axios.get(`/get-works-history/${data}`);
-    } catch (error) {
-        console.log("get works history error: ", error);
         return error.response;
     }
 };
@@ -210,30 +202,30 @@ export const deleteListedJob = async (data) => {
     }
 };
 
-export const getRemainingPosts = async (userId) => {
+export const getApplicants = async (data) => {
     try {
-        return await axios.get(`/get-remainig-posts?userId=${userId}`);
+        return await axios.get(`/applicants/${data.jobId}/${data.fieldName}`);
     } catch (error) {
-        console.log("get remaining post's count error: ", error);
+        console.log("get listed job error: ", error);
         return error.response;
     }
 };
 
-export const postNewJob = async (data) => {
+export const applicantAction = async (data) => {
     try {
-        return await axios.post(`/post-job`, data);
+        return await axios.patch("/applicant-action", data);
     } catch (error) {
-        console.log("post job error: ", error);
+        console.log("take applicant action error: ", error);
         return error.response;
     }
 };
 
-export const logout = async (data) => {
+export const getWorksHistory = async (data) => {
     try {
-        return await axios.post(`/logout`, data);
+        return await axios.get(`/works-history/${data}`);
     } catch (error) {
-        console.log("logout error: ", error);
-        return (error.response);
+        console.log("get works history error: ", error);
+        return error.response;
     }
 };
 

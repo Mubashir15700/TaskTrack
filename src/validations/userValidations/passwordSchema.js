@@ -9,5 +9,5 @@ export const passwordSchema = Yup.object({
         )
         .required("Password is required"),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
+        .oneOf([Yup.ref("password"), null], "Passwords must match"),
 });

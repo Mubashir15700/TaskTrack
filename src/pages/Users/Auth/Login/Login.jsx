@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { loginSchema } from "../../../../validations/userValidations/loginSchema";
 import { setLoading, initializeUser } from "../../../../redux/slices/userSlice";
 import { initializeAdmin } from "../../../../redux/slices/adminSlice";
-import { adminLogin, userLogin } from "../../../../api/sharedApi/authApi";
+import { login } from "../../../../api/sharedApi/authApi";
 import logo from "../../../../assets/images/logo.png";
 import "./Login.css";
 
@@ -15,6 +15,7 @@ const Login = ({ role }) => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    role
   });
 
   const [errors, setErrors] = useState({});
@@ -42,12 +43,7 @@ const Login = ({ role }) => {
       await loginSchema.validate(formData, { abortEarly: false });
       setErrors({});
 
-      let response;
-      if (role === "admin") {
-        response = await adminLogin(formData);
-      } else {
-        response = await userLogin(formData);
-      }
+      const response = await login(formData);
 
       if (response) {
         setServerResponse(response.data);
@@ -62,7 +58,7 @@ const Login = ({ role }) => {
         }
       }
     } catch (error) {
-      if (error.name === 'ValidationError') {
+      if (error.name === "ValidationError") {
         const validationErrors = {};
         error.inner.forEach(err => {
           validationErrors[err.path] = err.message;
