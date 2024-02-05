@@ -265,6 +265,15 @@ export const markNotificationOpened = async (id) => {
     }
 };
 
+export const updateMessagesReadStatus = async (ids) => {
+    try {
+        return await axios.patch(`/messages/mark-read/`, ids);
+    } catch (error) {
+        console.log("mark messages read error: ", error);
+        return error.response;
+    }
+};
+
 export const getPlans = async () => {
     try {
         return await axios.get("/plans");

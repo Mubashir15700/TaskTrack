@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import socket from "../../socket/socket";
 import EmojiPicker from "emoji-picker-react";
+import { getMessageTime } from "../../utils/dateutil";
+import { updateMessagesReadStatus } from "../../api/userApi";
 import "./Chat.css";
 
 const Chat = () => {
@@ -103,13 +105,40 @@ const Chat = () => {
 
             setCurrentMessage("");
             scrollToBottom();
-            setShowEmojiPicker((prev) => !prev);
+            setShowEmojiPicker(false);
         }
     };
 
     const handleScrollButtonClick = () => {
         scrollToBottom();
     };
+
+    // Function to update the read status of messages
+    const updateReadStatus = async (messageIds) => {
+        try {
+            const response = await updateMessagesReadStatus(messageIds);
+            if (response && response.data.status === "success") {
+                console.log("Read status updated successfully");
+            } else {
+                console.error("Failed to update read status");
+            }
+        } catch (error) {
+            console.error("Error updating read status:", error);
+        }
+    };
+
+    useEffect(() => {
+        // Get all unread message IDs sent by the sender
+        const unreadMessageIds = messageList
+            .filter((message) => message.senderId === id && !message.isRead)
+            .map((unreadMessage) => unreadMessage._id);
+
+        // Update the read status of unread messages
+        if (unreadMessageIds.length > 0) {
+            updateReadStatus(unreadMessageIds);
+        }
+
+    }, [messageList, id]);
 
     return (
         <div className="col-10 chat-window">
@@ -133,9 +162,13 @@ const Chat = () => {
                                 </div>
                                 <div className="message-meta">
                                     {messageContent.time ? (
-                                        <p id="time">{new Date().toLocaleString()}</p>
+                                        <p id="time">{getMessageTime(new Date())}</p>
                                     ) : (
-                                        <p id="time">{new Date(messageContent.timestamp).toLocaleString()}</p>
+                                        <p id="time">{getMessageTime(messageContent.timestamp)}</p>
+                                    )}
+                                    {messageContent?.senderId !== id && (
+                                        messageContent.isRead &&
+                                        <i className="bi bi-eye"></i>
                                     )}
                                 </div>
                             </div>
@@ -162,7 +195,10 @@ const Chat = () => {
                 </div>
                 <div className="col-2 d-flex justify-content-center">
                     {showScrollButton && (
-                        <button className="btn scroll-to-bottom-button" onClick={handleScrollButtonClick}>
+                        <button
+                            className="btn scroll-to-bottom-button"
+                            onClick={handleScrollButtonClick}
+                        >
                             <i className="bi bi-arrow-down-circle-fill"></i>
                         </button>
                     )}
