@@ -1,5 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import Carousel from "react-bootstrap/Carousel";
 import { getActiveBanners } from "../../api/userApi";
+import CarousalImage from "../../components/Users/CarousalImage";
+import CarousalContent from "../../components/Users/CarousalContent";
+import CarouselButton from "../../components/Users/CarouselButton";
 import defBanner from "../../assets/images/bnr-def.jfif";
 
 const Home = () => {
@@ -20,53 +24,33 @@ const Home = () => {
     getBanner();
   }, []);
 
+  const showNextPrevButtons = banners.length > 1;
+
   return (
-    <div id="carouselExampleControls" className="carousel slide" data-bs-ride="carousel">
-      <div className="carousel-inner position-relative">
+    <div>
+      <Carousel
+        nextIcon={showNextPrevButtons ? <CarouselButton type="next" /> : null}
+        prevIcon={showNextPrevButtons ? <CarouselButton type="prev" /> : null}
+      >
         {banners.length ? (
           banners.map((banner, index) => (
-            <div className={index === 0 ? "carousel-item active" : "carousel-item"} key={banner._id}>
-              <img
-                src={`http://localhost:3000/uploads/banner/${banner.image}`}
-                className="img-fluid mx-auto d-block w-100"
-                style={{ maxHeight: "500px", objectFit: "cover" }}
-                alt="Banner"
-              />
-              <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-              <div className="carousel-caption position-absolute top-50 start-50 translate-middle text-light">
-                <h1 className="h1">{banner.title}</h1>
-                <p className="p d-none d-sm-block">{banner.description}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div className="carousel-item active">
-            <img
-              src={defBanner}
-              className="img-fluid mx-auto d-block w-100"
-              style={{ maxHeight: "500px", objectFit: "cover" }}
-              alt="Banner"
-            />
-            <div className="overlay position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-            <div className="carousel-caption position-absolute top-50 start-50 translate-middle text-light">
-              <h1 className="display-4">Sample Banner</h1>
-              <p className="lead">This is a sample banner</p>
-            </div>
-          </div>
+            <Carousel.Item key={index}>
+              <CarousalImage src={`http://localhost:3000/uploads/banner/${banner?.image}`} />
+              <Carousel.Caption>
+                <CarousalContent title={banner.title} description={banner.description} />
+              </Carousel.Caption>
+            </Carousel.Item>
+          ))) : (
+          <Carousel.Item>
+            <CarousalImage src={defBanner} />
+            <Carousel.Caption>
+              <CarousalContent
+                title={"First slide label"}
+                description={"Nulla vitae elit libero, a pharetra augue mollis interdum."} />
+            </Carousel.Caption>
+          </Carousel.Item>
         )}
-      </div>
-      {banners.length > 1 && (
-        <>
-          <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Next</span>
-          </button>
-        </>
-      )}
+      </Carousel>
     </div>
   );
 };

@@ -109,7 +109,7 @@ const Routers = () => {
           <Route path="/jobs/listed-jobs/:id" element={isUserLoggedIn ? <EditListedJob /> : <Navigate to="/login" />} />
           <Route path="/laborers" element={<Laborers />} />
           <Route path="/laborers/:id" element={<LaborerDetails />} />
-          <Route path="/chat/:id/:username" element={<Chat />} />
+          <Route path="/chat/:id/:username" element={isUserLoggedIn ? <Chat /> : <Navigate to="/login" />} />
           <Route path="/laborer-profile" element={isUserLoggedIn ? <LaborerProfile /> : <Navigate to="/login" />} />
           <Route path="/become-laborer-form" element={isUserLoggedIn ? <Form /> : <Navigate to="/login" />} />
           <Route path="/login" element={!isUserLoggedIn ? <Login role={"user"} /> : <Navigate to="/" />} />

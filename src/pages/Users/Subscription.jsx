@@ -34,7 +34,6 @@ const Subscription = () => {
             try {
                 const activePlanResponse = await getActivePlan(currentSubscription);
                 if (activePlanResponse && activePlanResponse.data.status === "success") {
-                    console.log(activePlanResponse.data.currentPlan);
                     setActivePlan(activePlanResponse.data.currentPlan);
                 }
             } catch (error) {

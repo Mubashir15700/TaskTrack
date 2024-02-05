@@ -166,9 +166,9 @@ export const postNewJob = async (data) => {
     }
 };
 
-export const getListedJobs = async (data) => {
+export const getListedJobs = async (userId, pageParam) => {
     try {
-        return await axios.get(`/listed-jobs/${data}`);
+        return await axios.get(`/listed-jobs/${userId}/${pageParam}`);
     } catch (error) {
         console.log("get listed jobs error: ", error);
         return error.response;
@@ -294,7 +294,7 @@ export const saveSubscription = async () => {
 
 export const getActivePlan = async (data) => {
     try {
-        return await axios.get(`/get-active-plan?subscriptionId=${data}`);
+        return await axios.get(`/active-plan?subscriptionId=${data}`);
     } catch (error) {
         console.log("get active plan error: ", error);
         return error.response;

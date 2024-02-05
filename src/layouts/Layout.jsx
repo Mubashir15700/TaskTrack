@@ -3,7 +3,7 @@ import Routers from "../routes/Routers";
 import Header from "../components/Users/Header/Header";
 import AdminHeader from "../components/Admin/Header/AdminHeader";
 import Footer from "../components/Users/Footer/Footer";
-import { checkToDisplayHeaderFooter } from "../utils/route";
+import { checkToDisplayHeaderFooter } from "../utils/routeUtil";
 import { userRoutesToCheck, adminRoutesToCheck } from "../config/routesConfig";
 
 const Layout = () => {

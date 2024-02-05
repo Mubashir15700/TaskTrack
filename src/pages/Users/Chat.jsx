@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import socket from "../../socket/socket";
+import EmojiPicker from "emoji-picker-react";
 import "./Chat.css";
 
 const Chat = () => {
@@ -13,8 +14,18 @@ const Chat = () => {
     const { username } = useParams();
     const { id } = useParams();
 
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+    const handleToggleEmojiPicker = () => {
+        setShowEmojiPicker((prev) => !prev);
+    };
+
+    const handleSelectEmoji = (emoji) => {
+        setCurrentMessage((prev) => prev + emoji.emoji);
+    };
+
     useEffect(() => {
-        socket.emit("get_chat_history", { senderId: currentUser._id, receiverId: id });
+        socket.emit("get_chat_history", { senderId: currentUser?._id, receiverId: id });
 
         // Listen for the "chat_history" event
         socket.on("chat_history", (chatHistory) => {
@@ -33,7 +44,7 @@ const Chat = () => {
             socket.off("chat_history");
             socket.off("receive_message");
         };
-    }, [currentUser._id, id]);
+    }, [currentUser?._id, id]);
 
     useEffect(() => {
         const messageContainer = document.querySelector(".message-container");
@@ -74,24 +85,25 @@ const Chat = () => {
             setMessageList((list) => [
                 ...list,
                 {
-                    senderId: currentUser._id,
+                    senderId: currentUser?._id,
                     receiverId: id,
                     message: currentMessage,
-                    username: currentUser.username,
+                    username: currentUser?.username,
                     time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
                 },
             ]);
 
             socket.emit("send_message", {
-                senderId: currentUser._id,
+                senderId: currentUser?._id,
                 receiverId: id,
                 message: currentMessage,
-                username: currentUser.username,
+                username: currentUser?.username,
                 time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
             });
 
             setCurrentMessage("");
             scrollToBottom();
+            setShowEmojiPicker((prev) => !prev);
         }
     };
 
@@ -112,7 +124,7 @@ const Chat = () => {
                     {messageList.map((messageContent, index) => (
                         <div
                             className="message"
-                            id={currentUser._id === messageContent?.senderId ? "other" : "you"}
+                            id={currentUser?._id === messageContent?.senderId ? "other" : "you"}
                             key={index}
                         >
                             <div>
@@ -145,6 +157,7 @@ const Chat = () => {
                             event.key === "Enter" && sendMessage();
                         }}
                     />
+                    <button onClick={handleToggleEmojiPicker}>😊</button>
                     <button onClick={sendMessage}>&#9658;</button>
                 </div>
                 <div className="col-2 d-flex justify-content-center">
@@ -155,6 +168,12 @@ const Chat = () => {
                     )}
                 </div>
             </div>
+            {showEmojiPicker && (
+                <EmojiPicker
+                    className="w-100"
+                    onEmojiClick={handleSelectEmoji}
+                />
+            )}
         </div>
     );
 };
