@@ -57,9 +57,9 @@ export const updateLaborerProfile = async (data) => {
 };
 
 // laborers
-export const getLaborers = async (currentUserId) => {
+export const getLaborers = async (userId, pageParam) => {
     try {
-        return await axios.get(`/laborers?userId=${currentUserId}`);
+        return await axios.get(`/laborers/${userId}/${pageParam}`);
     } catch (error) {
         console.log("get laborers error: ", error);
         return error.response;
@@ -112,9 +112,9 @@ export const cancelRequest = async (data) => {
 };
 
 // jobs
-export const getJobs = async (data) => {
+export const getJobs = async (userId, pageParam) => {
     try {
-        return await axios.get("/jobs", { params: data });
+        return await axios.get(`/jobs/${userId}/${pageParam}`);
     } catch (error) {
         console.log("get jobs error: ", error);
         return error.response;
@@ -220,9 +220,9 @@ export const applicantAction = async (data) => {
     }
 };
 
-export const getWorksHistory = async (data) => {
+export const getWorksHistory = async (userId, pageParam) => {
     try {
-        return await axios.get(`/works-history/${data}`);
+        return await axios.get(`/works-history/${userId}/${pageParam}`);
     } catch (error) {
         console.log("get works history error: ", error);
         return error.response;

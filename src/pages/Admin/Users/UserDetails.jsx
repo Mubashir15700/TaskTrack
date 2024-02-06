@@ -171,8 +171,7 @@ const UserDetails = () => {
                 <div className="mt-5 mx-auto">
                     <p>No data found</p>
                 </div>
-            )
-            }
+            )}
         </div >
     );
 };

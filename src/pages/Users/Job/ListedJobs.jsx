@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getListedJobs } from "../../../api/userApi";
-
 import InfiniteScroll from "react-infinite-scroll-component";
+import Job from "../../../components/Users/Job";
+import { getListedJobs } from "../../../api/userApi";
 
 const ListedJobs = () => {
     const currentUserId = useSelector((state) => state.user.userData._id);
@@ -42,22 +41,16 @@ const ListedJobs = () => {
                     >
                         {jobs.map((job, index) => (
                             <div className="card mb-3" key={index}>
-                                <div className="card-header">
-                                    {job.title}
-                                </div>
-                                <div className="card-body d-flex flex-wrap justify-content-between">
-                                    <div className="col-md-6 col-12 mb-3">
-                                        <p className="card-text">{job.description}</p>
-                                        <p className="mb-1">Location: {job.location.village}, {job.location.district}</p>
-                                        <p className="mb-1">Posted on: {new Date(job.postedAt).toLocaleString()}</p>
-                                    </div>
-                                    <div className="col-md-3 col-12 mb-3">
-                                        <p>Status: {job.status}</p>
-                                        <Link to={`/jobs/listed-jobs/${job._id}`} className="btn btn-primary btn-block">
-                                            Edit
-                                        </Link>
-                                    </div>
-                                </div>
+                                <Job
+                                    isListed={true}
+                                    title={job.title}
+                                    description={job.description}
+                                    village={job.location.village}
+                                    district={job.location.district}
+                                    postedAt={job.postedAt}
+                                    status={job.status}
+                                    id={job._id}
+                                />
                             </div>
                         ))}
                     </InfiniteScroll>

@@ -17,7 +17,7 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const [searchSelect, setSearchSelect] = useState("employers");
+    const [searchSelect, setSearchSelect] = useState("users");
     const [error, setError] = useState("");
 
     const notificationsCount = useSelector((state) => state.admin.adminNotificationCount);
@@ -62,7 +62,7 @@ const Header = () => {
                     dispatch(setSearchResults({
                         searchOn: searchSelect, results: response.data.result
                     }));
-                    if (searchSelect === "employers" || searchSelect === "laborers") {
+                    if (searchSelect === "users") {
                         navigate("/admin/users");
                     } else if (searchSelect === "plans") {
                         navigate("/admin/subscription-plans");

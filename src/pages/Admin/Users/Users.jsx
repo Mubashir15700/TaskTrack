@@ -38,7 +38,7 @@ const Users = () => {
     };
 
     if (
-      (searchResults.searchOn === "employers" || searchResults.searchOn === "laborers")) {
+      (searchResults.searchOn === "users")) {
       setUsers(searchResults.results);
     } else {
       getAllUsers();

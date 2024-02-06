@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { getWorksHistory, getPrevRequest, cancelRequest, getLaborer } from "../../../api/userApi";
 import SweetAlert from "../../../components/Common/SweetAlert";
 
@@ -11,43 +12,47 @@ const WorksHistory = () => {
     const isJobSeeker = useSelector((state) => state.user.userData.isJobSeeker);
 
     const [works, setWorks] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [pendingRequest, setPendingRequest] = useState({});
 
+    const getAllWorksHistory = async () => {
+        try {
+            const response = await getWorksHistory(currentUserId, page);
+            if (response && response.data.status === "success") {
+                setWorks(response.data.works);
+                setPage((prevPage) => prevPage + 1);
+                setTotalPages(response.data.totalPages);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const getAnyPendingRequest = async () => {
+        try {
+            const response = await getPrevRequest(currentUserId);
+            if (response && response.data.status === "success") {
+                const responseData = response.data.request;
+                if (responseData) {
+                    const workData = {
+                        userId: responseData.userId,
+                        languages: responseData.languages,
+                        education: responseData.education,
+                        avlDays: responseData.avlDays,
+                        avlTimes: responseData.avlTimes,
+                        fields: responseData.fields,
+                        status: responseData.status,
+                    };
+                    setPendingRequest(workData);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
-        const getAllWorksHistory = async () => {
-            try {
-                const response = await getWorksHistory(currentUserId);
-                if (response && response.data.status === "success") {
-                    setWorks(response.data.works);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
-        const getAnyPendingRequest = async () => {
-            try {
-                const response = await getPrevRequest(currentUserId);
-                if (response && response.data.status === "success") {
-                    const responseData = response.data.request;
-                    if (responseData) {
-                        const workData = {
-                            userId: responseData.userId,
-                            languages: responseData.languages,
-                            education: responseData.education,
-                            avlDays: responseData.avlDays,
-                            avlTimes: responseData.avlTimes,
-                            fields: responseData.fields,
-                            status: responseData.status,
-                        };
-                        setPendingRequest(workData);
-                    }
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-
         getAllWorksHistory();
         getAnyPendingRequest();
     }, []);
@@ -115,26 +120,33 @@ const WorksHistory = () => {
             <h3 className="mb-4">Your Work History</h3>
             {
                 works.length ? (
-                    works.map((work, index) => (
-                        <div className="card mb-3" key={index}>
-                            <div className="card-header">
-                                {work.title}
-                            </div>
-                            <div className="card-body d-flex flex-wrap justify-content-between">
-                                <div className="col-md-6 col-12 mb-3">
-                                    <p className="card-text">{work.description}</p>
-                                    <p className="mb-1">Location: {work.location.village}, {work.location.district}</p>
-                                    <p className="mb-1">Posted on: {new Date(work.postedAt).toLocaleString()}</p>
+                    <InfiniteScroll
+                        dataLength={works.length}
+                        hasMore={page <= totalPages}
+                        loader={<div>Hang on, loading content...</div>}
+                        next={() => getAllWorksHistory()}
+                    >
+                        {works.map((work, index) => (
+                            <div className="card mb-3" key={index}>
+                                <div className="card-header">
+                                    {work.title}
                                 </div>
-                                <div className="col-md-3 col-12 mb-3">
-                                    <p>Status: {work.status}</p>
-                                    <Link to={`/jobs/${work._id}`} className="btn btn-primary btn-block">
-                                        View
-                                    </Link>
+                                <div className="card-body d-flex flex-wrap justify-content-between">
+                                    <div className="col-md-6 col-12 mb-3">
+                                        <p className="card-text">{work.description}</p>
+                                        <p className="mb-1">Location: {work.location.village}, {work.location.district}</p>
+                                        <p className="mb-1">Posted on: {new Date(work.postedAt).toLocaleString()}</p>
+                                    </div>
+                                    <div className="col-md-3 col-12 mb-3">
+                                        <p>Status: {work.status}</p>
+                                        <Link to={`/jobs/${work._id}`} className="btn btn-primary btn-block">
+                                            View
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))
+                        ))}
+                    </InfiniteScroll>
                 ) : (
                     <div className="d-flex justify-content-center align-items-center flex-column">
                         <p>You haven't done any works yet</p>

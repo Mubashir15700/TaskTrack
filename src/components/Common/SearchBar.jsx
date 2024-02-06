@@ -21,8 +21,7 @@ const SearchBar = ({ role, onSearch, onSelect }) => {
                     </>
                 ) : (
                     <>
-                        <option value="employers">Employers</option>
-                        <option value="laborers">Laborers</option>
+                        <option value="users">Users</option>
                         <option value="plans">Plans</option>
                         <option value="banners">Banners</option>
                     </>
