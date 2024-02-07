@@ -20,7 +20,9 @@ const Layout = () => {
       {shouldDisplayHeaderFooter && (
         userRole === "admin" ? <AdminHeader /> : <Header />
       )}
-      <main style={{ paddingTop: shouldDisplayHeaderFooter ? "71px" : "0" }}>
+      <main
+        style={{ paddingTop: shouldDisplayHeaderFooter ? "71px" : "0" }}
+      >
         <Routers />
       </main>
       {shouldDisplayHeaderFooter &&

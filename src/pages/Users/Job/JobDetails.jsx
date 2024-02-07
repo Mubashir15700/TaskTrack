@@ -94,11 +94,16 @@ const JobDetails = () => {
       {
         job ? (
           <div className="card">
-            <div className="card-header">
-              {job.title}
+            <div className="card-header d-flex justify-content-between">
+              <p>{job.title}</p>
+              <p>
+                Posted on: {new Date(job.postedAt).toLocaleDateString(undefined, {
+                  day: "2-digit", month: "short", year: "numeric"
+                })}
+              </p>
             </div>
             <div className="card-body d-flex flex-column flex-md-row justify-content-between">
-              <div className="col-md-3">
+              <div className="col-md-4">
                 {job.userDetails?.profile ? (
                   <img src={`http://localhost:3000/uploads/profile/${job?.userDetails?.profile}`} alt="emp-profile" />
                 ) : (
@@ -116,13 +121,8 @@ const JobDetails = () => {
                   </div>
                 </div>
               </div>
-              <div className="d-flex align-items-center col-md-6">
+              <div className="d-flex align-items-center col-md-8">
                 <p className="card-text">{job.description}</p>
-              </div>
-              <div className="d-flex align-items-center col-md-3">
-                <p className="">
-                  Posted on: {new Date(job.postedAt).toLocaleString()}
-                </p>
               </div>
             </div>
             <div className="px-1">

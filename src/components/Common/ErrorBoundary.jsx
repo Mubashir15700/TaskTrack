@@ -20,7 +20,13 @@ const ErrorBoundary = ({ children }) => {
 
     if (hasError) {
         // You can render any custom fallback UI
-        return <div>Something went wrong.</div>;
+        return (
+            <div className="d-flex justify-content-center align-items-center vh-100">
+                <div className="text-center">
+                    <div>Something went wrong.</div>
+                </div>
+            </div>
+        );
     }
 
     return children;

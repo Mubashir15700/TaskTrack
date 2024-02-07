@@ -24,7 +24,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
             if (currentAddress) {
                 if (typeof currentAddress === "string") {
                     addressToSet = JSON.parse(currentAddress);
-                    onAddressChange(addressToSet);
+                    usage !== "admin" && onAddressChange(addressToSet);
                 } else {
                     addressToSet = currentAddress;
                 }
@@ -132,24 +132,18 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         defaultValue={textareaValue}
                         disabled
                     />
-                    {(textareaValue !== "No Location provided" && usage === "profile") ? (
+                    {(textareaValue !== "No Location provided" && usage === "profile") && (
                         <button className="btn" onClick={handleDeleteLocation}>
                             <i className="bi bi-x-circle text-danger fs-3"></i>
                         </button>
-                    ) : null}
+                    )}
                 </div>
-                {(usage === "admin" && selectedAddress?.lat && selectedAddress?.lon) ? (
+                {(mapVisible && selectedAddress && selectedAddress.lat && selectedAddress.lon) && (
                     <DisplayMap
                         latitude={selectedAddress.lat}
                         longitude={selectedAddress.lon}
                     />
-                ) : null}
-                {(mapVisible && selectedAddress && selectedAddress.lat && selectedAddress.lon) ? (
-                    <DisplayMap
-                        latitude={selectedAddress.lat}
-                        longitude={selectedAddress.lon}
-                    />
-                ) : null}
+                )}
                 {manualEntryVisible && (
                     <div>
                         <div className="d-flex">

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { getWorksHistory, getPrevRequest, cancelRequest, getLaborer } from "../../../api/userApi";
 import SweetAlert from "../../../components/Common/SweetAlert";
+import Job from "../../../components/Users/Job";
 
 const WorksHistory = () => {
     const navigate = useNavigate();
@@ -128,22 +129,16 @@ const WorksHistory = () => {
                     >
                         {works.map((work, index) => (
                             <div className="card mb-3" key={index}>
-                                <div className="card-header">
-                                    {work.title}
-                                </div>
-                                <div className="card-body d-flex flex-wrap justify-content-between">
-                                    <div className="col-md-6 col-12 mb-3">
-                                        <p className="card-text">{work.description}</p>
-                                        <p className="mb-1">Location: {work.location.village}, {work.location.district}</p>
-                                        <p className="mb-1">Posted on: {new Date(work.postedAt).toLocaleString()}</p>
-                                    </div>
-                                    <div className="col-md-3 col-12 mb-3">
-                                        <p>Status: {work.status}</p>
-                                        <Link to={`/jobs/${work._id}`} className="btn btn-primary btn-block">
-                                            View
-                                        </Link>
-                                    </div>
-                                </div>
+                                <Job
+                                    isListed={false}
+                                    title={work.title}
+                                    description={work.description}
+                                    village={work.location.village}
+                                    district={work.location.district}
+                                    postedAt={work.postedAt}
+                                    status={work.status}
+                                    id={work._id}
+                                />
                             </div>
                         ))}
                     </InfiniteScroll>

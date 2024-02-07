@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSchema } from "../../../../validations/userValidations/loginSchema";
-import { setLoading, initializeUser } from "../../../../redux/slices/userSlice";
+import { initializeUser } from "../../../../redux/slices/userSlice";
 import { initializeAdmin } from "../../../../redux/slices/adminSlice";
 import { login } from "../../../../api/sharedApi/authApi";
 import logo from "../../../../assets/images/logo.png";
@@ -37,7 +37,6 @@ const Login = ({ role }) => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    // dispatch(setLoading(true));
 
     try {
       await loginSchema.validate(formData, { abortEarly: false });
@@ -50,7 +49,7 @@ const Login = ({ role }) => {
         if (response.data.status === "success") {
           if (role === "admin") {
             initializeAdmin(dispatch);
-            navigate("/admin/");
+            navigate("/admin");
           } else {
             initializeUser(dispatch);
             navigate("/");
@@ -69,8 +68,6 @@ const Login = ({ role }) => {
         setServerResponse({ status: "failed", message: "An error occurred during login" });
       }
     }
-
-    // dispatch(setLoading(false));
   };
 
   return (

@@ -42,7 +42,8 @@ const Subscription = () => {
         };
 
         getAllPlans();
-        getActivePlanDetails();
+
+        currentSubscription && getActivePlanDetails();
     }, []);
 
     const makePayment = async (plan) => {
