@@ -24,7 +24,9 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
             if (currentAddress) {
                 if (typeof currentAddress === "string") {
                     addressToSet = JSON.parse(currentAddress);
-                    usage !== "admin" && onAddressChange(addressToSet);
+                    if (usage !== "admin" && usage !== "display-laborer") {
+                        onAddressChange(addressToSet);
+                    }
                 } else {
                     addressToSet = currentAddress;
                 }

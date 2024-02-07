@@ -37,6 +37,7 @@ const userSlice = createSlice({
 export const {
     setLoggedIn, setUserData, setUserNotificationCount, setLoading, setSearchResults
 } = userSlice.actions;
+
 export default userSlice.reducer;
 
 // Asynchronous initialization function

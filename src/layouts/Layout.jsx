@@ -1,14 +1,14 @@
 import { useLocation } from "react-router-dom";
 import Routers from "../routes/Routers";
-import Header from "../components/Users/Header/Header";
 import AdminHeader from "../components/Admin/Header/AdminHeader";
+import Header from "../components/Users/Header/Header";
 import Footer from "../components/Users/Footer/Footer";
 import { checkToDisplayHeaderFooter } from "../utils/routeUtil";
 import { userRoutesToCheck, adminRoutesToCheck } from "../config/routesConfig";
 
 const Layout = () => {
   const location = useLocation();
-
+  
   const userRole = location.pathname.startsWith("/admin") ? "admin" : "user";
   const shouldDisplayHeaderFooter = checkToDisplayHeaderFooter(
     userRole === "admin" ? adminRoutesToCheck : userRoutesToCheck,
