@@ -22,7 +22,7 @@ export const getUser = async (data) => {
 
 export const userAction = async (data) => {
     try {
-        return await axios.patch(`/admin/user-action/${data}`);
+        return await axios.post(`/admin/user-action`, data);
     } catch (error) {
         console.log("user action error: ", error);
         return error.response;
@@ -109,9 +109,9 @@ export const getRequest = async (data) => {
     }
 };
 
-export const requestAction = async (id, type) => {
+export const requestAction = async (data) => {
     try {
-        return await axios.patch(`/admin/request-action/${id}`, type);
+        return await axios.post(`/admin/request-action`, data);
     } catch (error) {
         console.log("request action error: ", error);
         return error.response;

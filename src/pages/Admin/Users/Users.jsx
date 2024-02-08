@@ -50,17 +50,18 @@ const Users = () => {
       `${isBlocked ? "Unblock" : "Block"}`,
       `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
       `${isBlocked ? "Unblock" : "Block"}`,
-      "#d9534f"
+      "#d9534f",
+      `${!isBlocked ? "text" : ""}`
     );
 
     if (result.isConfirmed) {
-      handleBlockUnblock(userId);
+      handleBlockUnblock(userId, result.value);
     }
   };
 
-  const handleBlockUnblock = async (userId) => {
+  const handleBlockUnblock = async (userId, reason) => {
     try {
-      const response = await userAction(userId);
+      const response = await userAction({ userId, reason });
       if (response) {
         if (response.data.status === "success") {
           const updatedUsersResponse = await getUsers(itemsPerPage, currentPage);
@@ -74,7 +75,7 @@ const Users = () => {
             setError("Failed to fetch updated users data.");
           }
         } else {
-          setError("Something went wrong");
+          setError(response.data.message);
         }
       }
     } catch (error) {

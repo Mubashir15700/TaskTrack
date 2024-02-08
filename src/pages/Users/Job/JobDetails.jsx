@@ -143,9 +143,9 @@ const JobDetails = () => {
                     </div>
                     <div className="col-md-3">
                       <p className="mb-1"><strong>Wage Per Hour:</strong> {field.wagePerHour}</p>
+                      <p>Status: {job.status}</p>
                     </div>
                     <div className="col-md-3">
-                      <p>Status: {job.status}</p>
                       {job.status !== "closed" && (
                         hasExpressedInterest(field, currentUserId) ? (
                           <button

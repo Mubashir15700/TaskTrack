@@ -16,6 +16,7 @@ const WorksHistory = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [pendingRequest, setPendingRequest] = useState({});
+    const [rejectReason, setRejectReason] = useState(null);
 
     const getAllWorksHistory = async () => {
         try {
@@ -46,6 +47,9 @@ const WorksHistory = () => {
                         status: responseData.status,
                     };
                     setPendingRequest(workData);
+                    if (response.data.reason) {
+                        setRejectReason(response.data.reason);
+                    }
                 }
             }
         } catch (error) {
@@ -68,6 +72,25 @@ const WorksHistory = () => {
 
         if (result.isConfirmed) {
             handleCancelRequest();
+        }
+    };
+
+    const handleCancelRequest = async () => {
+        try {
+            const response = await cancelRequest({ currentUserId });
+            if (response) {
+                if (response.data.status === "success") {
+                    toast.success("Cancelled request successfully");
+                    navigate("/account");
+                } else {
+                    toast.error(response.data?.message);
+                }
+            } else {
+                toast.error("Failed to cancel request. Please try again.");
+            }
+        } catch (error) {
+            console.error("Error cancelling request:", error);
+            toast.error("An error occurred while cancelling the request. Please try again.");
         }
     };
 
@@ -94,25 +117,6 @@ const WorksHistory = () => {
         } catch (error) {
             toast.error("An error occurerd while fetching data");
             console.log("Get laborer profile error: ", error);
-        }
-    };
-
-    const handleCancelRequest = async () => {
-        try {
-            const response = await cancelRequest({ currentUserId });
-            if (response) {
-                if (response.data.status === "success") {
-                    toast.success("Cancelled request successfully");
-                    navigate("/account");
-                } else {
-                    toast.error(response.data?.message);
-                }
-            } else {
-                toast.error("Failed to cancel request. Please try again.");
-            }
-        } catch (error) {
-            console.error("Error cancelling request:", error);
-            toast.error("An error occurred while cancelling the request. Please try again.");
         }
     };
 
@@ -152,6 +156,7 @@ const WorksHistory = () => {
                                         "Your request to become laborer has been sent to admin." :
                                         `Your request to become laborer has been ${pendingRequest.status}`}
                                 </p>
+                                {rejectReason && <p>Reason: {rejectReason}</p>}
                                 <div className="d-md-flex justify-content-between col-6">
                                     {pendingRequest.status !== "approved" ? (
                                         <Link

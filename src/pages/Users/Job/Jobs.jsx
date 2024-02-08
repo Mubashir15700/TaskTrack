@@ -16,7 +16,7 @@ const Jobs = () => {
     try {
       const response = await getJobs(currentUserId, page);
       if (response && response.data.status === "success") {
-        setJobs(response.data.jobs);
+        setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]);
         setPage((prevPage) => prevPage + 1);
         setTotalPages(response.data.totalPages);
       }

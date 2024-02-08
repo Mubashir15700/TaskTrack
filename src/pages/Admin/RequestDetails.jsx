@@ -12,7 +12,6 @@ const RequestDetails = () => {
     const dispatch = useDispatch();
 
     const [request, setRequest] = useState();
-    console.log("req: ", request);
     const [error, setError] = useState();
 
     const { id } = useParams();
@@ -43,17 +42,20 @@ const RequestDetails = () => {
             `${action === "approve" ? "Approve" : "Reject"}`,
             `Are you sure you want to ${action} this request?`,
             `${action === "approve" ? "Approve" : "Reject"}`,
-            "#d9534f"
+            "#d9534f",
+            `${action === "reject" ? "text" : ""}`
         );
 
         if (result.isConfirmed) {
-            handleApproveReject({ action });
+            handleApproveReject(action, result.value);
         }
     };
 
-    const handleApproveReject = async (type) => {
+    const handleApproveReject = async (type, reason) => {
         try {
-            const response = await requestAction(id, type);
+            const response = await requestAction(
+                { requestId: id, userId: request.user?._id, type, reason }
+            );
             if (response) {
                 if (response.data.status === "success") {
                     const updatedRequest = await getRequest(id);

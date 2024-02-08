@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { applicantAction } from "../../../api/userApi";
+import SweetAlert from "../../../components/Common/SweetAlert";
 import socket from "../../../socket/socket";
 
 const ViewApplicants = () => {
@@ -15,10 +16,26 @@ const ViewApplicants = () => {
 
     const currentUserId = useSelector((state) => state.user.userData?._id);
 
-    const takeApplicantAction = async (laborerId, action) => {
+    const confirmApproveReject = async (laborerId, action) => {
+        const result = await SweetAlert.confirmAction(
+            `${action === "accept" ? "Accept" : "Reject"}`,
+            `Are you sure you want to ${action} this request?`,
+            `${action === "accept" ? "Approve" : "Reject"}`,
+            "#d9534f",
+            `${action === "reject" ? "text" : ""}`
+        );
+
+        if (result.isConfirmed) {
+            takeApplicantAction(laborerId, action, result.value);
+        }
+    };
+
+    const takeApplicantAction = async (laborerId, action, reason) => {
         try {
             const actionTook = action === "accept" ? "accepted" : "rejected";
-            const response = await applicantAction({ jobId, fieldName, laborerId, actionTook });
+            const response = await applicantAction(
+                { jobId, fieldName, laborerId, actionTook, reason }
+                );
             if (response && response.data.status === "success") {
                 toast.success("Success");
                 // Update the UI by modifying the state
@@ -79,13 +96,13 @@ const ViewApplicants = () => {
                                     <div className="d-flex flex-column flex-sm-row">
                                         <button
                                             className="btn btn-warning my-3 me-2"
-                                            onClick={() => takeApplicantAction(applicant?.userId?._id, "accept")}
+                                            onClick={() => confirmApproveReject(applicant?.userId?._id, "accept")}
                                         >
                                             Approve
                                         </button>
                                         <button
                                             className="btn btn-danger my-3"
-                                            onClick={() => takeApplicantAction(applicant?.userId?._id, "reject")}
+                                            onClick={() => confirmApproveReject(applicant?.userId?._id, "reject")}
                                         >
                                             Reject
                                         </button>

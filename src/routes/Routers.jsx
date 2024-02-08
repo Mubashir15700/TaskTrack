@@ -44,7 +44,7 @@ const Routers = () => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route
-            path="/admin*"
+            path="/admin/*"
             element={<AdminRoutes isLoggedIn={isAdminLoggedIn} />}
           />
           <Route
