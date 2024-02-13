@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import { setAdminNotificationCount } from "../../redux/slices/adminSlice";
 import { setUserNotificationCount } from "../../redux/slices/userSlice";
-import { getAdminNotifications, markNotificationOpened } from "../../api/adminApi"
-import { getUserNotifications, markNotificationOpened as markUserNotificationOpened } from "../../api/userApi";
+import { getAdminNotifications, markNotificationOpened } from "../../api/admin/notification";
+import {
+  getUserNotifications,
+  markNotificationOpened as markUserNotificationOpened
+} from "../../api/user/notification";
 
 const Notifications = () => {
   const dispatch = useDispatch();
@@ -16,28 +20,32 @@ const Notifications = () => {
   const currentUserId = useSelector((state) => state.user.userData?._id);
 
   const [notifications, setNotifications] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const getAllNotifications = async () => {
+    try {
+      let response;
+      if (role === "admin") {
+        response = await getAdminNotifications(page);
+        dispatch(setAdminNotificationCount(0));
+      } else {
+        response = await getUserNotifications(currentUserId, page);
+        dispatch(setUserNotificationCount(0));
+      }
+      if (response && response.status === 200) {
+        setNotifications((prevNotifications) => [...prevNotifications, ...response.notifications]);
+        setPage((prevPage) => prevPage + 1);
+        setTotalPages(response.totalPages);
+      } else {
+        toast.error("Error while fetching notifications");
+      }
+    } catch (error) {
+      console.log("get all notifications error: ", error);
+    }
+  };
 
   useEffect(() => {
-    const getAllNotifications = async () => {
-      try {
-        let response;
-        if (role === "admin") {
-          response = await getAdminNotifications();
-          dispatch(setAdminNotificationCount(0));
-        } else {
-          response = await getUserNotifications(currentUserId);
-          dispatch(setUserNotificationCount(0));
-        }
-        if (response && response.data.status === "success") {
-          setNotifications(response.data.notifications);
-        } else {
-          toast.error("Error while fetching notifications");
-        }
-      } catch (error) {
-        console.log("get all notifications error: ", error);
-      }
-    };
-
     getAllNotifications();
   }, []);
 
@@ -48,7 +56,6 @@ const Notifications = () => {
       } else {
         await markUserNotificationOpened(id);
       }
-      console.log(redirectTo);
       navigate(redirectTo);
     } catch (error) {
       console.log(error);
@@ -58,39 +65,46 @@ const Notifications = () => {
   return (
     <div className="col-10 mx-auto mt-3">
       <h3 className="mb-4">Notifications</h3>
-      {notifications?.length ? (
-        notifications.map((notification, index) => (
-          <div className="card mb-3" key={index}>
-            <div className="card-body d-flex flex-wrap justify-content-between">
-              <div className="col-md-3 col-12 mb-3">
-                {notification.from?.profile && (
-                  <img
-                    src={`http://localhost:3000/uploads/profile/${notification.from.profile}`}
-                    alt="Profile"
-                    style={{ height: "60px", width: "80px" }}
-                    className="rounded-3"
-                  />
-                )}
-                <p>{notification.from?.username}</p>
-              </div>
-              <div className="col-md-6 col-12 mb-3">
-                <p>{notification.message}</p>
-                <p>{new Date(notification.timestamp).toDateString()}</p>
-              </div>
-              <div className="col-md-3 col-12 mb-3">
-                <button
-                  className="btn btn-primary btn-block me-5"
-                  onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
-                >
-                  View More
-                </button>
-                {!notification.isOpened && (
-                  <i className="bi bi-circle-fill text-danger"></i>
-                )}
+      {notifications && notifications.length ? (
+        <InfiniteScroll
+          dataLength={notifications.length}
+          hasMore={page <= totalPages}
+          loader={<div>Hang on, loading content...</div>}
+          next={getAllNotifications}
+        >
+          {notifications.map((notification, index) => (
+            <div className="card mb-3" key={index}>
+              <div className="card-body d-flex flex-wrap justify-content-between">
+                <div className="col-md-3 col-12 mb-3">
+                  {notification.from?.profile && (
+                    <img
+                      src={`http://localhost:3000/uploads/profile/${notification.from.profile}`}
+                      alt="Profile"
+                      style={{ height: "60px", width: "80px" }}
+                      className="rounded-3"
+                    />
+                  )}
+                  <p>{notification.from?.username}</p>
+                </div>
+                <div className="col-md-6 col-12 mb-3">
+                  <p>{notification.message}</p>
+                  <p>{new Date(notification.timestamp).toDateString()}</p>
+                </div>
+                <div className="col-md-3 col-12 mb-3">
+                  <button
+                    className="btn btn-primary btn-block me-5"
+                    onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
+                  >
+                    View More
+                  </button>
+                  {!notification.isOpened && (
+                    <i className="bi bi-circle-fill text-danger"></i>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))
+          ))}
+        </InfiniteScroll>
       ) : (
         <div>
           No notifications found

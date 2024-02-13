@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
-import { getJob, applyJob, cancelApplication } from "../../../api/userApi";
+import { getJob, applyJob, cancelApplication } from "../../../api/user/job";
 import Address from "../../../components/Users/Address";
 import socket from "../../../socket/socket";
 
@@ -17,8 +17,8 @@ const JobDetails = () => {
   const getJobDetails = async () => {
     try {
       const response = await getJob(id);
-      if (response && response.data.status === "success") {
-        setJob(response.data.job);
+      if (response && response.status === 200) {
+        setJob(response.job);
       }
     } catch (error) {
       console.log(error);
@@ -51,7 +51,7 @@ const JobDetails = () => {
     if (isJobSeeker) {
       try {
         const response = await applyJob({ jobId: id, field, laborerId: currentUserId });
-        if (response && response.data.status) {
+        if (response && response.status) {
           toast.success("Successfully applied for this job");
           getJobDetails();
           socket.emit("new_applicant", { empId: job.userId, jobId: id });
@@ -70,7 +70,7 @@ const JobDetails = () => {
   const removeInterest = async (field) => {
     try {
       const response = await cancelApplication({ jobId: id, field, laborerId: currentUserId });
-      if (response && response.data.status) {
+      if (response && response.status) {
         toast.success("Successfully cancelled application for this job");
         getJobDetails();
         socket.emit("application_cancel", { empId: job.userId, jobId: id });
@@ -146,7 +146,7 @@ const JobDetails = () => {
                       <p>Status: {job.status}</p>
                     </div>
                     <div className="col-md-3">
-                      {job.status !== "closed" && (
+                      {(currentUserId && job.status !== "closed") && (
                         hasExpressedInterest(field, currentUserId) ? (
                           <button
                             className="btn btn-danger"

@@ -5,6 +5,14 @@ function SubForm1({ formData, setFormData, errors }) {
         setFormData({ ...formData, location: selectedAddress });
     };
 
+    const AddressProps = {
+        userId: formData?._id,
+        label: "Lives In",
+        currentAddress: formData?.location,
+        onAddressChange: newAddressSelected,
+        usage: "form",
+    };
+
     return (
         <>
             <h5 className="mb-2">Basic Information</h5>
@@ -48,13 +56,7 @@ function SubForm1({ formData, setFormData, errors }) {
                     />
                     {errors.email && <span className="error-display">{errors.email}</span>}
                 </div>
-                <Address
-                    userId={formData?._id}
-                    label={"Lives In"}
-                    currentAddress={formData?.location}
-                    onAddressChange={newAddressSelected}
-                    usage={"form"}
-                />
+                <Address {...AddressProps} />
                 {errors.location && <span className="error-display">{errors.location}</span>}
             </div>
         </>

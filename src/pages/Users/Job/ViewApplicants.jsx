@@ -2,7 +2,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { applicantAction } from "../../../api/userApi";
+import { applicantAction } from "../../../api/user/job";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import socket from "../../../socket/socket";
 
@@ -36,7 +36,7 @@ const ViewApplicants = () => {
             const response = await applicantAction(
                 { jobId, fieldName, laborerId, actionTook, reason }
                 );
-            if (response && response.data.status === "success") {
+            if (response && response.status === 200) {
                 toast.success("Success");
                 // Update the UI by modifying the state
                 setApplicantsData((prevApplicants) => {

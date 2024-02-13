@@ -18,7 +18,7 @@ const SweetAlert = {
             options.inputPlaceholder = "Enter reason here";
             options.inputValidator = (value) => {
                 if (!value) {
-                    return 'You need to enter a reason';
+                    return "You need to enter a reason";
                 }
             };
         }

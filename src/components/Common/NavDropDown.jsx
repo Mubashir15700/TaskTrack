@@ -1,13 +1,49 @@
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { setLoggedIn } from "../../redux/slices/adminSlice";
+import { setLoggedIn as setUserLoggedIn } from "../../redux/slices/userSlice";
+import { setLoading } from "../../redux/slices/commonSlice";
+import SweetAlert from "./SweetAlert";
+import { logout } from "../../api/shared/auth";
 
-const NavDropDown = ({ role, onLogoutClick }) => {
+const NavDropDown = ({ role, onError }) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     let count;
     if (role === "admin") {
         count = useSelector((state) => state.admin.adminNotificationCount);
     } else {
         count = useSelector((state) => state.user.userNotificationCount);
     }
+
+    const confirmLogout = async () => {
+        const result = await SweetAlert.confirmAction(
+            "Log Out",
+            "Are you sure you want to log out?",
+            "Logout",
+            "#d9534f"
+        );
+
+        if (result.isConfirmed) {
+            handleLogout();
+        }
+    };
+
+    const handleLogout = async () => {
+        dispatch(setLoading(true));
+
+        const response = await logout({ role });
+        if (response && response.status === 200) {
+            role === "admin" ? dispatch(setLoggedIn(false)) : dispatch(setUserLoggedIn(false));
+            const navigateTo = role === "admin" ? "/admin/login" : "/login";
+            navigate(navigateTo);
+        } else {
+            onError("An error occured while logging out");
+            console.log("logout error: ", response);
+        }
+        dispatch(setLoading(false));
+    };
 
     return (
         <div className="nav-item dropdown">
@@ -46,7 +82,7 @@ const NavDropDown = ({ role, onLogoutClick }) => {
                 </li>
                 <li><hr className="dropdown-divider" /></li>
                 <li>
-                    <button type="button" className="btn btn-danger logout-btn" onClick={onLogoutClick}>
+                    <button type="button" className="btn btn-danger logout-btn" onClick={confirmLogout}>
                         <i className="bi bi-power"></i> Logout
                     </button>
                 </li>

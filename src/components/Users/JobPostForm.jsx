@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Address from "./Address";
-import { getApplicants } from "../../api/userApi";
+import Fields from "./Fields";
+import { getApplicants } from "../../api/user/job";
 
 const JobPostForm = ({
     heading,
@@ -17,7 +18,8 @@ const JobPostForm = ({
     isChanged,
     handleSubmit,
     handleDeleteJob,
-    serverResponse
+    serverResponse,
+    purpose
 }) => {
     const navigate = useNavigate();
 
@@ -30,15 +32,15 @@ const JobPostForm = ({
     const getJobApplicants = async (fieldName) => {
         try {
             const response = await getApplicants({ jobId: postData._id, fieldName });
-            if (response && response.data.status === "success") {
-                navigate("/jobs/view-applicants", { 
-                    state: { 
-                        applicantsData: response.data.applicants, 
-                        job: postData.title, 
+            if (response && response.status === 200) {
+                navigate("/jobs/view-applicants", {
+                    state: {
+                        applicantsData: response.applicants,
+                        job: postData.title,
                         jobId: postData._id,
-                        status: postData.status, 
-                        fieldName 
-                    } 
+                        status: postData.status,
+                        fieldName
+                    }
                 });
             } else {
                 toast.error("Failed to fetch applicants");
@@ -121,70 +123,22 @@ const JobPostForm = ({
                 <div className="col-md-12">
                     <label>Required Fields</label>
                     {postData.fields?.map((field, index) => (
-                        <div key={index} className="field-container form-group row col-md-12 mb-2">
-                            <div className="col-md-4">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder={`Field ${index + 1} Name`}
-                                    value={field.name || ""}
-                                    onChange={(e) => handleFieldChange(index, { name: e.target.value })}
-                                />
-                                {errors.hasOwnProperty(`fields[${index}].name`) && (
-                                    <p className="error-display">Field name is required</p>
-                                )}
-                            </div>
-                            <div className="col-md-2">
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    placeholder="Number of Workers"
-                                    value={field.workers || ""}
-                                    onChange={(e) => handleFieldChange(index, { workers: e.target.value })}
-                                />
-                                {errors.hasOwnProperty(`fields[${index}].workers`) && (
-                                    <p className="error-display">Number of workers must be a positive number</p>
-                                )}
-                            </div>
-                            <div className="col-md-3">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Materials Required"
-                                    value={field.materialsRequired || ""}
-                                    onChange={(e) => handleFieldChange(index, { materialsRequired: e.target.value })}
-                                />
-                            </div>
-                            <div className="col-md-3">
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    placeholder="Hourly Wage"
-                                    value={field.wagePerHour || ""}
-                                    onChange={(e) => handleFieldChange(index, { wagePerHour: e.target.value })}
-                                />
-                                {errors.hasOwnProperty(`fields[${index}].wagePerHour`) && (
-                                    <p className="error-display">Wage per hour must be a positive number</p>
-                                )}
-                            </div>
-                            <div className="col-md-6">
-                                <button type="button" className="btn" onClick={() => handleRemoveField(index)}>
-                                    <i className="bi bi-x-circle text-danger"></i>
-                                </button>
-                                {field.applicants?.length && (
-                                    <Link onClick={() => getJobApplicants(field.name)}>
-                                        {`View (${field.applicants.length})Applicants`}
-                                    </Link>
-                                )}
-                            </div>
-                        </div>
+                        <Fields
+                            key={index}
+                            field={field}
+                            index={index}
+                            errors={errors}
+                            handleFieldChange={handleFieldChange}
+                            handleRemoveField={handleRemoveField}
+                            getJobApplicants={getJobApplicants}
+                        />
                     ))}
                     <button type="button" className="btn" onClick={handleAddField}>
                         <i className="bi bi-plus-circle"></i>
                     </button>
                 </div>
                 {/* End of Fields Section */}
-                {heading !== "Post New Job" && (
+                {(heading !== "Post New Job" && purpose !== "Send Request") && (
                     <div className="form-group row">
                         <div className="col-md-4">
                             <label>Status</label>
@@ -197,7 +151,6 @@ const JobPostForm = ({
                                 <option value="open">Open</option>
                                 <option value="in progress">In Progress</option>
                                 <option value="completed">Completed</option>
-                                {/* Add more options as needed */}
                             </select>
                         </div>
                         <div className="col-md-4 mt-4">
@@ -214,7 +167,7 @@ const JobPostForm = ({
                     </button>
                 )}
                 {serverResponse && (
-                    <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                    <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
                         {serverResponse.message}
                     </div>
                 )}

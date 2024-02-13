@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getListedJob, updateListedJob, deleteListedJob } from "../../../api/userApi";
+import { getListedJob, updateListedJob, deleteListedJob } from "../../../api/user/job";
 import { jobSchema } from "../../../validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 import SweetAlert from "../../../components/Common/SweetAlert";
@@ -21,8 +21,8 @@ const EditListedJob = () => {
             try {
                 // dispatch(setLoading(true));
                 const response = await getListedJob(id);
-                if (response && response.data.status === "success" && response.data.job) {
-                    setPostData(response.data.job);
+                if (response && response.status === 200 && response.job) {
+                    setPostData(response.job);
                 } else {
                     toast.error("Failed to fetch job data.");
                 }
@@ -87,9 +87,9 @@ const EditListedJob = () => {
             await jobSchema.validate(postData, { abortEarly: false });
             const response = await updateListedJob(postData);
             if (response) {
-                setServerResponse(response.data);
+                setServerResponse(response);
 
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     navigate("/jobs/listed-jobs");
                     toast.success("Edited job successfully");
                 }
@@ -125,9 +125,9 @@ const EditListedJob = () => {
         try {
             const response = await deleteListedJob(id);
             if (response) {
-                setServerResponse(response.data);
+                setServerResponse(response);
 
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     navigate("/jobs/listed-jobs");
                     toast.success("Deleted job successfully");
                 }
@@ -138,22 +138,24 @@ const EditListedJob = () => {
         }
     };
 
+    const JobPostFormProps = {
+        heading: `Edit ${postData.title}`,
+        postData: postData,
+        handleInputChange: handleInputChange,
+        errors: errors,
+        newAddressSelected: newAddressSelected,
+        handleFieldChange: handleFieldChange,
+        handleRemoveField: handleRemoveField,
+        handleAddField: handleAddField,
+        buttonText: "Edit Job",
+        isChanged: changed,
+        handleSubmit: handleEditJob,
+        handleDeleteJob: confirmDeleteJob,
+        serverResponse: serverResponse,
+    };
+
     return (
-        <JobPostForm
-            heading={`Edit ${postData.title}`}
-            postData={postData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-            newAddressSelected={newAddressSelected}
-            handleFieldChange={handleFieldChange}
-            handleRemoveField={handleRemoveField}
-            handleAddField={handleAddField}
-            buttonText={"Edit Job"}
-            isChanged={changed}
-            handleSubmit={handleEditJob}
-            handleDeleteJob={confirmDeleteJob}
-            serverResponse={serverResponse}
-        />
+        <JobPostForm {...JobPostFormProps} />
     );
 };
 

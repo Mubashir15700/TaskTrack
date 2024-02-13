@@ -21,7 +21,7 @@ function ImageCrop({ onNewImageUrl, purpose }) {
             const file = await fetch(cropper.getCroppedCanvas().toDataURL())
                 .then((res) => res.blob())
                 .then((blob) => {
-                    const nameSuffix = purpose === 'profile' ? 'profile' : 'banner';
+                    const nameSuffix = purpose === "profile" ? "profile" : "banner";
                     return new File([blob], `${nameSuffix}.png`, {
                         type: "image/png"
                     });
@@ -39,6 +39,19 @@ function ImageCrop({ onNewImageUrl, purpose }) {
         setCropperVisible(false);
     };
 
+    const CropperProps = {
+        src: image,
+        style: { height: 400, width: 400 },
+        initialAspectRatio: 4 / 3,
+        minCropBoxHeight: 100,
+        minCropBoxWidth: 100,
+        guides: false,
+        checkOrientation: false,
+        onInitialized: (instance) => {
+            setCropper(instance);
+        }
+    };
+
     return (
         <>
             <div>
@@ -52,8 +65,8 @@ function ImageCrop({ onNewImageUrl, purpose }) {
                         src={preview}
                         className="preview rounded-3 mb-2"
                         style={{
-                            height: purpose === 'profile' ? '150px' : '200px',
-                            width: purpose === 'profile' ? '150px' : '300px',
+                            height: purpose === "profile" ? "150px" : "200px",
+                            width: purpose === "profile" ? "150px" : "300px",
                         }}
                     />
                 )}
@@ -70,36 +83,24 @@ function ImageCrop({ onNewImageUrl, purpose }) {
                 <>
                     <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
                     <div className="d-flex flex-column align-items-center">
-                        <Cropper
-                            src={image}
-                            style={{ height: 400, width: 400 }}
-                            initialAspectRatio={4 / 3}
-                            minCropBoxHeight={100}
-                            minCropBoxWidth={100}
-                            guides={false}
-                            checkOrientation={false}
-                            onInitialized={(instance) => {
-                                setCropper(instance);
-                            }}
-                        />
+                        <Cropper {...CropperProps} />
                         <div className="position-absolute bottom-0 start-50 translate-middle-x">
                             <button className="btn btn-danger me-2">
                                 <i
                                     className="bi bi-x-circle text-white cursor-pointer"
-                                    style={{ zIndex: 1001, cursor: 'pointer' }}
+                                    style={{ zIndex: 1001, cursor: "pointer" }}
                                     onClick={handleCancelClick}
                                 />
                             </button>
                             <button className="btn btn-primary me-2">
                                 <i
                                     className="bi bi-crop text-white me-2"
-                                    style={{ zIndex: 1001, cursor: 'pointer' }}
+                                    style={{ zIndex: 1001, cursor: "pointer" }}
                                     onClick={getCropData}
                                 />
                             </button>
                         </div>
                     </div>
-
                 </>
             )}
         </>

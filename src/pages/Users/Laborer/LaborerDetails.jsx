@@ -1,10 +1,80 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { getLaborer } from "../../../api/userApi";
+import { useSelector } from "react-redux";
+import { getLaborer } from "../../../api/user/laborer";
 import Address from "../../../components/Users/Address";
+import JobPostForm from "../../../components/Users/JobPostForm";
 
 const LaborerDetails = () => {
   const [laborer, setLaborer] = useState({});
+  const [showFormIndex, setShowFormIndex] = useState(null);
+
+  const toggleForm = (index) => {
+    setShowFormIndex(prevIndex => prevIndex === index ? null : index);
+  };
+
+  const currentUser = useSelector((state) => state.user.userData);
+
+  const [postData, setPostData] = useState({
+    userId: currentUser._id,
+    title: "",
+    description: "",
+    date: undefined,
+    time: undefined,
+    duration: undefined,
+    location: currentUser.location,
+    fields: [
+      {
+        materialsRequired: "",
+        wagePerHour: "",
+      },
+    ],
+  });
+
+  const [errors, setErrors] = useState({});
+  const [serverResponse, setServerResponse] = useState("");
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setPostData({
+      ...postData,
+      [name]: value,
+    });
+  };
+
+  const handleFieldChange = (index, fieldData) => {
+    const updatedFields = [...postData.fields];
+    updatedFields[index] = { ...updatedFields[index], ...fieldData };
+
+    setPostData({
+      ...postData,
+      fields: updatedFields,
+    });
+  };
+
+  const handleAddField = () => {
+    setPostData({
+      ...postData,
+      fields: [...postData.fields, { name: "", workers: 1 }],
+    });
+  };
+
+  const handleRemoveField = (index) => {
+    const updatedFields = [...postData.fields];
+    updatedFields.splice(index, 1);
+
+    setPostData({
+      ...postData,
+      fields: updatedFields,
+    });
+  };
+
+  const newAddressSelected = (address) => {
+    setPostData({
+      ...postData,
+      location: address,
+    });
+  };
 
   const { id } = useParams();
 
@@ -12,8 +82,8 @@ const LaborerDetails = () => {
     const getLaborerDetails = async () => {
       try {
         const response = await getLaborer(id);
-        if (response && response.data.status === "success") {
-          setLaborer(response.data.laborer);
+        if (response && response.status === 200) {
+          setLaborer(response.laborer);
         }
       } catch (error) {
         console.log(error);
@@ -70,17 +140,44 @@ const LaborerDetails = () => {
             <hr className="my-3" />
             <div className="mt-3">
               {laborer.fields && laborer.fields.map((field, index) => (
-                <div key={index} className="p-3 mb-3">
-                  <p className="mb-3"><strong>Work Category: {field.name}</strong></p>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <p className="mb-1">Workers Done Before: {field.worksDone}</p>
-                      <p className="mb-1">Wage Per Hour: <strong>{field.wagePerHour}</strong></p>
+                <div key={index}>
+                  <div className="p-3 mb-3">
+                    <p className="mb-3"><strong>Work Category: {field.name}</strong></p>
+                    <div className="row">
+                      <div className="col-md-6">
+                        <p className="mb-1">Workers Done Before: {field.worksDone}</p>
+                        <p className="mb-1">Wage Per Hour: <strong>{field.wagePerHour}</strong></p>
+                      </div>
+                      {showFormIndex !== index && (
+                        <div className="col-md-3">
+                          <button
+                            className="btn btn-outline-primary"
+                            onClick={() => toggleForm(index)}
+                          >
+                            Request
+                          </button>
+                        </div>
+                      )}
                     </div>
-                    {/* <div className="col-md-3">
-                      <button className="btn btn-outline-primary">Express Interest</button>
-                    </div> */}
                   </div>
+                  {showFormIndex === index && (
+                    <div>
+                      <JobPostForm
+                        heading={"Send Request"}
+                        postData={postData}
+                        handleInputChange={handleInputChange}
+                        errors={errors}
+                        newAddressSelected={newAddressSelected}
+                        handleFieldChange={handleFieldChange}
+                        handleRemoveField={handleRemoveField}
+                        handleAddField={handleAddField}
+                        buttonText={"Send Request"}
+                        handleSubmit={""}
+                        serverResponse={serverResponse}
+                        purpose={"Send Request"}
+                      />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

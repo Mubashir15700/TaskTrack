@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { passwordSchema } from "../../../../validations/userValidations/passwordSchema";
-import { setLoading } from "../../../../redux/slices/userSlice";
-import { resetPassword } from "../../../../api/sharedApi/authApi";
+import { resetPassword } from "../../../../api/shared/auth";
 import logo from "../../../../assets/images/logo.png";
 import "./ResetPassword.css";
 
 const ResetPassword = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [formData, setFormData] = useState({
         password: "",
@@ -37,7 +35,6 @@ const ResetPassword = () => {
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
-        // dispatch(setLoading(true));
 
         try {
             // Validate formData against the password schema
@@ -49,10 +46,10 @@ const ResetPassword = () => {
             const response = await resetPassword({ userId, ...formData });
 
             if (response) {
-                console.log("reset password response: ", response.data);
-                setServerResponse(response.data);
+                console.log("reset password response: ", response);
+                setServerResponse(response);
 
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     navigate("/login");
                 }
             }
@@ -70,8 +67,6 @@ const ResetPassword = () => {
                 setServerResponse({ status: "failed", message: "An error occurred during resetting password" });
             }
         }
-
-        // dispatch(setLoading(false));
     };
 
     return (

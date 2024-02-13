@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import { postNewJob, getRemainingPosts } from "../../../api/userApi";
+import { postNewJob, getRemainingPosts } from "../../../api/user/job";
 import { jobSchema } from "../../../validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 
@@ -36,10 +36,10 @@ const PostJob = () => {
     const getRemainingPostsCount = async () => {
       try {
         const response = await getRemainingPosts(currentUser?._id);
-        if (response && response.data.status === "success") {
-          setRemainingPosts(response.data.remainingPosts);
+        if (response && response.status === 200) {
+          setRemainingPosts(response.remainingPosts);
         } else {
-          console.log(response.data.message);
+          console.log(response.message);
           toast.error("Failed to fetch remaining post's count");
         }
       } catch (error) {
@@ -101,9 +101,9 @@ const PostJob = () => {
       await jobSchema.validate(postData, { abortEarly: false });
       const response = await postNewJob(postData);
       if (response) {
-        setServerResponse(response.data);
+        setServerResponse(response);
 
-        if (response.data.status === "success") {
+        if (response.status === 200) {
           navigate("/jobs/listed-jobs");
           toast.success("Posted new job successfully");
         }
@@ -122,23 +122,25 @@ const PostJob = () => {
     }
   };
 
+  const JobPostFormProps = {
+    heading: "Post New Job",
+    postData: postData,
+    handleInputChange: handleInputChange,
+    errors: errors,
+    newAddressSelected: newAddressSelected,
+    handleFieldChange: handleFieldChange,
+    handleRemoveField: handleRemoveField,
+    handleAddField: handleAddField,
+    buttonText: "Post Job",
+    handleSubmit: handlePostJob,
+    serverResponse: serverResponse,
+  };
+
   return (
     <>
       {currentUser.currentSubscription !== null ? (
         remainingPosts > 0 ? (
-          <JobPostForm
-            heading={"Post New Job"}
-            postData={postData}
-            handleInputChange={handleInputChange}
-            errors={errors}
-            newAddressSelected={newAddressSelected}
-            handleFieldChange={handleFieldChange}
-            handleRemoveField={handleRemoveField}
-            handleAddField={handleAddField}
-            buttonText={"Post Job"}
-            handleSubmit={handlePostJob}
-            serverResponse={serverResponse}
-          />
+          <JobPostForm {...JobPostFormProps} />
         ) : (
           <div className="col-10 my-3 mx-auto">
             <p>

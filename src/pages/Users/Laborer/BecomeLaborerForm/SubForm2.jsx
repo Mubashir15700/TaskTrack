@@ -1,27 +1,56 @@
 import Select from "react-select";
 
-const SelectDayoptions = [
-    { value: "sunday", label: "Sunday" },
-    { value: "monday", label: "Monday" },
-    { value: "tuesday", label: "Tuesday" },
-    { value: "Wednesday", label: "wednesday" },
-    { value: "thursday", label: "Thursday" },
-    { value: "friday", label: "Friday" },
-    { value: "saturday", label: "Saturday" },
-];
-
-const SelectTimeoptions = [
-    { value: "full time", label: "Full Time" },
-    { value: "part time", label: "Part Time" },
-    { value: "mornings", label: "Mornings" },
-    { value: "afternoons", label: "Afternoons" },
-    { value: "evenings", label: "Evenings" },
-    { value: "on call", label: "On Call" },
-];
-
 function SubForm2(
     { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, purpose, setChanged }
 ) {
+    const SelectDayoptions = [
+        { value: "sunday", label: "Sunday" },
+        { value: "monday", label: "Monday" },
+        { value: "tuesday", label: "Tuesday" },
+        { value: "Wednesday", label: "wednesday" },
+        { value: "thursday", label: "Thursday" },
+        { value: "friday", label: "Friday" },
+        { value: "saturday", label: "Saturday" },
+    ];
+
+    const SelectTimeoptions = [
+        { value: "full time", label: "Full Time" },
+        { value: "part time", label: "Part Time" },
+        { value: "mornings", label: "Mornings" },
+        { value: "afternoons", label: "Afternoons" },
+        { value: "evenings", label: "Evenings" },
+        { value: "on call", label: "On Call" },
+    ];
+
+    const DaysSelectProps = {
+        defaultValue: SelectDayoptions.filter((option) =>
+            formData.avlDays?.includes(option.value)
+        ),
+        options: SelectDayoptions,
+        onChange: (selectedOptions) => {
+            // Extract the values from selectedOptions
+            const selectedValues = selectedOptions.map((option) => option.value);
+
+            // Update the state with the selected values
+            setFormData({ ...formData, avlDays: selectedValues });
+            setChanged && setChanged(true);
+        },
+    };
+
+    const TimesSelectProps = {
+        defaultValue: SelectTimeoptions.filter((option) =>
+            formData.avlTimes?.includes(option.value)),
+        options: SelectTimeoptions,
+        onChange: (selectedOptions) => {
+            // Extract the values from selectedOptions
+            const selectedValues = selectedOptions.map((option) => option.value);
+
+            // Update the state with the selected values
+            setFormData({ ...formData, avlTimes: selectedValues });
+            setChanged && setChanged(true);
+        },
+    };
+
     return (
         <>
             <h5 className="mb-2">Laborer Details</h5>
@@ -56,39 +85,12 @@ function SubForm2(
             <div className="form-group row mt-3">
                 <div className="col-md-6">
                     <label>Available Days</label>
-                    <Select
-                        defaultValue={SelectDayoptions.filter((option) =>
-                            formData.avlDays?.includes(option.value)
-                        )}
-                        options={SelectDayoptions}
-                        onChange={(selectedOptions) => {
-                            // Extract the values from selectedOptions
-                            const selectedValues = selectedOptions.map((option) => option.value);
-
-                            // Update the state with the selected values
-                            setFormData({ ...formData, avlDays: selectedValues });
-                            setChanged && setChanged(true);
-                        }}
-                        isMulti
-                    />
+                    <Select {...DaysSelectProps} isMulti />
                     {errors.avlDays && <span className="error-display">{errors.avlDays}</span>}
                 </div>
                 <div className="col-md-6">
                     <label>Available Times</label>
-                    <Select
-                        defaultValue={SelectTimeoptions.filter((option) =>
-                            formData.avlTimes?.includes(option.value))}
-                        options={SelectTimeoptions}
-                        onChange={(selectedOptions) => {
-                            // Extract the values from selectedOptions
-                            const selectedValues = selectedOptions.map((option) => option.value);
-
-                            // Update the state with the selected values
-                            setFormData({ ...formData, avlTimes: selectedValues });
-                            setChanged && setChanged(true);
-                        }}
-                        isMulti
-                    />
+                    <Select {...TimesSelectProps} isMulti />
                     {errors.avlTimes && <span className="error-display">{errors.avlTimes}</span>}
                 </div>
             </div>

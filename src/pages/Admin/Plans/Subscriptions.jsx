@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getSubscriptions } from "../../../api/adminApi";
+import { getSubscriptions } from "../../../api/admin/plan";
 
 const Subscriptions = () => {
-
-  const dispatch = useDispatch();
-
   const [subscriptions, setSubscriptions] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -20,20 +16,17 @@ const Subscriptions = () => {
   useEffect(() => {
     const getAllSubscriptions = async () => {
       try {
-        // dispatch(setLoading(true));
         const response = await getSubscriptions(itemsPerPage, currentPage);
-        if (response && response.data.status === "success" && response.data.subscriptions) {
-          console.log(response.data.subscriptions);
-          setSubscriptions(response.data.subscriptions);
-          setPageCount(response.data.totalPages);
+        if (response && response.status === 200 && response.subscriptions) {
+          console.log(response.subscriptions);
+          setSubscriptions(response.subscriptions);
+          setPageCount(response.totalPages);
         } else {
           setError("Failed to fetch subscriptions data.");
         }
       } catch (error) {
         setError("An error occurred while fetching subscriptions data.");
         console.error("Error fetching subscriptions data:", error);
-      } finally {
-        // dispatch(setLoading(false));
       }
     };
 
@@ -85,16 +78,18 @@ const Subscriptions = () => {
     },
   ];
 
+  const TableDataDisplayProps = {
+    heading: "Subscriptions",
+    itemsPerPage: itemsPerPage,
+    onItemsPerPageChange: (value) => setItemsPerPage(value),
+    dataTableColumns: columns,
+    dataTableData: subscriptions,
+    pageCount: pageCount,
+    onPageChange: ({ selected }) => setCurrentPage(selected),
+  };
+
   return (
-    <TableDataDisplay
-      heading={"Subscriptions"}
-      itemsPerPage={itemsPerPage}
-      onItemsPerPageChange={(value) => setItemsPerPage(value)}
-      dataTableColumns={columns}
-      dataTableData={subscriptions}
-      pageCount={pageCount}
-      onPageChange={({ selected }) => setCurrentPage(selected)}
-    />
+    <TableDataDisplay {...TableDataDisplayProps} />
   );
 };
 

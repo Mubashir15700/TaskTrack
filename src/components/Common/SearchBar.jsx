@@ -1,4 +1,3 @@
-
 const SearchBar = ({ role, onSearch, onSelect }) => {
     return (
         <form className="d-flex input-group search-form" role="search">

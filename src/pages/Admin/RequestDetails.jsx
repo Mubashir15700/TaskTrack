@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
-import { getRequest, requestAction } from "../../api/adminApi";
+import { getRequest, requestAction } from "../../api/admin/request";
 import Address from "../../components/Users/Address";
 import SweetAlert from "../../components/Common/SweetAlert";
 import socket from "../../socket/socket";
 
 const RequestDetails = () => {
-    const dispatch = useDispatch();
-
     const [request, setRequest] = useState();
     const [error, setError] = useState();
 
@@ -19,18 +15,15 @@ const RequestDetails = () => {
     useEffect(() => {
         const getRequestDetails = async () => {
             try {
-                // dispatch(setLoading(true));
                 const response = await getRequest(id);
-                if (response && response.data.status === "success" && response.data.request) {
-                    setRequest(response.data.request);
+                if (response && response.status === 200 && response.request) {
+                    setRequest(response.request);
                 } else {
                     setError("Failed to fetch request details.");
                 }
             } catch (error) {
                 setError("An error occurred while fetching request details.");
                 console.error("Error fetching request details:", error);
-            } finally {
-                // dispatch(setLoading(false));
             }
         };
 
@@ -57,11 +50,11 @@ const RequestDetails = () => {
                 { requestId: id, userId: request.user?._id, type, reason }
             );
             if (response) {
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     const updatedRequest = await getRequest(id);
-                    if (updatedRequest && updatedRequest.data.status === "success") {
+                    if (updatedRequest && updatedRequest.status === 200) {
                         toast.success("Request successfully updated");
-                        setRequest(updatedRequest.data.request);
+                        setRequest(updatedRequest.request);
 
                         socket.emit("request_action", {
                             userId: request.user._id, message:

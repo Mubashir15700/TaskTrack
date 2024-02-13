@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
-import { getUser, userAction } from "../../../api/adminApi";
+import { getUser, userAction } from "../../../api/admin/user";
 import Address from "../../../components/Users/Address";
 import SweetAlert from "../../../components/Common/SweetAlert";
 
 const UserDetails = () => {
-    const dispatch = useDispatch();
-
     const [user, setUser] = useState();
     const [error, setError] = useState();
 
@@ -18,10 +14,9 @@ const UserDetails = () => {
     useEffect(() => {
         const getUserDetails = async () => {
             try {
-                // dispatch(setLoading(true));
                 const response = await getUser(id);
-                if (response && response.data.status === "success" && response.data.user) {
-                    const user = response.data.user;
+                if (response && response.status === 200 && response.user) {
+                    const user = response.user;
                     if (user.location && Object.values(user.location).length) {
                         user.location = user.location;
                     }
@@ -32,8 +27,6 @@ const UserDetails = () => {
             } catch (error) {
                 setError("An error occurred while fetching user details.");
                 console.error("Error fetching user details:", error);
-            } finally {
-                // dispatch(setLoading(false));
             }
         };
         getUserDetails();
@@ -56,10 +49,10 @@ const UserDetails = () => {
         try {
             const response = await userAction(id);
             if (response) {
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     const updatedUserResponse = await getUser(id);
-                    if (updatedUserResponse && updatedUserResponse.data.status === "success") {
-                        setUser(updatedUserResponse.data.user);
+                    if (updatedUserResponse && updatedUserResponse.status === 200) {
+                        setUser(updatedUserResponse.user);
                     } else {
                         setError("Failed to fetch updated user data.");
                     }

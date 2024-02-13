@@ -10,7 +10,7 @@ const Job = ({
     district,
     postedAt,
     status,
-    id
+    id,
 }) => {
     return (
         <>

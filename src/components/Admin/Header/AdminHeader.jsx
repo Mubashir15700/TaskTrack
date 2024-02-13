@@ -2,16 +2,14 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/adminSlice";
+import { setSearchResults } from "../../../redux/slices/adminSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
-import SweetAlert from "../../Common/SweetAlert";
-import { search } from "../../../api/sharedApi/utilityApi";
-import { logout } from "../../../api/sharedApi/authApi";
-import logo from "../../../assets/images/logo.png";
-import "./AdminHeader.css";
+import { search } from "../../../api/shared/utility";
 import socket from "../../../socket/socket";
 import { handleNotifyRequestSubmit } from "../../../socket/adminSocketEvents";
+import logo from "../../../assets/images/logo.png";
+import "./AdminHeader.css";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -58,9 +56,9 @@ const Header = () => {
                 searchOn: searchSelect
             });
             if (response) {
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     dispatch(setSearchResults({
-                        searchOn: searchSelect, results: response.data.result
+                        searchOn: searchSelect, results: response.result
                     }));
                     if (searchSelect === "users") {
                         navigate("/admin/users");
@@ -86,36 +84,15 @@ const Header = () => {
         setSearchSelect(selectedValue);
     };
 
-    const confirmLogout = async () => {
-        const result = await SweetAlert.confirmAction(
-            "Log Out",
-            "Are you sure you want to log out?",
-            "Logout",
-            "#d9534f"
-        );
-
-        if (result.isConfirmed) {
-            handleLogout();
-        }
-    };
-
-    const handleLogout = async () => {
-        dispatch(setLoading(true));
-
-        const response = await logout({ role: "admin" });
-        if (response && response.status === 200) {
-            dispatch(setLoggedIn(false));
-            navigate("/admin/login");
-        } else {
-            setError("An error occured while logging out");
-            console.log("logout error: ", response);
-        }
-        dispatch(setLoading(false));
-    };
-
     useEffect(() => {
         error && toast.error(error);
     }, [error]);
+
+    const searchBarProps = {
+        role: "admin",
+        onSearch: handleSearch,
+        onSelect: changeSearchSelect
+    };
 
     return (
         <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
@@ -127,10 +104,14 @@ const Header = () => {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <NavLink to="/admin" className="nav-link" aria-current="page" end>Dashboard</NavLink>
+                            <NavLink to="/admin" className="nav-link" aria-current="page" end>
+                                Dashboard
+                            </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/admin/users" className="nav-link" aria-current="page">Users</NavLink>
+                            <NavLink to="/admin/users" className="nav-link" aria-current="page">
+                                Users
+                            </NavLink>
                         </li>
                         <li className="nav-item">
                             <NavLink to="/admin/subscription-plans" className="nav-link" aria-current="page">
@@ -148,12 +129,14 @@ const Header = () => {
                             </NavLink>
                         </li>
                         <li className="nav-item">
-                            <NavLink to="/admin/banners" className="nav-link" aria-current="page">Banners</NavLink>
+                            <NavLink to="/admin/banners" className="nav-link" aria-current="page">
+                                Banners
+                            </NavLink>
                         </li>
                     </ul>
                     <div className="d-md-flex flex-md-row flex-column">
-                        <NavDropDown role={"admin"} onLogoutClick={confirmLogout} />
-                        <SearchBar role={"admin"} onSearch={handleSearch} onSelect={changeSearchSelect} />
+                        <NavDropDown role={"admin"} onError={setError} />
+                        <SearchBar {...searchBarProps} />
                     </div>
                 </div>
             </div>

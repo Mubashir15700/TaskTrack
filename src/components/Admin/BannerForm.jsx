@@ -1,7 +1,16 @@
 import ImageCrop from "../Common/ImageCrop";
 
 const BannerForm = ({
-    title, bannerData, handleInputChange, newImageSelected, previewUrl, addCropImage, changed, handleSubmit, serverResponse, errors
+    title,
+    bannerData,
+    handleInputChange,
+    newImageSelected,
+    previewUrl,
+    addCropImage,
+    changed,
+    handleSubmit,
+    serverResponse,
+    errors
 }) => {
     return (
         <div className="col-8 my-3 mx-auto">
@@ -55,7 +64,7 @@ const BannerForm = ({
                     </button>
                 )}
                 {serverResponse && (
-                    <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                    <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
                         {serverResponse.message}
                     </div>
                 )}

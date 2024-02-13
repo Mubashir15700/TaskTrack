@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getLaborers } from "../../../api/userApi";
+import NearMeButton from "../../../components/Users/NearMeButton";
+import { getLaborers } from "../../../api/user/laborer";
 import prfPlaceholder from "../../../assets/images/prf-placeholder.jfif";
 
 const Laborers = () => {
@@ -12,6 +14,14 @@ const Laborers = () => {
 
   const searchResults = useSelector(state => state.user?.searchResults);
   const currentUserId = useSelector(state => state.user.userData?._id);
+  let currentUserLocation;
+  if (currentUserId) {
+    currentUserLocation = useSelector(state => state.user?.userData?.location);
+    if (currentUserLocation && typeof currentUserLocation === "string") {
+      currentUserLocation = JSON.parse(currentUserLocation);
+    }
+  }
+  const { lat, lon } = currentUserLocation || {};
 
   // Function to parse location string into an object
   const parseLocation = (laborer) => {
@@ -19,23 +29,25 @@ const Laborers = () => {
       ...laborer,
       user: {
         ...laborer.user,
-        location: JSON.parse(laborer.user.location) // Parse the location string
+        location: JSON.parse(laborer.user?.location) // Parse the location string
       }
     };
   };
 
-  const getAllLaborers = async () => {
+  const getAllLaborers = async (lat, lon) => {
     try {
-      const response = await getLaborers(currentUserId, page);
-      if (response && response.data.status === "success") {
+      const response = await getLaborers(currentUserId, page, lat, lon);
+      if (response && response.status === 200) {
         // Parse the location string into an object for each laborer
-        const parsedLaborers = response.data.laborers.map(parseLocation);
-
+        const parsedLaborers = response.laborers?.map(parseLocation);
         setLaborers((prevLaborers) => [...prevLaborers, ...parsedLaborers]);
         setPage((prevPage) => prevPage + 1);
-        setTotalPages(response.data.totalPages);
+        setTotalPages(response.totalPages);
+      } else {
+        toast.error("Failed to fetch laborers");
       }
     } catch (error) {
+      toast.error("An error occured while fetching laborers");
       console.log(error);
     }
   };
@@ -49,9 +61,30 @@ const Laborers = () => {
     }
   }, [searchResults]);
 
+  // Function to handle NearMeButton click
+  const handleNearMeClick = () => {
+    if (lat && lon) {
+      setLaborers([]);
+      setPage(1);
+      setTotalPages(0);
+      getAllLaborers(lat, lon);
+    } else {
+      // Do something if lat and lon are not available
+      toast.error("Latitude and longitude are not available.");
+      console.log("Latitude and longitude are not available.");
+    }
+  };
+
   return (
     <div className="col-10 mx-auto mt-3">
-      <h3 className="mb-4">Laborers</h3>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="mb-0">Laborers</h3>
+        <NearMeButton
+          text={"Find laborers near me"}
+          purpose={"laborers"}
+          onClickNearMe={handleNearMeClick}
+        />
+      </div>
       {laborers?.length ? (
         <InfiniteScroll
           dataLength={laborers.length}

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SubForm2 from "../Laborer/BecomeLaborerForm/SubForm2";
 import { workSchema } from "../../../validations/userValidations/becomeLaborerSchema";
-import { updateLaborerProfile } from "../../../api/userApi";
+import { updateLaborerProfile } from "../../../api/user/profile";
 
 const LaborerProfile = () => {
     const location = useLocation();
@@ -56,7 +56,7 @@ const LaborerProfile = () => {
             await workSchema.validate(laborerData, { abortEarly: false });
 
             const response = await updateLaborerProfile(laborerData);
-            if (response && response.data.status === "success") {
+            if (response && response.status === 200) {
                 toast.success("Updated laborer profile successfully");
                 navigate("/account");
             } else {
@@ -76,17 +76,19 @@ const LaborerProfile = () => {
         }
     };
 
+    const SubForm2Props = {
+        formData: laborerData,
+        setFormData: setLaborerData,
+        handleFieldChange: handleFieldChange,
+        handleRemoveField: handleRemoveField,
+        handleAddField: handleAddField,
+        errors: errors,
+        setChanged: setChanged,
+    };
+
     return (
         <div className="col-10 my-3 mx-auto p-3 p-lg-5 border mt-5">
-            <SubForm2
-                formData={laborerData}
-                setFormData={setLaborerData}
-                handleFieldChange={handleFieldChange}
-                handleRemoveField={handleRemoveField}
-                handleAddField={handleAddField}
-                errors={errors}
-                setChanged={setChanged}
-            />
+            <SubForm2 {...SubForm2Props} />
             {changed && (
                 <button className="d-block btn btn-primary" onClick={handleUpdate}>Update</button>
             )}

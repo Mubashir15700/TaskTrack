@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getBanner, editBanner } from "../../../api/adminApi";
+import { getBanner, editBanner } from "../../../api/admin/banner";
 import BannerForm from "../../../components/Admin/BannerForm";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 
@@ -21,8 +21,8 @@ const EditBanner = () => {
             try {
                 // dispatch(setLoading(true));
                 const response = await getBanner(id);
-                if (response && response.data.status === "success" && response.data.banner) {
-                    const banner = response.data.banner
+                if (response && response.status === 200 && response.banner) {
+                    const banner = response.banner
                     setBannerData(banner);
                     setPreviewUrl(`http://localhost:3000/uploads/banner/${banner?.image}`)
                 } else {
@@ -76,13 +76,13 @@ const EditBanner = () => {
             const response = await editBanner(formData);
 
             if (response) {
-                setServerResponse(response.data);
+                setServerResponse(response);
             }
-            if (response.data.status === "success") {
+            if (response.status === 200) {
                 navigate("/admin/banners");
                 toast.success("Edited banner successfully");
             } else {
-                toast.error(response?.data?.message || "An error occurred during editing banner");
+                toast.error(response?.message || "An error occurred during editing banner");
             }
         } catch (error) {
             if (error.name === "ValidationError") {
@@ -97,19 +97,21 @@ const EditBanner = () => {
         }
     };
 
+    const BannerFormProps = {
+        title: "Edit Banner",
+        bannerData: bannerData,
+        handleInputChange: handleInputChange,
+        newImageSelected: newImageSelected,
+        previewUrl: previewUrl,
+        addCropImage: addCropImage,
+        changed: changed,
+        handleSubmit: handleEditBanner,
+        serverResponse: serverResponse,
+        errors: errors,
+    };
+
     return (
-        <BannerForm
-            title={"Edit Banner"}
-            bannerData={bannerData}
-            handleInputChange={handleInputChange}
-            newImageSelected={newImageSelected}
-            previewUrl={previewUrl}
-            addCropImage={addCropImage}
-            changed={changed}
-            handleSubmit={handleEditBanner}
-            serverResponse={serverResponse}
-            errors={errors}
-        />
+        <BannerForm {...BannerFormProps} />
     );
 };
 

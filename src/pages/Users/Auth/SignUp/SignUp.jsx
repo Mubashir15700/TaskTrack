@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signupSchema } from "../../../../validations/userValidations/signUpSchema";
-import { setLoading, setUserData } from "../../../../redux/slices/userSlice";
-import { userSignUp } from "../../../../api/sharedApi/authApi";
+import { setUserData } from "../../../../redux/slices/userSlice";
+import { userSignUp } from "../../../../api/shared/auth";
 import logo from '../../../../assets/images/logo.png';
 import "./SignUp.css";
 
@@ -38,7 +38,6 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // dispatch(setLoading(true));
 
     try {
       // Validate formData against the signup schema
@@ -50,10 +49,10 @@ const SignUp = () => {
       const response = await userSignUp(formData);
 
       if (response) {
-        setServerResponse(response.data);
+        setServerResponse(response);
 
-        if (response.data.status === "success") {
-          dispatch(setUserData(response.data.currentUser));
+        if (response.status === 200) {
+          dispatch(setUserData(response.currentUser));
           navigate(`/verify-otp?purpose=signup&email=${formData.email}`);
         }
       }
@@ -71,8 +70,6 @@ const SignUp = () => {
         setServerResponse({ status: "failed", message: "An error occurred during signup" });
       }
     }
-
-    // dispatch(setLoading(false));
   };
 
   return (
@@ -162,7 +159,9 @@ const SignUp = () => {
             {serverResponse.message}
           </div>
         )}
-        <p className="mt-3">Already have an account?<Link className="link" to="/login">Log In</Link></p>
+        <p className="mt-3">
+          Already have an account?<Link className="link" to="/login">Log In</Link>
+        </p>
       </form>
     </div>
   );

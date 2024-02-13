@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { emailSchema } from "../../../../validations/userValidations/emailSchema";
-import { setLoading } from "../../../../redux/slices/userSlice";
-import { confirmEmail } from "../../../../api/sharedApi/authApi";
+import { confirmEmail } from "../../../../api/shared/auth";
 import logo from "../../../../assets/images/logo.png";
 import "./Email.css";
 
 const Email = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [serverResponse, setServerResponse] = useState("");
@@ -23,7 +20,6 @@ const Email = () => {
 
     const handleConfirmEmail = async (e) => {
         e.preventDefault();
-        // dispatch(setLoading(true));
         setServerResponse("");
 
         try {
@@ -32,9 +28,9 @@ const Email = () => {
             const response = await confirmEmail({ email });
 
             if (response) {
-                setServerResponse(response.data);
+                setServerResponse(response);
 
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     navigate(`/verify-otp?purpose=forgot-password&email=${email}`);
                 }
             }
@@ -44,11 +40,11 @@ const Email = () => {
             if (error.name === "ValidationError") {
                 setErrors(error.errors[0]);
             } else {
-                setServerResponse({ status: "failed", message: "An error occurred during email confirmation" });
+                setServerResponse(
+                    { status: "failed", message: "An error occurred during email confirmation" }
+                );
             }
         }
-
-        // dispatch(setLoading(false));
     };
 
     const handleCancel = () => {

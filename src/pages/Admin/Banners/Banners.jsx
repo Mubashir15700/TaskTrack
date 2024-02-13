@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { setLoading } from "../../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import ItemsPerPageCount from "../../../components/Common/ItemsPerPageCount";
 import Pagination from "../../../components/Common/Pagination";
-import { getBanners, bannerAction, updateBannerOrder } from "../../../api/adminApi";
+import { getBanners, bannerAction, updateBannerOrder } from "../../../api/admin/banner";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -30,19 +29,16 @@ const Banner = () => {
   useEffect(() => {
     const getAllBanners = async () => {
       try {
-        // dispatch(setLoading(true));
         const response = await getBanners(itemsPerPage, currentPage);
-        if (response && response.data.status === "success" && response.data.banners) {
-          setBanners(response.data.banners);
-          setPageCount(response.data.totalPages);
+        if (response && response.status === 200 && response.banners) {
+          setBanners(response.banners);
+          setPageCount(response.totalPages);
         } else {
           setError("Failed to fetch banners data.");
         }
       } catch (error) {
         setError("An error occurred while fetching banners data.");
         console.error("Error fetching banners data:", error);
-      } finally {
-        // dispatch(setLoading(false));
       }
     };
 
@@ -72,14 +68,14 @@ const Banner = () => {
       console.log("handleListUnlist");
       const response = await bannerAction(bannerId);
       if (response) {
-        if (response.data.status === "success") {
+        if (response.status === 200) {
           const updatedBannersResponse = await getBanners(itemsPerPage, currentPage);
           if (
             updatedBannersResponse &&
-            updatedBannersResponse.data.status === "success" &&
-            updatedBannersResponse.data.banners
+            updatedBannersResponse.status === 200 &&
+            updatedBannersResponse.banners
           ) {
-            setBanners(updatedBannersResponse.data.banners);
+            setBanners(updatedBannersResponse.banners);
           } else {
             setError("Failed to fetch updated banners data.");
           }
@@ -126,7 +122,7 @@ const Banner = () => {
 
       const reOrderBannersResponse = await updateBannerOrder(data);
 
-      if (!reOrderBannersResponse || reOrderBannersResponse.data.status !== "success") {
+      if (!reOrderBannersResponse || reOrderBannersResponse.status !== "success") {
         toast.error("Error while updating banner's order");
         return;
       }

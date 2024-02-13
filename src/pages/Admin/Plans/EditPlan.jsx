@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { getPlan, editPlan } from "../../../api/adminApi";
+import { getPlan, editPlan } from "../../../api/admin/plan";
 import PlanForm from "../../../components/Admin/PlanForm";
 import planSchema from "../../../validations/adminValidations/planSchema";
 
@@ -22,18 +22,15 @@ const EditPlan = () => {
     useEffect(() => {
         const getPlanDetails = async () => {
             try {
-                // dispatch(setLoading(true));
                 const response = await getPlan(id);
-                if (response && response.data.status === "success" && response.data.plan) {
-                    setPlanData(response.data.plan);
+                if (response && response.status === 200 && response.plan) {
+                    setPlanData(response.plan);
                 } else {
                     setErrors("Failed to fetch plan details.");
                 }
             } catch (error) {
                 setErrors("An error occurred while fetching plan details.");
                 console.error("Error fetching plan details: ", error);
-            } finally {
-                // dispatch(setLoading(false));
             }
         };
 
@@ -60,12 +57,12 @@ const EditPlan = () => {
 
             const response = await editPlan(planData);
             if (response) {
-                setServerResponse(response.data);
-                if (response.data.status === "success") {
+                setServerResponse(response);
+                if (response.status === 200) {
                     navigate("/admin/subscription-plans");
                     toast.success("Edited plan successfully");
                 } else {
-                    toast.error(response?.data?.message || "An error occurred during editing plan");
+                    toast.error(response?.message || "An error occurred during editing plan");
                 }
             }
         } catch (error) {
@@ -81,15 +78,17 @@ const EditPlan = () => {
         }
     };
 
+    const PlanFormProps = {
+        title: "Edit Plan",
+        planData: planData,
+        handleInputChange: handleInputChange,
+        handleSubmit: handleEditPlan,
+        serverResponse: serverResponse,
+        errors: errors,
+    };
+
     return (
-        <PlanForm
-            title={"Edit Plan"}
-            planData={planData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleEditPlan}
-            serverResponse={serverResponse}
-            errors={errors}
-        />
+        <PlanForm {...PlanFormProps} />
     );
 };
 

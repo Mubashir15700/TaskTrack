@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { profileSchema } from "../../validations/userValidations/profileSchema";
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { updateProfile, deleteUserProfileImage } from "../../api/userApi";
+import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";
 import ImageCrop from "../../components/Common/ImageCrop";
 import Address from "../../components/Users/Address";
 
@@ -90,14 +90,14 @@ const UserDetails = () => {
 
       const response = await updateProfile(formData, currentUser?._id);
 
-      if (response && response.data?.status === "success") {
-        dispatch(setUpdatedUserData(response.data.updatedUser));
+      if (response && response?.status === 200) {
+        dispatch(setUpdatedUserData(response.updatedUser));
         navigate("/account");
         toast.success("Updated profile successfully");
         setChanged(false);
       } else {
-        console.error("Error updating profile:", response?.data);
-        toast.error(response?.data?.message || "An error occurred during profile update");
+        console.error("Error updating profile:", response);
+        toast.error(response?.message || "An error occurred during profile update");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -118,8 +118,8 @@ const UserDetails = () => {
   const handleDeleteProfile = async () => {
     try {
       const response = await deleteUserProfileImage(currentUser?._id, currentUser.profile);
-      if (response && response.data.status === "success") {
-        const updatedUser = response.data.updatedUser;
+      if (response && response.status === 200) {
+        const updatedUser = response.updatedUser;
         dispatch(setUpdatedUserData(updatedUser));
         navigate("/profile");
         toast.success("Deleted profile image successfully");
@@ -134,6 +134,15 @@ const UserDetails = () => {
 
   // the profile image URL
   const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
+
+  const AddressProps = {
+    userId: currentUser?._id,
+    label: "Lives In",
+    currentAddress: currentUser?.location || {},
+    onAddressChange: newAddressSelected,
+    onLocationDeleted: deleteSuccess,
+    usage: "profile",
+  };
 
   return (
     <div className="col-8 my-3 mx-auto">
@@ -200,14 +209,7 @@ const UserDetails = () => {
               </div>
             </div>
             <div>
-              <Address
-                userId={currentUser?._id}
-                label={"Lives In"}
-                currentAddress={currentUser?.location || {}}
-                onAddressChange={newAddressSelected}
-                onLocationDeleted={deleteSuccess}
-                usage={"profile"}
-              />
+              <Address {...AddressProps} />
             </div>
             {changed && (
               <div className="form-group row mt-3">

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { addPlan } from "../../../api/adminApi";
+import { addPlan } from "../../../api/admin/plan";
 import PlanForm from "../../../components/Admin/PlanForm";
 import planSchema from "../../../validations/adminValidations/planSchema";
 
@@ -39,12 +39,12 @@ const AddPlan = () => {
 
             const response = await addPlan(planData);
             if (response) {
-                setServerResponse(response.data);
-                if (response.data.status === "success") {
+                setServerResponse(response);
+                if (response.status === 200) {
                     navigate("/admin/subscription-plans");
                     toast.success("Added new plan successfully");
                 } else {
-                    toast.error(response?.data?.message || "An error occurred during adding plan");
+                    toast.error(response?.message || "An error occurred during adding plan");
                 }
             }
         } catch (error) {
@@ -60,15 +60,17 @@ const AddPlan = () => {
         }
     };
 
+    const PlanFormProps = {
+        title: "Add Plan",
+        planData: planData,
+        handleInputChange: handleInputChange,
+        handleSubmit: handleAddPlan,
+        serverResponse: serverResponse,
+        errors: errors,
+    };
+
     return (
-        <PlanForm
-            title={"Add Plan"}
-            planData={planData}
-            handleInputChange={handleInputChange}
-            handleSubmit={handleAddPlan}
-            serverResponse={serverResponse}
-            errors={errors}
-        />
+        <PlanForm {...PlanFormProps} />
     );
 };
 

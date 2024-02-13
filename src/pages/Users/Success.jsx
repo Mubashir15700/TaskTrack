@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { initializeUser } from "../../redux/slices/userSlice";
-import { saveSubscription } from "../../api/userApi";
+import initializeUser from "../../utils/initializeUser";
+import { saveSubscription } from "../../api/user/plan";
 import SubscriptionStatus from "../../components/Users/SubscriptionStatus";
 
 const Success = () => {
@@ -14,9 +14,9 @@ const Success = () => {
         const saveSubscriptionResult = async () => {
             try {
                 const saveResponse = await saveSubscription();
-                if (saveResponse && saveResponse.data.status === "success") {
+                if (saveResponse && saveResponse.status === 200) {
                     if (currentUser.currentSubscription === null) {
-                        dispatch(initializeUser());
+                        initializeUser("user", dispatch);
                     }
                 }
             } catch (error) {

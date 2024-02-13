@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Job from "../../../components/Users/Job";
-import { getListedJobs } from "../../../api/userApi";
+import { getListedJobs } from "../../../api/user/job";
 
 const ListedJobs = () => {
     const currentUserId = useSelector((state) => state.user.userData._id);
@@ -14,10 +14,10 @@ const ListedJobs = () => {
     const getAllListedJobs = async () => {
         try {
             const response = await getListedJobs(currentUserId, page);
-            if (response && response.data.status === "success") {
-                setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]);
+            if (response && response.status === 200) {
+                setJobs((prevJobs) => [...prevJobs, ...response.jobs]);
                 setPage((prevPage) => prevPage + 1);
-                setTotalPages(response.data.totalPages);
+                setTotalPages(response.totalPages);
             }
         } catch (error) {
             console.log(error);

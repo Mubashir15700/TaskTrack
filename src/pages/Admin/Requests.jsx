@@ -1,15 +1,10 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../../redux/slices/adminSlice";
 import toast from "react-hot-toast";
 import TableDataDisplay from "../../components/Admin/TableDataDisplay";
-import { getRequests } from "../../api/adminApi";
+import { getRequests } from "../../api/admin/request";
 
 const Requests = () => {
-
-    const dispatch = useDispatch();
-
     const [requests, setRequests] = useState([]);
     const [error, setError] = useState();
     const [currentPage, setCurrentPage] = useState(0);
@@ -19,20 +14,16 @@ const Requests = () => {
     useEffect(() => {
         const getAllRequests = async () => {
             try {
-                // dispatch(setLoading(true));
                 const response = await getRequests(itemsPerPage, currentPage);
-                if (response && response.data.status === "success") {
-                    // console.log(response.data.requests);
-                    setRequests(response.data.requests);
-                    setPageCount(response.data.totalPages);
+                if (response && response.status === 200) {
+                    setRequests(response.requests);
+                    setPageCount(response.totalPages);
                 } else {
                     setError("Failed to fetch requests data.");
                 }
             } catch (error) {
                 setError("An error occurred while fetching requests data.");
                 console.error("Error fetching requests data:", error);
-            } finally {
-                // dispatch(setLoading(false));
             }
         };
 
@@ -72,16 +63,18 @@ const Requests = () => {
         },
     ];
 
+    const TableDataDisplayProps = {
+        heading: "Requests",
+        itemsPerPage: itemsPerPage,
+        onItemsPerPageChange: (value) => setItemsPerPage(value),
+        dataTableColumns: columns,
+        dataTableData: requests,
+        pageCount: pageCount,
+        onPageChange: ({ selected }) => setCurrentPage(selected),
+    };
+
     return (
-        <TableDataDisplay
-            heading={"Requests"}
-            itemsPerPage={itemsPerPage}
-            onItemsPerPageChange={(value) => setItemsPerPage(value)}
-            dataTableColumns={columns}
-            dataTableData={requests}
-            pageCount={pageCount}
-            onPageChange={({ selected }) => setCurrentPage(selected)}
-        />
+        <TableDataDisplay {...TableDataDisplayProps} />
     );
 };
 

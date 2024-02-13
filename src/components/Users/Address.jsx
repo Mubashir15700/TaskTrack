@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import DisplayMap from "../../components/Users/DisplayMap";
-import { getCurrentLocation, deleteLocation } from "../../api/userApi";
+import { getCurrentLocation, deleteLocation } from "../../api/user/profile";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
 
 const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => {
@@ -59,10 +59,10 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         const { latitude, longitude } = pos.coords;
                         const response = await getCurrentLocation({ latitude, longitude });
 
-                        if (response && response.data) {
+                        if (response && response) {
                             setMapVisible(true);
-                            setSelectedAddress(response.data.fullAddress);
-                            onAddressChange(response.data.fullAddress);
+                            setSelectedAddress(response.fullAddress);
+                            onAddressChange(response.fullAddress);
                         } else {
                             toast.error("Error while getting your current location");
                         }
@@ -95,9 +95,9 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
 
     const handleDeleteLocation = async () => {
         const response = await deleteLocation(userId);
-        if (response.data.status === "success") {
+        if (response.status === 200) {
             setSelectedAddress({});
-            onLocationDeleted(response.data.deleteResult);
+            onLocationDeleted(response.deleteResult);
         }
     };
 

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import { getLaborer } from "../../api/userApi";
+import { getLaborer } from "../../api/user/laborer";
 
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
@@ -14,9 +14,9 @@ const Account = () => {
     const goToLaborerProfile = async () => {
         try {
             const response = await getLaborer(currentUser._id);
-            if (response && response.data.status === "success") {
+            if (response && response.status === 200) {
                 // Extract relevant data from the response
-                const { languages, education, avlDays, avlTimes, fields } = response.data.laborer;
+                const { languages, education, avlDays, avlTimes, fields } = response.laborer;
 
                 const laborerProfileData = {
                     userId: currentUser._id,
@@ -29,7 +29,7 @@ const Account = () => {
 
                 navigate("/laborer-profile", { state: { laborerProfileData } });
             } else {
-                toast.error(response.data.message);
+                toast.error(response.message);
             }
         } catch (error) {
             toast.error("An error occurerd while fetching data");

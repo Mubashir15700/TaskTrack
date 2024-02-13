@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getWorksHistory, getPrevRequest, cancelRequest, getLaborer } from "../../../api/userApi";
+import { getWorksHistory } from "../../../api/user/job";
+import { getLaborer } from "../../../api/user/laborer";
+import { getPrevRequest, cancelRequest } from "../../../api/user/request";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import Job from "../../../components/Users/Job";
 
@@ -21,10 +23,10 @@ const WorksHistory = () => {
     const getAllWorksHistory = async () => {
         try {
             const response = await getWorksHistory(currentUserId, page);
-            if (response && response.data.status === "success") {
-                setWorks(response.data.works);
+            if (response && response.status === 200) {
+                setWorks(response.works);
                 setPage((prevPage) => prevPage + 1);
-                setTotalPages(response.data.totalPages);
+                setTotalPages(response.totalPages);
             }
         } catch (error) {
             console.log(error);
@@ -34,8 +36,8 @@ const WorksHistory = () => {
     const getAnyPendingRequest = async () => {
         try {
             const response = await getPrevRequest(currentUserId);
-            if (response && response.data.status === "success") {
-                const responseData = response.data.request;
+            if (response && response.status === 200) {
+                const responseData = response.request;
                 if (responseData) {
                     const workData = {
                         userId: responseData.userId,
@@ -47,8 +49,8 @@ const WorksHistory = () => {
                         status: responseData.status,
                     };
                     setPendingRequest(workData);
-                    if (response.data.reason) {
-                        setRejectReason(response.data.reason);
+                    if (response.reason) {
+                        setRejectReason(response.reason);
                     }
                 }
             }
@@ -79,11 +81,11 @@ const WorksHistory = () => {
         try {
             const response = await cancelRequest({ currentUserId });
             if (response) {
-                if (response.data.status === "success") {
+                if (response.status === 200) {
                     toast.success("Cancelled request successfully");
                     navigate("/account");
                 } else {
-                    toast.error(response.data?.message);
+                    toast.error(response?.message);
                 }
             } else {
                 toast.error("Failed to cancel request. Please try again.");
@@ -97,9 +99,9 @@ const WorksHistory = () => {
     const handleLinkClick = async () => {
         try {
             const response = await getLaborer(currentUserId);
-            if (response && response.data.status === "success") {
+            if (response && response.status === 200) {
                 // Extract relevant data from the response
-                const { languages, education, avlDays, avlTimes, fields } = response.data.laborer;
+                const { languages, education, avlDays, avlTimes, fields } = response.laborer;
 
                 const laborerProfileData = {
                     userId: currentUserId,
@@ -112,7 +114,7 @@ const WorksHistory = () => {
 
                 navigate("/laborer-profile", { state: { laborerProfileData } });
             } else {
-                toast.error(response.data.message);
+                toast.error(response.message);
             }
         } catch (error) {
             toast.error("An error occurerd while fetching data");

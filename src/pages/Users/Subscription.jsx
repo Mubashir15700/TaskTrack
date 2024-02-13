@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import Cookies from "js-cookie";
-import { initializeUser } from "../../redux/slices/userSlice";
+import initializeUser from "../../utils/initializeUser";
 import SweetAlert from "../../components/Common/SweetAlert";
-import { getPlans, getActivePlan, createSubscription, cancelActivePlan } from "../../api/userApi";
+import { getPlans, getActivePlan, createSubscription, cancelActivePlan } from "../../api/user/plan";
 import { loadStripe } from "@stripe/stripe-js/pure";
 
 const Subscription = () => {
@@ -22,8 +22,8 @@ const Subscription = () => {
         const getAllPlans = async () => {
             try {
                 const response = await getPlans();
-                if (response && response.data.status === "success") {
-                    setPlans(response.data.plans);
+                if (response && response.status === 200) {
+                    setPlans(response.plans);
                 }
             } catch (error) {
                 console.log(error);
@@ -33,8 +33,8 @@ const Subscription = () => {
         const getActivePlanDetails = async () => {
             try {
                 const activePlanResponse = await getActivePlan(currentSubscription);
-                if (activePlanResponse && activePlanResponse.data.status === "success") {
-                    setActivePlan(activePlanResponse.data.currentPlan);
+                if (activePlanResponse && activePlanResponse.status === 200) {
+                    setActivePlan(activePlanResponse.currentPlan);
                 }
             } catch (error) {
                 console.error(error);
@@ -60,29 +60,29 @@ const Subscription = () => {
 
             const response = await createSubscription(data);
 
-            if (response.status === 409 && response.data.redirectUrl) {
+            if (response.status === 409 && response.redirectUrl) {
                 // User already has a subscription, redirect them to the billing portal
-                window.location.href = response.data.redirectUrl;
+                window.location.href = response.redirectUrl;
                 return;
             }
 
-            if (response.data && response.data.id) {
-                const sessionId = response.data ? response.data.id : null;
+            if (response && response.id) {
+                const sessionId = response ? response.id : null;
 
                 // Store sessionId in a cookie
                 Cookies.set("sessionId", sessionId, { expires: 7 });
             }
 
-            if (!response.data.status === "success") {
+            if (!response.status === 200) {
                 throw new Error(`Server error: ${response.status} - ${response.statusText}`);
             }
 
-            if (!response.data.id) {
+            if (!response.id) {
                 throw new Error("Invalid response from the server");
             }
 
             await stripe.redirectToCheckout({
-                sessionId: response.data.id
+                sessionId: response.id
             });
         } catch (error) {
             console.error(error);
@@ -109,13 +109,13 @@ const Subscription = () => {
                 subscriptionId: activePlan.subscriptionId,
                 userId: _id
             });
-            if (response && response.data.status === "success") {
-                toast.success(response.data.message);
+            if (response && response.status === 200) {
+                toast.success(response.message);
                 setActivePlan({});
-                dispatch(initializeUser());
+                initializeUser("user", dispatch);
             } else {
-                toast.error("Failed to cancel subscription: ", response.data.message);
-                console.log("Failed to cancel subscription: ", response.data.message);
+                toast.error("Failed to cancel subscription: ", response.message);
+                console.log("Failed to cancel subscription: ", response.message);
             }
         } catch (error) {
             console.error(error);

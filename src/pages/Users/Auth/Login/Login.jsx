@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import GLogin from "../../../../components/Users/GLogin";
 import { loginSchema } from "../../../../validations/userValidations/loginSchema";
-import { initializeUser } from "../../../../redux/slices/userSlice";
-import { initializeAdmin } from "../../../../redux/slices/adminSlice";
-import { login } from "../../../../api/sharedApi/authApi";
+import initializeUser from "../../../../utils/initializeUser";
+import { login } from "../../../../api/shared/auth";
 import logo from "../../../../assets/images/logo.png";
 import "./Login.css";
 
@@ -45,13 +45,13 @@ const Login = ({ role }) => {
       const response = await login(formData);
 
       if (response) {
-        setServerResponse(response.data);
-        if (response.data.status === "success") {
+        setServerResponse(response);
+        if (response.status === 200) {
           if (role === "admin") {
-            initializeAdmin(dispatch);
+            initializeUser("admin", dispatch);
             navigate("/admin");
           } else {
-            initializeUser(dispatch);
+            initializeUser("user", dispatch);
             navigate("/");
           }
         }
@@ -108,10 +108,13 @@ const Login = ({ role }) => {
             <Link className="link" to="/verify-email">Forgot password?</Link>
           }
         </div>
-        <div className="d-flex justify-content-center bottom-div">
+        <div className="d-flex flex-row justify-content-center bottom-div">
           <button type="submit" className="btn btn-primary login-btn" disabled={!formFilled}>
             Login
           </button>
+          {role === "user" &&
+            <GLogin onServerResponse={setServerResponse} />
+          }
         </div>
         {serverResponse && (
           <div className={`alert ${["failed", "error"].includes(serverResponse.status) ? "alert-danger" : "alert-success"} mt-3`} role="alert">

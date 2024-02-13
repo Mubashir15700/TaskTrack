@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { otpSchema } from "../../../../validations/userValidations/otpSchema";
-import { setLoading, setLoggedIn } from "../../../../redux/slices/userSlice";
-import { verifyOtp, resendOtp } from "../../../../api/sharedApi/authApi";
+import { setLoggedIn } from "../../../../redux/slices/userSlice";
+import { verifyOtp, resendOtp } from "../../../../api/shared/auth";
 import logo from "../../../../assets/images/logo.png";
 import "./OTP.css";
 
@@ -27,7 +27,6 @@ const OTP = () => {
 
   const handleVerification = async (e) => {
     e.preventDefault();
-    // dispatch(setLoading(true));
     setServerResponse("");
 
     try {
@@ -38,9 +37,9 @@ const OTP = () => {
       const response = await verifyOtp({ otp, email });
 
       if (response) {
-        setServerResponse(response.data);
+        setServerResponse(response);
 
-        if (response.data.status === "success") {
+        if (response.status === "success") {
           localStorage.removeItem("otpTimer");
           if (purpose === "forgot-password") {
             navigate("/reset-password");
@@ -60,8 +59,6 @@ const OTP = () => {
         setServerResponse("An error occurred during OTP verification");
       }
     }
-
-    // dispatch(setLoading(false));
   };
 
   const handleResend = async () => {
@@ -69,8 +66,8 @@ const OTP = () => {
 
     const response = await resendOtp({ email });
     if (response) {
-      setServerResponse(response.data);
-      if (response.data.status === "success") {
+      setServerResponse(response);
+      if (response.status === 200) {
         setTimer(300);
         localStorage.setItem("otpTimer", "300");
       }

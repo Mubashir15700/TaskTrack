@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
+import toast from "react-hot-toast";
 import Job from "../../../components/Users/Job";
-import { getJobs } from "../../../api/userApi";
+import NearMeButton from "../../../components/Users/NearMeButton";
+import { getJobs } from "../../../api/user/job";
 
 const Jobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -11,16 +13,27 @@ const Jobs = () => {
 
   const searchResults = useSelector(state => state.user?.searchResults);
   const currentUserId = useSelector(state => state.user?.userData?._id);
+  let currentUserLocation;
+  if (currentUserId) {
+    currentUserLocation = useSelector(state => state.user?.userData?.location);
+    if (currentUserLocation && typeof currentUserLocation === "string") {
+      currentUserLocation = JSON.parse(currentUserLocation);
+    }
+  }
+  const { lat, lon } = currentUserLocation || {};
 
-  const getAllJobs = async () => {
+  const getAllJobs = async (lat, lon) => {
     try {
-      const response = await getJobs(currentUserId, page);
-      if (response && response.data.status === "success") {
-        setJobs((prevJobs) => [...prevJobs, ...response.data.jobs]);
+      const response = await getJobs(currentUserId, page, lat, lon);
+      if (response && response.status === 200) {
+        setJobs((prevJobs) => [...prevJobs, ...response.jobs]);
         setPage((prevPage) => prevPage + 1);
-        setTotalPages(response.data.totalPages);
+        setTotalPages(response.totalPages);
+      } else {
+        toast.error("Failed to fetch jobs");
       }
     } catch (error) {
+      toast.error("An error occured while fetching jobs");
       console.log(error);
     }
   };
@@ -33,9 +46,30 @@ const Jobs = () => {
     }
   }, [searchResults]);
 
+  // Function to handle NearMeButton click
+  const handleNearMeClick = () => {
+    if (lat && lon) {
+      setJobs([]);
+      setPage(1);
+      setTotalPages(0);
+      getAllJobs(lat, lon);
+    } else {
+      // Do something if lat and lon are not available
+      toast.error("Latitude and longitude are not available.");
+      console.log("Latitude and longitude are not available.");
+    }
+  };
+
   return (
     <div className="col-10 mx-auto mt-3">
-      <h3 className="mb-4">Jobs</h3>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="mb-0">Jobs</h3>
+        <NearMeButton
+          text={"Find jobs near me"}
+          purpose={"jobs"}
+          onClickNearMe={handleNearMeClick}
+        />
+      </div>
       {
         jobs.length ? (
           <InfiniteScroll

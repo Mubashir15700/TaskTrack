@@ -2,14 +2,10 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setLoggedIn, setLoading, setSearchResults } from "../../../redux/slices/userSlice";
+import { setSearchResults } from "../../../redux/slices/userSlice";
 import NavDropDown from "../../Common/NavDropDown";
 import SearchBar from "../../Common/SearchBar";
-import SweetAlert from "../../Common/SweetAlert";
-import { search } from "../../../api/sharedApi/utilityApi";
-import { logout } from "../../../api/sharedApi/authApi";
-import logo from "../../../assets/images/logo.png";
-import "./Header.css";
+import { search } from "../../../api/shared/utility";
 import socket from "../../../socket/socket";
 import {
   handleNotifyRequestAction,
@@ -18,6 +14,8 @@ import {
   handleNotifyApplicationCancel,
   handleNotifyApplicationAction
 } from "../../../socket/userSocketEvents";
+import logo from "../../../assets/images/logo.png";
+import "./Header.css";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -91,8 +89,8 @@ const Header = () => {
           searchOn: searchSelect
         });
 
-        if (response && response.data.status === "success") {
-          const { result } = response.data;
+        if (response && response.status === 200) {
+          const { result } = response;
 
           dispatch(setSearchResults({
             searchOn: searchSelect,
@@ -118,33 +116,6 @@ const Header = () => {
 
   const changeSearchSelect = (selectedValue) => {
     setSearchSelect(selectedValue);
-  };
-
-  const confirmLogout = async () => {
-    const result = await SweetAlert.confirmAction(
-      "Log Out",
-      "Are you sure you want to log out?",
-      "Logout",
-      "#d9534f"
-    );
-
-    if (result.isConfirmed) {
-      handleLogout();
-    }
-  };
-
-  const handleLogout = async () => {
-    dispatch(setLoading(true));
-
-    const response = await logout({ role: "user" });
-    if (response && response.status === 200) {
-      dispatch(setLoggedIn(false));
-      navigate("/login");
-    } else {
-      setError("An error occured while logging out");
-      console.log("logout error: ", response);
-    }
-    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -189,7 +160,7 @@ const Header = () => {
           {isLoggedIn && (
             <>
               <NavLink to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit" >Post Job</NavLink>
-              <NavDropDown role={"user"} onLogoutClick={confirmLogout} />
+              <NavDropDown role={"user"} onError={setError} />
             </>
           )}
           <SearchBar role={"user"} onSearch={handleSearch} onSelect={changeSearchSelect} />

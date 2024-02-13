@@ -2,8 +2,9 @@ import { useEffect, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import { setLoading, initializeAdmin, setSearchResults } from "../redux/slices/adminSlice";
-import { initializeUser } from "../redux/slices/userSlice";
+import { setSearchResults } from "../redux/slices/adminSlice";
+import { setLoading } from "../redux/slices/commonSlice";
+import initializeUser from "../utils/initializeUser";
 import LoadingSpinner from "../components/Common/LoadingSpinner";
 import ErrorBoundary from "../components/Common/ErrorBoundary";
 import AdminRoutes from "./AdminRoutes";
@@ -13,10 +14,9 @@ const Routers = () => {
   const dispatch = useDispatch();
   const location = useLocation();
 
+  const isLoading = useSelector(state => state.common.loading);
   const isAdminLoggedIn = useSelector(state => state.admin.isLoggedIn);
   const isUserLoggedIn = useSelector(state => state.user.isLoggedIn);
-  const isAdminLoading = useSelector(state => state.admin.loading);
-  const isUserLoading = useSelector(state => state.user.loading);
 
   useEffect(() => {
     dispatch(setLoading(true));
@@ -26,15 +26,15 @@ const Routers = () => {
     }));
 
     if (location.pathname.startsWith("/admin")) {
-      !isAdminLoggedIn && dispatch(initializeAdmin());
+      !isAdminLoggedIn && initializeUser("admin", dispatch);
     } else {
-      !isUserLoggedIn && dispatch(initializeUser());
+      !isUserLoggedIn && initializeUser("user", dispatch);
     }
 
     dispatch(setLoading(false));
   }, [location.pathname, isUserLoggedIn, isAdminLoggedIn]);
 
-  if (isAdminLoading || isUserLoading) {
+  if (isLoading) {
     return <LoadingSpinner />;
   }
 

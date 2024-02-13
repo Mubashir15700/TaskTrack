@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { addBanner } from "../../../api/adminApi";
+import { addBanner } from "../../../api/admin/banner";
 import BannerForm from "../../../components/Admin/BannerForm";
 import bannerSchema from "../../../validations/adminValidations/bannerSchema";
 
@@ -48,12 +48,12 @@ const AddBanner = () => {
 
             const response = await addBanner(formData);
             if (response) {
-                setServerResponse(response.data);
-                if (response.data.status === "success") {
+                setServerResponse(response);
+                if (response.status === 200) {
                     navigate("/admin/banners");
                     toast.success("Added new banner successfully");
                 } else {
-                    toast.error(response?.data?.message || "An error occurred during adding banner");
+                    toast.error(response?.message || "An error occurred during adding banner");
                 }
             }
         } catch (error) {
@@ -69,18 +69,20 @@ const AddBanner = () => {
         }
     };
 
+    const BannerFormProps = {
+        title: "Add Banner",
+        bannerData: bannerData,
+        handleInputChange: handleInputChange,
+        newImageSelected: false,
+        addCropImage: addCropImage,
+        changed: true,
+        handleSubmit: handleAddBanner,
+        serverResponse: serverResponse,
+        errors: errors,
+    };
+
     return (
-        <BannerForm
-            title={"Add Banner"}
-            bannerData={bannerData}
-            handleInputChange={handleInputChange}
-            newImageSelected={false}
-            addCropImage={addCropImage}
-            changed={true}
-            handleSubmit={handleAddBanner}
-            serverResponse={serverResponse}
-            errors={errors}
-        />
+        <BannerForm {...BannerFormProps} />
     );
 };
 

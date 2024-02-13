@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserData as updateUserData } from "../../../../redux/slices/userSlice";
 import toast from "react-hot-toast";
-import { sendRequest, updateRequest } from "../../../../api/userApi";
+import { sendRequest, updateRequest } from "../../../../api/user/request";
 import { profileSchema, workSchema } from "../../../../validations/userValidations/becomeLaborerSchema";
 import SubForm1 from "./SubForm1";
 import SubForm2 from "./SubForm2";
@@ -165,13 +165,13 @@ function Form() {
                 }
 
                 if (response) {
-                    if (response.data.status === "success") {
-                        if (response.data?.updatedProfile) {
-                            const currentUser = response.data.updatedProfile;
+                    if (response.status === 200) {
+                        if (response?.updatedProfile) {
+                            const currentUser = response.updatedProfile;
                             dispatch(updateUserData(currentUser));
                         }
-                        if (response.data?.updatedRequest) {
-                            setWorkData(response.data.updatedRequest);
+                        if (response?.updatedRequest) {
+                            setWorkData(response.updatedRequest);
                         }
                         toast.success("Your request has been sent");
                         navigate("/jobs/works-history");

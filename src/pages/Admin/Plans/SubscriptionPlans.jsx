@@ -1,16 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../../redux/slices/adminSlice";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getPlans, planAction } from "../../../api/adminApi";
+import { getPlans, planAction } from "../../../api/admin/plan";
 
 const SubscriptionPlans = () => {
-
-  const dispatch = useDispatch();
-
   const [plans, setPlans] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -22,19 +18,16 @@ const SubscriptionPlans = () => {
   useEffect(() => {
     const getAllPlans = async () => {
       try {
-        // dispatch(setLoading(true));
         const response = await getPlans(itemsPerPage, currentPage);
-        if (response && response.data.status === "success" && response.data.plans) {
-          setPlans(response.data.plans);
-          setPageCount(response.data.totalPages);
+        if (response && response.status === 200 && response.plans) {
+          setPlans(response.plans);
+          setPageCount(response.totalPages);
         } else {
           setError("Failed to fetch plans data.");
         }
       } catch (error) {
         setError("An error occurred while fetching plans data.");
         console.error("Error fetching plans data:", error);
-      } finally {
-        // dispatch(setLoading(false));
       }
     };
 
@@ -62,14 +55,14 @@ const SubscriptionPlans = () => {
     try {
       const response = await planAction(planId);
       if (response) {
-        if (response.data.status === "success") {
+        if (response.status === 200) {
           const updatedPlansResponse = await getPlans(itemsPerPage, currentPage);
           if (
             updatedPlansResponse &&
-            updatedPlansResponse.data.status === "success" &&
-            updatedPlansResponse.data.plans
+            updatedPlansResponse.status === 200 &&
+            updatedPlansResponse.plans
           ) {
-            setPlans(updatedPlansResponse.data.plans);
+            setPlans(updatedPlansResponse.plans);
           } else {
             setError("Failed to fetch updated plans data.");
           }
@@ -131,17 +124,19 @@ const SubscriptionPlans = () => {
     },
   ];
 
+  const TableDataDisplayProps = {
+    heading: "Plans",
+    itemsPerPage: itemsPerPage,
+    onItemsPerPageChange: (value) => setItemsPerPage(value),
+    addLink: "/admin/subscription-plans/add-plan",
+    dataTableColumns: columns,
+    dataTableData: plans,
+    pageCount: pageCount,
+    onPageChange: ({ selected }) => setCurrentPage(selected),
+  };
+
   return (
-    <TableDataDisplay
-      heading={"Plans"}
-      itemsPerPage={itemsPerPage}
-      onItemsPerPageChange={(value) => setItemsPerPage(value)}
-      addLink={"/admin/subscription-plans/add-plan"}
-      dataTableColumns={columns}
-      dataTableData={plans}
-      pageCount={pageCount}
-      onPageChange={({ selected }) => setCurrentPage(selected)}
-    />
+    <TableDataDisplay {...TableDataDisplayProps} />
   );
 };
 

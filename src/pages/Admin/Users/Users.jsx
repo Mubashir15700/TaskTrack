@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "../../../redux/slices/adminSlice";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
-import { getUsers, userAction } from "../../../api/adminApi";
+import { getUsers, userAction } from "../../../api/admin/user";
 
 const Users = () => {
-  const dispatch = useDispatch();
-
   const [users, setUsers] = useState([]);
   const [error, setError] = useState();
   const [currentPage, setCurrentPage] = useState(0);
@@ -21,19 +18,16 @@ const Users = () => {
   useEffect(() => {
     const getAllUsers = async () => {
       try {
-        // dispatch(setLoading(true));
         const response = await getUsers(itemsPerPage, currentPage);
-        if (response && response.data.status === "success" && response.data.users) {
-          setUsers(response.data.users);
-          setPageCount(response.data.totalPages);
+        if (response && response.status === 200 && response.users) {
+          setUsers(response.users);
+          setPageCount(response.totalPages);
         } else {
           setError("Failed to fetch users data.");
         }
       } catch (error) {
         setError("An error occurred while fetching users data.");
         console.error("Error fetching users data:", error);
-      } finally {
-        // dispatch(setLoading(false));
       }
     };
 
@@ -63,19 +57,19 @@ const Users = () => {
     try {
       const response = await userAction({ userId, reason });
       if (response) {
-        if (response.data.status === "success") {
+        if (response.status === 200) {
           const updatedUsersResponse = await getUsers(itemsPerPage, currentPage);
           if (
             updatedUsersResponse &&
-            updatedUsersResponse.data.status === "success" &&
-            updatedUsersResponse.data.users
+            updatedUsersResponse.status === 200 &&
+            updatedUsersResponse.users
           ) {
-            setUsers(updatedUsersResponse.data.users);
+            setUsers(updatedUsersResponse.users);
           } else {
             setError("Failed to fetch updated users data.");
           }
         } else {
-          setError(response.data.message);
+          setError(response.message);
         }
       }
     } catch (error) {
@@ -148,16 +142,18 @@ const Users = () => {
     },
   ];
 
+  const TableDataDisplayProps = {
+    heading: "Users",
+    itemsPerPage: itemsPerPage,
+    onItemsPerPageChange: (value) => setItemsPerPage(value),
+    dataTableColumns: columns,
+    dataTableData: users,
+    pageCount: pageCount,
+    onPageChange: ({ selected }) => setCurrentPage(selected),
+  };
+
   return (
-    <TableDataDisplay
-      heading={"Users"}
-      itemsPerPage={itemsPerPage}
-      onItemsPerPageChange={(value) => setItemsPerPage(value)}
-      dataTableColumns={columns}
-      dataTableData={users}
-      pageCount={pageCount}
-      onPageChange={({ selected }) => setCurrentPage(selected)}
-    />
+    <TableDataDisplay {...TableDataDisplayProps} />
   );
 };
 

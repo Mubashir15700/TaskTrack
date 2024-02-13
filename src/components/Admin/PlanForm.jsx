@@ -72,7 +72,7 @@ const PlanForm = ({
                 {title}
             </button>
             {serverResponse && (
-                <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
                     {serverResponse.message}
                 </div>
             )}

@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import socket from "../../socket/socket";
 import EmojiPicker from "emoji-picker-react";
 import { getMessageTime } from "../../utils/dateutil";
-import { updateMessagesReadStatus } from "../../api/userApi";
+import { updateMessagesReadStatus } from "../../api/user/utils";
 import "./Chat.css";
 
 const Chat = () => {
@@ -117,7 +117,7 @@ const Chat = () => {
     const updateReadStatus = async (messageIds) => {
         try {
             const response = await updateMessagesReadStatus(messageIds);
-            if (response && response.data.status === "success") {
+            if (response && response.status === 200) {
                 console.log("Read status updated successfully");
             } else {
                 console.error("Failed to update read status");
