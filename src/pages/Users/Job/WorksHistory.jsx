@@ -123,7 +123,7 @@ const WorksHistory = () => {
     };
 
     return (
-        <div className="col-10 mx-auto mt-3">
+        <div className="col-10 mx-auto mt-3 vh-100">
             <h3 className="mb-4">Your Work History</h3>
             {
                 works.length ? (

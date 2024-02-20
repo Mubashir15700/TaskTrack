@@ -109,7 +109,7 @@ const SubscriptionPlans = () => {
     },
     {
       name: "Actions",
-      width: "190px",
+      width: "220px",
       cell: row => (
         <div className="d-flex gap-2">
           <Link to={`/admin/subscription-plans/edit-plan/${row._id}`} className="btn btn-primary">

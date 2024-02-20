@@ -19,7 +19,7 @@ const GLogin = ({ onServerResponse }) => {
             }
         } catch (error) {
             console.error("Error during login with google:", error);
-            onServerResponse({ status: "failed", message: "An error occurred during Google login" });
+            onServerResponse({ status: "failed", message: error.message });
         }
     };
 

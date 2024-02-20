@@ -74,7 +74,13 @@ const Notifications = () => {
         >
           {notifications.map((notification, index) => (
             <div className="card mb-3" key={index}>
-              <div className="card-body d-flex flex-wrap justify-content-between">
+              <div
+                className={
+                  `card-body d-flex flex-wrap justify-content-between 
+                  ${!notification.isOpened && "bg-secondary"}`
+                }
+              // onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
+              >
                 <div className="col-md-3 col-12 mb-3">
                   {notification.from?.profile && (
                     <img
@@ -90,15 +96,21 @@ const Notifications = () => {
                   <p>{notification.message}</p>
                   <p>{new Date(notification.timestamp).toDateString()}</p>
                 </div>
-                <div className="col-md-3 col-12 mb-3">
-                  <button
-                    className="btn btn-primary btn-block me-5"
-                    onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
-                  >
-                    View More
-                  </button>
+                <div
+                  className="d-flex justify-content-between align-items-center col-md-3 col-12 mb-3"
+                >
+                  <div className="dropdown">
+                    <a className="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i className="bi bi-three-dots"></i>
+                    </a>
+                    <ul className="dropdown-menu">
+                      <li>
+                        sdfdsfds
+                      </li>
+                    </ul>
+                  </div>
                   {!notification.isOpened && (
-                    <i className="bi bi-circle-fill text-danger"></i>
+                    <i className="bi bi-dot text-danger fs-1"></i>
                   )}
                 </div>
               </div>

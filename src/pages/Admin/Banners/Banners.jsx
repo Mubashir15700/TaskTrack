@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
-import ItemsPerPageCount from "../../../components/Common/ItemsPerPageCount";
-import Pagination from "../../../components/Common/Pagination";
+import ItemsPerPageCount from "../../../components/Admin/ItemsPerPageCount";
+import Pagination from "../../../components/Admin/Pagination";
 import { getBanners, bannerAction, updateBannerOrder } from "../../../api/admin/banner";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import {

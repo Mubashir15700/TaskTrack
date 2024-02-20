@@ -52,7 +52,7 @@ const JobPostForm = ({
     };
 
     return (
-        <div className="col-10 my-3 mx-auto">
+        <div className="col-10 my-5 mx-auto">
             <div className="p-3 p-lg-5 border">
                 <h3 className="mb-2">{heading}</h3>
                 <div className="col-md-12">

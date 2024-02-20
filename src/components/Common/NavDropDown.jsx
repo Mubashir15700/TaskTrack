@@ -46,9 +46,9 @@ const NavDropDown = ({ role, onError }) => {
     };
 
     return (
-        <div className="nav-item dropdown">
-            <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-caret-down-square-fill"></i>
+        <div className={`nav-item dropdown ${role === "user" && "mx-4"}`}>
+            <a className="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i className="bi bi-caret-down-square-fill fs-2"></i>
                 {count > 0 && (
                     <span className="badge bg-danger text-light position-absolute top-0 start-10 translate-middle">
                         {count}
@@ -81,9 +81,9 @@ const NavDropDown = ({ role, onError }) => {
                     </NavLink>
                 </li>
                 <li><hr className="dropdown-divider" /></li>
-                <li>
-                    <button type="button" className="btn btn-danger logout-btn" onClick={confirmLogout}>
-                        <i className="bi bi-power"></i> Logout
+                <li className="text-center">
+                    <button type="button" className="btn btn-sm btn-danger mb-2" onClick={confirmLogout}>
+                        <i className="bi bi-power fs-5 me-2"></i> Logout
                     </button>
                 </li>
             </ul>

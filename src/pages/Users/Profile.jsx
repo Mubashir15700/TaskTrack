@@ -145,27 +145,29 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="col-8 my-3 mx-auto">
+    <div className="col-8 my-3 mx-auto vh-100">
       {currentUser ? (
         <div className="p-3 p-lg-5 border">
-          {(currentUser.profile && !newImageSelected) && (
-            <img
-              src={imageUrl}
-              alt="Profile"
-              style={{ maxHeight: "130px", width: "150px" }}
-              className="rounded-3 img-fluid"
-            />
-          )}
-          {currentUser.profile && (
-            <i
-              className="bi bi-trash"
-              style={{ cursor: "pointer" }}
-              onClick={handleDeleteProfile}
-            />
-          )}
-          {(!currentUser.profile && !newImageSelected) && (
-            <i className="bi bi-person-circle fs-1 mb-3"></i>
-          )}
+          <div className="d-flex align-items-end">
+            {(currentUser.profile && !newImageSelected) && (
+              <img
+                src={imageUrl}
+                alt="Profile"
+                style={{ maxHeight: "130px", width: "150px" }}
+                className="rounded-3 img-fluid"
+              />
+            )}
+            {currentUser.profile && (
+              <i
+                className="bi bi-trash"
+                style={{ cursor: "pointer" }}
+                onClick={handleDeleteProfile}
+              />
+            )}
+            {(!currentUser.profile && !newImageSelected) && (
+              <i className="bi bi-person-circle fs-1 mb-3"></i>
+            )}
+          </div>
           <div className="mb-2">
             <ImageCrop onNewImageUrl={addCropImg} purpose={"profile"} />
           </div>

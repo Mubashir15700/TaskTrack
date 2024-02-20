@@ -39,7 +39,6 @@ const PostJob = () => {
         if (response && response.status === 200) {
           setRemainingPosts(response.remainingPosts);
         } else {
-          console.log(response.message);
           toast.error("Failed to fetch remaining post's count");
         }
       } catch (error) {
@@ -137,7 +136,7 @@ const PostJob = () => {
   };
 
   return (
-    <>
+    <div className="vh-100">
       {currentUser.currentSubscription !== null ? (
         remainingPosts > 0 ? (
           <JobPostForm {...JobPostFormProps} />
@@ -159,7 +158,7 @@ const PostJob = () => {
           </Link>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

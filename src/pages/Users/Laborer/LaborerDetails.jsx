@@ -13,16 +13,16 @@ const LaborerDetails = () => {
     setShowFormIndex(prevIndex => prevIndex === index ? null : index);
   };
 
-  const currentUser = useSelector((state) => state.user.userData);
+  const currentUser = useSelector((state) => state.user?.userData);
 
   const [postData, setPostData] = useState({
-    userId: currentUser._id,
+    userId: currentUser?._id,
     title: "",
     description: "",
     date: undefined,
     time: undefined,
     duration: undefined,
-    location: currentUser.location,
+    location: currentUser?.location,
     fields: [
       {
         materialsRequired: "",

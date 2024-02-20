@@ -206,7 +206,7 @@ function Form() {
     };
 
     return (
-        <div className="col-10 my-3 mx-auto p-3 p-lg-5 border mt-5">
+        <div className="col-10 my-5 mx-auto p-3 p-lg-5 border mt-5">
             <div className="header">
                 <h3 className="mb-4">Become A Laborer</h3>
             </div>

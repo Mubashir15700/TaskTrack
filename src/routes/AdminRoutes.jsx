@@ -12,7 +12,7 @@ import AddBanner from "../pages/Admin/Banners/AddBanner";
 import EditBanner from "../pages/Admin/Banners/EditBanner";
 const Requests = lazy(() => import("../pages/Admin/Requests"));
 const RequestDetails = lazy(() => import("../pages/Admin/RequestDetails"));
-import Login from "../pages/Users/Auth/Login/Login";
+import Login from "../pages/Users/Auth/Login";
 const Notifications = lazy(() => import("../pages/Users/Notifications"));
 import ErrorPage from "../pages/Users/ErrorPage";
 

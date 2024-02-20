@@ -24,15 +24,15 @@ const Laborers = () => {
   const { lat, lon } = currentUserLocation || {};
 
   // Function to parse location string into an object
-  const parseLocation = (laborer) => {
-    return {
-      ...laborer,
-      user: {
-        ...laborer.user,
-        location: JSON.parse(laborer.user?.location) // Parse the location string
-      }
-    };
-  };
+  const parseLocation = (laborer) => ({
+    ...laborer,
+    user: {
+      ...laborer.user,
+      location: typeof laborer.user?.location === "string"
+        ? JSON.parse(laborer.user.location ?? "null")
+        : laborer.user?.location
+    }
+  });
 
   const getAllLaborers = async (lat, lon) => {
     try {
@@ -76,7 +76,7 @@ const Laborers = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3">
+    <div className="col-10 mx-auto mt-3 vh-100">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="mb-0">Laborers</h3>
         <NearMeButton

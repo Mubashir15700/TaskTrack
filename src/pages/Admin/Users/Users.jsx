@@ -127,7 +127,7 @@ const Users = () => {
     },
     {
       name: "Actions",
-      width: "190px",
+      width: "220px",
       cell: row => (
         <div className="d-flex gap-2">
           <Link to={`/admin/users/${row._id}`} className="btn btn-primary">

@@ -2,20 +2,29 @@ import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setSearchResults } from "../../../redux/slices/userSlice";
-import NavDropDown from "../../Common/NavDropDown";
-import SearchBar from "../../Common/SearchBar";
-import { search } from "../../../api/shared/utility";
-import socket from "../../../socket/socket";
+import { setSearchResults } from "../../redux/slices/userSlice";
+import SearchBar from "../Common/SearchBar";
+import { search } from "../../api/shared/utility";
+import socket from "../../socket/socket";
 import {
   handleNotifyRequestAction,
   handleNotifyChatMessage,
   handleNotifyNewApplication,
   handleNotifyApplicationCancel,
   handleNotifyApplicationAction
-} from "../../../socket/userSocketEvents";
-import logo from "../../../assets/images/logo.png";
-import "./Header.css";
+} from "../../socket/userSocketEvents";
+import logo from "../../assets/images/logo.png";
+import NavDropDown from "../Common/NavDropDown";
+import {
+  MDBContainer,
+  MDBNavbar,
+  MDBNavbarBrand,
+  MDBNavbarToggler,
+  MDBIcon,
+  MDBNavbarNav,
+  MDBNavbarItem,
+  MDBCollapse,
+} from "mdb-react-ui-kit";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -122,61 +131,79 @@ const Header = () => {
     error && toast.error(error);
   }, [error]);
 
+  const [openBasic, setOpenBasic] = useState(false);
+
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary fixed-top">
-      <div className="container-fluid">
-        <img src={logo} alt="logo" className="mt-2" style={{ height: "45px" }} />
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
+    <MDBNavbar expand="lg" light bgColor="light" className="fixed-top">
+      <MDBContainer fluid>
+        <MDBNavbarBrand href="#">
+          <img src={logo} alt="logo" className="mt-2" style={{ height: "40px" }} />
+        </MDBNavbarBrand>
+
+        <MDBNavbarToggler
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          onClick={() => setOpenBasic(!openBasic)}
+        >
+          <MDBIcon icon="bars" fas />
+        </MDBNavbarToggler>
+
+        <MDBCollapse navbar open={openBasic}>
+          <MDBNavbarNav className="mb-2 mb-lg-0">
+            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/" className="nav-link" aria-current="page">
                 Home
               </NavLink>
-            </li>
-            <li className="nav-item">
+            </MDBNavbarItem>
+            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/about" className="nav-link" aria-current="page">
                 About
               </NavLink>
-            </li>
-            <li className="nav-item">
+            </MDBNavbarItem>
+            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/contact" className="nav-link" aria-current="page">
                 Contact
               </NavLink>
-            </li>
-            <li className="nav-item">
+            </MDBNavbarItem>
+            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/laborers" className="nav-link" aria-current="page">
                 Laborers
               </NavLink>
-            </li>
-            <li className="nav-item">
+            </MDBNavbarItem>
+            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/jobs" className="nav-link" aria-current="page">
                 Jobs
               </NavLink>
-            </li>
-          </ul>
-          {isLoggedIn && (
-            <>
-              <NavLink to="/jobs/post-job" className="btn btn-outline-success post-job-btn" type="submit" >Post Job</NavLink>
-              <NavDropDown role={"user"} onError={setError} />
-            </>
-          )}
+            </MDBNavbarItem>
+            {isLoggedIn && (
+              <div className="d-flex ms-lg-3">
+                <NavLink
+                  to="/jobs/post-job"
+                  className="btn btn-primary align-self-center"
+                  type="submit"
+                >
+                  Post Job
+                </NavLink>
+                <NavDropDown role={"user"} onError={setError} />
+              </div>
+            )}
+          </MDBNavbarNav>
+
           <SearchBar role={"user"} onSearch={handleSearch} onSelect={changeSearchSelect} />
           {!isLoggedIn &&
-            <div className="login-signup-btn-div">
-              <NavLink to="/login" type="button" className="btn btn-light header-login-btn">
+            <div className="d-flex my-md-2 my-lg-0">
+              <NavLink to="/login" type="button" className="btn btn-light me-3">
                 Login
               </NavLink>
-              <NavLink to="/sign-up" className="btn btn-outline-success header-sign-up-btn" type="submit">
+              <NavLink to="/sign-up" className="btn btn-primary" type="submit">
                 Sign Up
               </NavLink>
             </div>
           }
-        </div>
-      </div>
-    </nav>
+        </MDBCollapse>
+      </MDBContainer>
+    </MDBNavbar>
   );
 };
 

@@ -124,7 +124,7 @@ const Subscription = () => {
     };
 
     return (
-        <div className="col-10 mx-auto mt-3">
+        <div className="col-10 my-3 mx-auto vh-100">
             <h3 className="mb-4">Subscription Management</h3>
             {Object.keys(activePlan).length ? (
                 <>
@@ -161,71 +161,69 @@ const Subscription = () => {
             ) : (
                 <div>No active subscription found</div>
             )}
-            <div>
-                <section id="price-section">
-                    <div className="container">
-                        <div className="row d-flex justify-content-center pt-5">
-                            <div className="row justify-content-center gapsectionsecond my-2">
-                                <div className="col-lg-7 text-center">
-                                    <h5>Available Subscription Plans</h5>
-                                </div>
+            <section id="price-section">
+                <div className="container">
+                    <div className="row d-flex justify-content-center pt-5">
+                        <div className="row justify-content-center gapsectionsecond my-2">
+                            <div className="col-lg-7 text-center">
+                                <h5>Available Subscription Plans</h5>
                             </div>
-                            {plans?.length ? (
-                                plans.map((plan, index) => (
-                                    <div
-                                        className="card col-8 col-lg-3 py-5 pb-lg-0 mx-2"
-                                        key={index}
-                                    >
-                                        <div className="wrap-price">
-                                            <div className="price-innerdetail text-center">
-                                                <h5>{plan.name}</h5>
-                                                <p className="prices">₹{plan.amount}</p>
-                                                <div className="detail-pricing">
-                                                    <span className="float-left">
-                                                        {plan.description}
-                                                    </span>
-                                                </div>
-                                                <div className="detail-pricing">
-                                                    <span className="float-left">
-                                                        {" "}
-                                                        <i className="bi bi-check2-circle"></i>{" "}
-                                                        {`Can Post ${plan.numberOfJobPosts} Jobs`}</span></div>
-                                                <div className="detail-pricing">
-                                                    <span className="float-left">
-                                                        {" "}
-                                                        <i className="bi bi-check2-circle"></i>{" "}
-                                                        Consultation
-                                                    </span>
-                                                    <span className="float-right">Style</span>
-                                                </div>
-                                                {
-                                                    activePlan?.planId?._id === plan._id ? (
-                                                        <button
-                                                            className="btn btn-secondary my-3"
-                                                            onClick={confirmCancelPlan}
-                                                        >
-                                                            Cancel Plan
-                                                        </button>
-                                                    ) : (
-                                                        <button
-                                                            className="btn btn-outline-primary my-3"
-                                                            onClick={() => makePayment(plan)}
-                                                        >
-                                                            Choose Plan
-                                                        </button>
-                                                    )
-                                                }
+                        </div>
+                        {plans?.length ? (
+                            plans.map((plan, index) => (
+                                <div
+                                    className="card col-8 col-lg-3 py-5 pb-lg-0 mx-2"
+                                    key={index}
+                                >
+                                    <div className="wrap-price">
+                                        <div className="price-innerdetail text-center">
+                                            <h5>{plan.name}</h5>
+                                            <p className="prices">₹{plan.amount}</p>
+                                            <div className="detail-pricing">
+                                                <span className="float-left">
+                                                    {plan.description}
+                                                </span>
                                             </div>
+                                            <div className="detail-pricing">
+                                                <span className="float-left">
+                                                    {" "}
+                                                    <i className="bi bi-check2-circle"></i>{" "}
+                                                    {`Can Post ${plan.numberOfJobPosts} Jobs`}</span></div>
+                                            <div className="detail-pricing">
+                                                <span className="float-left">
+                                                    {" "}
+                                                    <i className="bi bi-check2-circle"></i>{" "}
+                                                    Consultation
+                                                </span>
+                                                <span className="float-right">Style</span>
+                                            </div>
+                                            {
+                                                activePlan?.planId?._id === plan._id ? (
+                                                    <button
+                                                        className="btn btn-secondary my-3"
+                                                        onClick={confirmCancelPlan}
+                                                    >
+                                                        Cancel Plan
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className="btn btn-outline-primary my-3"
+                                                        onClick={() => makePayment(plan)}
+                                                    >
+                                                        Choose Plan
+                                                    </button>
+                                                )
+                                            }
                                         </div>
                                     </div>
-                                ))
-                            ) : (
-                                <div>No available plans found</div>
-                            )}
-                        </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div>No available plans found</div>
+                        )}
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
         </div>
     );
 };

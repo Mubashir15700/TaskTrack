@@ -1,9 +1,10 @@
 const ItemsPerPageCount = ({ value, onChange }) => {
     return (
-        <div className="mb-3">
+        <div className="mb-3 d-flex align-items-center">
             <label htmlFor="itemsPerPage" className="form-label">Items Per Page:</label>
             <select
                 id="itemsPerPage"
+                className="form-select form-select-sm w-25 ms-2"
                 value={value}
                 onChange={onChange}
             >

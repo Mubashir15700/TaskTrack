@@ -1,15 +1,15 @@
 const SearchBar = ({ role, onSearch, onSelect }) => {
     return (
-        <form className="d-flex input-group search-form" role="search">
+        <form className="w-50 input-group search-form" role="search">
             <input
-                className="form-control search-input"
+                className="w-50 form-control search-input"
                 type="search"
                 placeholder="Search"
                 aria-label="Search"
                 onChange={onSearch}
             />
             <select
-                className="form-select search-select"
+                className="w-25 form-control form-select search-select"
                 id="inputGroupSelect03"
                 onChange={(e) => onSelect(e.target.value)}
             >

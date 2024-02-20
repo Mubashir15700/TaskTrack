@@ -20,11 +20,11 @@ const LaborerProfile = lazy(() => import("../pages/Users/Laborer/LaborerProfile"
 const JobDetails = lazy(() => import("../pages/Users/Job/JobDetails"));
 const LaborerDetails = lazy(() => import("../pages/Users/Laborer/LaborerDetails"));
 const Chat = lazy(() => import("../pages/Users/Chat"));
-import Login from "../pages/Users/Auth/Login/Login";
-import SignUp from "../pages/Users/Auth/SignUp/SignUp";
-import Email from "../pages/Users/Auth/Email/Email";
-import OTP from "../pages/Users/Auth/OTP/OTP";
-import ResetPassword from "../pages/Users/Auth/ResetPassword/ResetPassword";
+import Login from "../pages/Users/Auth/Login";
+import SignUp from "../pages/Users/Auth/SignUp";
+import Email from "../pages/Users/Auth/Email";
+import OTP from "../pages/Users/Auth/OTP";
+import ResetPassword from "../pages/Users/Auth/ResetPassword";
 const Notifications = lazy(() => import("../pages/Users/Notifications"));
 import ErrorPage from "../pages/Users/ErrorPage";
 

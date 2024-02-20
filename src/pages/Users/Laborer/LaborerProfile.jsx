@@ -87,11 +87,13 @@ const LaborerProfile = () => {
     };
 
     return (
-        <div className="col-10 my-3 mx-auto p-3 p-lg-5 border mt-5">
-            <SubForm2 {...SubForm2Props} />
-            {changed && (
-                <button className="d-block btn btn-primary" onClick={handleUpdate}>Update</button>
-            )}
+        <div className="col-10 mx-auto vh-100">
+            <div className="my-3  p-3 p-lg-5 border mt-5">
+                <SubForm2 {...SubForm2Props} />
+                {changed && (
+                    <button className="d-block btn btn-primary" onClick={handleUpdate}>Update</button>
+                )}
+            </div>
         </div>
     );
 };

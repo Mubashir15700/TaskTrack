@@ -1,14 +1,14 @@
 import { useLocation } from "react-router-dom";
 import Routers from "../routes/Routers";
-import AdminHeader from "../components/Admin/Header/AdminHeader";
-import Header from "../components/Users/Header/Header";
-import Footer from "../components/Users/Footer/Footer";
+import AdminHeader from "../components/Admin/AdminHeader";
+import Header from "../components/Users/Header";
+import Footer from "../components/Users/Footer";
 import { checkToDisplayHeaderFooter } from "../utils/routeUtil";
 import { userRoutesToCheck, adminRoutesToCheck } from "../config/routesConfig";
 
 const Layout = () => {
   const location = useLocation();
-  
+
   const userRole = location.pathname.startsWith("/admin") ? "admin" : "user";
   const shouldDisplayHeaderFooter = checkToDisplayHeaderFooter(
     userRole === "admin" ? adminRoutesToCheck : userRoutesToCheck,
@@ -16,20 +16,18 @@ const Layout = () => {
   );
 
   return (
-    <>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       {shouldDisplayHeaderFooter && (
         userRole === "admin" ? <AdminHeader /> : <Header />
       )}
-      <main
-        style={{ paddingTop: shouldDisplayHeaderFooter ? "71px" : "0" }}
-      >
+      <main style={{ flex: 1, paddingTop: shouldDisplayHeaderFooter ? "72px" : 0 }}>
         <Routers />
       </main>
       {shouldDisplayHeaderFooter &&
         (userRole === "user" && !location.pathname.includes("chat")) &&
         <Footer />
       }
-    </>
+    </div>
   );
 };
 

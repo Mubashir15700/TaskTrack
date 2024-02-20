@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 import { getSubscriptions } from "../../../api/admin/plan";

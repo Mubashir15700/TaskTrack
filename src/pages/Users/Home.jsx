@@ -32,10 +32,11 @@ const Home = () => {
   const showNextPrevButtons = banners.length > 1;
 
   return (
-    <div>
+    <div className="vh-100">
       <Carousel
         nextIcon={showNextPrevButtons ? <CarouselButton type="next" /> : null}
         prevIcon={showNextPrevButtons ? <CarouselButton type="prev" /> : null}
+        fade
       >
         {banners.length ? (
           banners.map((banner, index) => (
