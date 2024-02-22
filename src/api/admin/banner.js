@@ -6,17 +6,17 @@ export const getBanners = async (itemsPerPage, currentPage) =>
         `/admin/banners?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
     ));
 
-export const getBanner = async (data) =>
-    handleAxiosRequest(axios.get(`/admin/banner/${data}`));
+export const getBanner = async (id) =>
+    handleAxiosRequest(axios.get(`/admin/banners/${id}`));
 
 export const addBanner = async (data) =>
-    handleAxiosRequest(axios.post(`/admin/add-banner`, data));
+    handleAxiosRequest(axios.post(`/admin/banners/add-banner`, data));
 
 export const editBanner = async (data) =>
-    handleAxiosRequest(axios.put(`/admin/edit-banner/${data._id}`, data));
+    handleAxiosRequest(axios.put(`/admin/banners/${data._id}/edit-banner`, data));
 
-export const bannerAction = async (data) =>
-    handleAxiosRequest(axios.patch(`/admin/banner-action/${data}`));
+export const bannerAction = async (id) =>
+    handleAxiosRequest(axios.patch(`/admin/banners/${id}/list-unlist`));
 
 export const updateBannerOrder = async (data) =>
-    handleAxiosRequest(axios.patch("/admin/update-banner-order", { data }));
+    handleAxiosRequest(axios.patch("/admin/banners/update-order", { data }));

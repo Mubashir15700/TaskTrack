@@ -6,8 +6,8 @@ export const getRequests = async (itemsPerPage, currentPage) =>
         axios.get(`/admin/requests?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`)
     );
 
-export const getRequest = async (data) =>
-    handleAxiosRequest(axios.get(`/admin/request/${data}`));
+export const getRequest = async (id) =>
+    handleAxiosRequest(axios.get(`/admin/requests/${id}`));
 
 export const requestAction = async (data) =>
-    handleAxiosRequest(axios.post(`/admin/request-action`, data));
+    handleAxiosRequest(axios.post(`/admin/requests/list-unlist`, data));

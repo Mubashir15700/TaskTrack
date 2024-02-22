@@ -5,16 +5,16 @@ export const getPlans = async () =>
     handleAxiosRequest(axios.get("/plans"));
 
 export const getStripePublicKey = async () =>
-    handleAxiosRequest(axios.get("/stripe-public-key"));
+    handleAxiosRequest(axios.get("/subscription/stripe-public-key"));
 
 export const createSubscription = async (data) =>
-    handleAxiosRequest(axios.post("/create-subscription", data));
+    handleAxiosRequest(axios.post("/subscription/create", data));
 
 export const saveSubscription = async () =>
-    handleAxiosRequest(axios.post("/save-subscription-result"));
+    handleAxiosRequest(axios.post("/subscription/save"));
 
 export const getActivePlan = async (subscriptionId) =>
-    handleAxiosRequest(axios.get(`/active-plan?subscriptionId=${subscriptionId}`));
+    handleAxiosRequest(axios.get(`/plans/active-plan?subscriptionId=${subscriptionId}`));
 
 export const cancelActivePlan = async (data) =>
-    handleAxiosRequest(axios.post("/cancel-active-plan", data));
+    handleAxiosRequest(axios.post("/plans/cancel", data));

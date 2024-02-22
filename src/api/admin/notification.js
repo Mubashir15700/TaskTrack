@@ -2,13 +2,13 @@ import axios from "../../config/axiosConfig";
 import handleAxiosRequest from "../../utils/axiosUtil";
 
 export const getAdminNotificationCount = async () =>
-    handleAxiosRequest(axios.get("/admin/notifications-count"));
+    handleAxiosRequest(axios.get("/admin/notifications/count"));
 
 export const getAdminNotifications = async (pageParam) =>
     handleAxiosRequest(axios.get(`/admin/notifications/${pageParam}`));
 
 export const getAdminNotificationDetails = async (id) =>
-    handleAxiosRequest(axios.get(`/admin/notification/${id}`));
+    handleAxiosRequest(axios.get(`/admin/notifications/${id}`));
 
 export const markNotificationOpened = async (id) =>
-    handleAxiosRequest(axios.patch(`/admin/notification/mark-read/${id}`));
+    handleAxiosRequest(axios.patch(`/admin/notifications/${id}/mark-read`));

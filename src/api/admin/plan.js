@@ -6,17 +6,17 @@ export const getPlans = async (itemsPerPage, currentPage) =>
         `/admin/plans?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}`
     ));
 
-export const getPlan = async (data) =>
-    handleAxiosRequest(axios.get(`/admin/plan/${data}`));
+export const getPlan = async (id) =>
+    handleAxiosRequest(axios.get(`/admin/plans/${id}`));
 
 export const addPlan = async (data) =>
-    handleAxiosRequest(axios.post(`/admin/add-plan`, data));
+    handleAxiosRequest(axios.post(`/admin/plans/add-plan`, data));
 
 export const editPlan = async (data) =>
-    handleAxiosRequest(axios.put(`/admin/edit-plan/${data._id}`, data));
+    handleAxiosRequest(axios.put(`/admin/plans/${data._id}/edit-plan`, data));
 
 export const planAction = async (data) =>
-    handleAxiosRequest(axios.patch(`/admin/plan-action/${data}`));
+    handleAxiosRequest(axios.patch(`/admin/plans/${data._id}/list-unlist`));
 
 export const getSubscriptions = async (itemsPerPage, currentPage) =>
     handleAxiosRequest(axios.get(

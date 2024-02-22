@@ -4,47 +4,47 @@ import handleAxiosRequest from "../../utils/axiosUtil";
 export const getJobs = async (userId, pageParam, lat = null, lon = null) =>
     handleAxiosRequest(axios.get(`/jobs/${userId}/${pageParam}`, { params: { lat, lon } }));
 
-export const getJob = async (data) => handleAxiosRequest(axios.get(`/job/${data}`));
+export const getJob = async (id) => handleAxiosRequest(axios.get(`/jobs/${id}`));
 
-export const applyJob = async (data) => handleAxiosRequest(axios.post("/apply-job", data));
+export const applyJob = async (data) => handleAxiosRequest(axios.post("/jobs/apply", data));
 
 export const cancelApplication = async (data) => handleAxiosRequest(axios.post(
-    "/cancel-job-application",
+    "/jobs/cancel-application",
     data
 ));
 
 export const getRemainingPosts = async (userId) => handleAxiosRequest(axios.get(
-    `/remaining-posts?userId=${userId}`
+    `/jobs/remaining-posts?userId=${userId}`
 ));
 
-export const postNewJob = async (data) => handleAxiosRequest(axios.post("/post-job", data));
+export const postNewJob = async (data) => handleAxiosRequest(axios.post("/jobs/post", data));
 
-export const getListedJobs = async (userId, pageParam) => handleAxiosRequest(axios.get(
-    `/listed-jobs/${userId}/${pageParam}`
+export const getListedJobs = async (id, pageParam) => handleAxiosRequest(axios.get(
+    `/jobs/listed/${id}/${pageParam}`
 ));
 
-export const getListedJob = async (data) => handleAxiosRequest(axios.get(
-    `/listed-job/${data}`
+export const getListedJob = async (id) => handleAxiosRequest(axios.get(
+    `/jobs/listed/${id}`
 ));
 
 export const updateListedJob = async (data) => handleAxiosRequest(axios.put(
-    `/edit-listed-job`,
+    `/jobs/edit`,
     data
 ));
 
-export const deleteListedJob = async (data) => handleAxiosRequest(axios.delete(
-    `/delete-listed-job/${data}`
+export const deleteListedJob = async (id) => handleAxiosRequest(axios.delete(
+    `/jobs/delete/${id}`
 ));
 
 export const getApplicants = async (data) => handleAxiosRequest(axios.get(
-    `/applicants/${data.jobId}/${data.fieldName}`
+    `/jobs/applicants/${data.jobId}/${data.fieldName}`
 ));
 
 export const applicantAction = async (data) => handleAxiosRequest(axios.patch(
-    "/applicant-action",
+    "/jobs/applicant-action",
     data
 ));
 
 export const getWorksHistory = async (userId, pageParam) => handleAxiosRequest(axios.get(
-    `/works-history/${userId}/${pageParam}`
+    `/jobs/works-history/${userId}/${pageParam}`
 ));
