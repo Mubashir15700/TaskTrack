@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
-import Cookies from "js-cookie";
 import initializeUser from "../../utils/initializeUser";
 import SweetAlert from "../../components/Common/SweetAlert";
-import { getPlans, getActivePlan, createSubscription, cancelActivePlan } from "../../api/user/plan";
+import {
+    getPlans, getActivePlan, getStripePublicKey, createSubscription, cancelActivePlan
+} from "../../api/user/plan";
 import { loadStripe } from "@stripe/stripe-js/pure";
 
 const Subscription = () => {
     const [activePlan, setActivePlan] = useState({});
     const [plans, setPlans] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
 
     const userData = useSelector((state) => state.user.userData);
 
-    // Destructure the userData object to get _id, email, and currentSubscription
     const { _id, email, currentSubscription } = userData || {};
 
     useEffect(() => {
@@ -47,8 +48,11 @@ const Subscription = () => {
     }, []);
 
     const makePayment = async (plan) => {
+        setLoading(true);
         try {
-            const stripe = await loadStripe("pk_test_51OdorbSBs8zQZ4vVMEdwVQpUgEDvXBlLoHM0PPVQSTZt33l46puwOaZjUX6KefQZ0Pc9WNIykcdRXTXiI8CcgD3400oQsZpVHc");
+            const getPublicKeyResponse = await getStripePublicKey();
+
+            const stripe = await loadStripe(getPublicKeyResponse.stripePublicKey);
 
             const data = {
                 item: plan,
@@ -60,33 +64,31 @@ const Subscription = () => {
 
             const response = await createSubscription(data);
 
-            if (response.status === 409 && response.redirectUrl) {
-                // User already has a subscription, redirect them to the billing portal
-                window.location.href = response.redirectUrl;
-                return;
-            }
-
-            if (response && response.id) {
-                const sessionId = response ? response.id : null;
-
-                // Store sessionId in a cookie
-                Cookies.set("sessionId", sessionId, { expires: 7 });
-            }
-
-            if (!response.status === 200) {
-                throw new Error(`Server error: ${response.status} - ${response.statusText}`);
-            }
-
             if (!response.id) {
                 throw new Error("Invalid response from the server");
+            }
+
+            // Store sessionId in localStorage
+            localStorage.setItem("sessionId", response.id);
+
+            if (response.status !== 200) {
+                throw new Error(`Server error: ${response.status} - ${response.statusText}`);
             }
 
             await stripe.redirectToCheckout({
                 sessionId: response.id
             });
         } catch (error) {
-            console.error(error);
-            toast.error("An error occured");
+            if (error.status === 409 && error.redirectUrl) {
+                // User already has a subscription, redirect them to the billing portal
+                window.location.href = error.redirectUrl;
+                return;
+            } else {
+                console.error(error);
+                toast.error("An error occured");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -94,7 +96,7 @@ const Subscription = () => {
         const result = await SweetAlert.confirmAction(
             "Cancel Subscription",
             "Are you sure you want to cancel current subscription?",
-            "Cancel",
+            "Confirm",
             "#d9534f"
         );
 
@@ -124,7 +126,7 @@ const Subscription = () => {
     };
 
     return (
-        <div className="col-10 my-3 mx-auto vh-100">
+        <div className="col-10 my-3 mx-auto">
             <h3 className="mb-4">Subscription Management</h3>
             {Object.keys(activePlan).length ? (
                 <>
@@ -208,9 +210,16 @@ const Subscription = () => {
                                                 ) : (
                                                     <button
                                                         className="btn btn-outline-primary my-3"
+                                                        disabled={loading}
                                                         onClick={() => makePayment(plan)}
                                                     >
-                                                        Choose Plan
+                                                        {loading && (
+                                                            <span
+                                                                className="spinner-border spinner-border-sm me-1"
+                                                                aria-hidden="true"
+                                                            ></span>
+                                                        )}
+                                                        {loading ? "Opening Stripe..." : "Choose Plan"}
                                                     </button>
                                                 )
                                             }

@@ -1,4 +1,5 @@
 import Address from "../../../../components/Users/Address";
+import FormErrorDisplay from "../../../../components/Common/FormErrorDisplay";
 
 function SubForm1({ formData, setFormData, errors }) {
     const newAddressSelected = (selectedAddress) => {
@@ -28,7 +29,7 @@ function SubForm1({ formData, setFormData, errors }) {
                             setFormData({ ...formData, username: e.target.value });
                         }}
                     />
-                    {errors.username && <span className="error-display">{errors.username}</span>}
+                    <FormErrorDisplay error={errors.username} />
                 </div>
                 <div className="col-md-6">
                     <label>Phone</label>
@@ -41,7 +42,7 @@ function SubForm1({ formData, setFormData, errors }) {
                             setFormData({ ...formData, phone: e.target.value });
                         }}
                     />
-                    {errors.phone && <span className="error-display">{errors.phone}</span>}
+                    <FormErrorDisplay error={errors.phone} />
                 </div>
                 <div className="col-md-12 my-2">
                     <label>Email</label>
@@ -54,10 +55,10 @@ function SubForm1({ formData, setFormData, errors }) {
                             setFormData({ ...formData, email: e.target.value });
                         }}
                     />
-                    {errors.email && <span className="error-display">{errors.email}</span>}
+                    <FormErrorDisplay error={errors.email} />
                 </div>
                 <Address {...AddressProps} />
-                {errors.location && <span className="error-display">{errors.location}</span>}
+                <FormErrorDisplay error={errors.location} />
             </div>
         </>
     );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getBanner, editBanner } from "../../../api/admin/banner";
@@ -19,20 +19,17 @@ const EditBanner = () => {
     useEffect(() => {
         const getBannerDetails = async () => {
             try {
-                // dispatch(setLoading(true));
                 const response = await getBanner(id);
                 if (response && response.status === 200 && response.banner) {
                     const banner = response.banner
                     setBannerData(banner);
-                    setPreviewUrl(`http://localhost:3000/uploads/banner/${banner?.image}`)
+                    setPreviewUrl(banner.image)
                 } else {
                     setErrors("Failed to fetch banner details.");
                 }
             } catch (error) {
                 setErrors("An error occurred while fetching banner details.");
                 console.error("Error fetching banner details: ", error);
-            } finally {
-                // dispatch(setLoading(false));
             }
         };
 

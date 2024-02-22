@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import DisplayMap from "../../components/Users/DisplayMap";
+import FormErrorDisplay from "../Common/FormErrorDisplay";
 import { getCurrentLocation, deleteLocation } from "../../api/user/profile";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
 
@@ -16,6 +17,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
         state: "",
         postcode: undefined,
     });
+    const [loading, setLoading] = useState(false);
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -56,6 +58,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     if (pos && pos.coords) {
+                        setLoading(true);
                         const { latitude, longitude } = pos.coords;
                         const response = await getCurrentLocation({ latitude, longitude });
 
@@ -63,16 +66,20 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                             setMapVisible(true);
                             setSelectedAddress(response.fullAddress);
                             onAddressChange(response.fullAddress);
+                            setLoading(false);
                         } else {
                             toast.error("Error while getting your current location");
+                            setLoading(false);
                         }
                     } else {
                         toast.error("Error while getting your current location");
+                        setLoading(false);
                     }
                 },
                 (error) => {
                     toast.error("Error while getting your current location");
                     console.log("Geolocation error: ", error);
+                    setLoading(false);
                 }
             );
         } catch (error) {
@@ -158,7 +165,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.road}
                                     onChange={handleManualEntryChange}
                                 />
-                                {errors.road && <span className="error-display">{errors.road}</span>}
+                                <FormErrorDisplay error={errors.road} />
                             </div>
                             <div className="col-md-6">
                                 <label>Village</label>
@@ -169,7 +176,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.village}
                                     onChange={handleManualEntryChange}
                                 />
-                                {errors.village && <span className="error-display">{errors.village}</span>}
+                                <FormErrorDisplay error={errors.village} />
                             </div>
                         </div>
                         <div className="d-flex">
@@ -182,7 +189,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.district}
                                     onChange={handleManualEntryChange}
                                 />
-                                {errors.district && <span className="error-display">{errors.district}</span>}
+                                <FormErrorDisplay error={errors.district} />
                             </div>
                             <div className="col-md-4">
                                 <label>State</label>
@@ -193,7 +200,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.state}
                                     onChange={handleManualEntryChange}
                                 />
-                                {errors.state && <span className="error-display">{errors.state}</span>}
+                                <FormErrorDisplay error={errors.state} />
                             </div>
                             <div className="col-md-4">
                                 <label>Pincode</label>
@@ -204,7 +211,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                                     value={manualEntry.pincode}
                                     onChange={handleManualEntryChange}
                                 />
-                                {errors.postcode && <span className="error-display">{errors.postcode}</span>}
+                                <FormErrorDisplay error={errors.postcode} />
                             </div>
                         </div>
                     </div>
@@ -213,10 +220,17 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                     <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
                         <button
                             className="btn btn-primary col-md-5 my-sm-1"
+                            disabled={loading}
                             onClick={handleGetCurrentLocation}
                         >
+                            {loading && (
+                                <span
+                                    className="spinner-border spinner-border-sm me-1"
+                                    aria-hidden="true"
+                                ></span>
+                            )}
                             <i className="bi bi-crosshair mx-2"></i>
-                            Get your current location
+                            {loading ? "Fetching Location..." : "Get your current location"}
                         </button>
                         {!manualEntryVisible ? (
                             <button

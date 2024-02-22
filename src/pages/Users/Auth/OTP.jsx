@@ -43,7 +43,7 @@ const OTP = () => {
       if (response) {
         setServerResponse(response);
 
-        if (response.status === "success") {
+        if (response.status === 200) {
           localStorage.removeItem("otpTimer");
           if (purpose === "forgot-password") {
             navigate("/reset-password");
@@ -136,9 +136,10 @@ const OTP = () => {
                     Time remaining: {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
                   </span>
                 )}
-                {timer === 0 && (<Link onClick={handleResend} className="link mt-1">
-                  Resend OTP
-                </Link>
+                {timer === 0 && (
+                  <Link onClick={handleResend} className="link mt-1">
+                    Resend OTP
+                  </Link>
                 )}
               </div>
               <MDBBtn className="w-100 mb-4" size="md" onClick={handleVerification}>Verify</MDBBtn>

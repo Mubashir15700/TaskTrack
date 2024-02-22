@@ -24,7 +24,7 @@ const TableDataDisplay = ({
                         `col-12 col-md-4 ${addLink && "col-12 col-md-4 d-flex justify-content-between mt-3 mt-md-0"}`
                     }
                 >
-                    <div className="mt-4 col-10">
+                    <div className="mt-3 col-10">
                         <ItemsPerPageCount
                             value={itemsPerPage}
                             onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
@@ -43,7 +43,7 @@ const TableDataDisplay = ({
                 responsive={true}
                 className="mb-2"
             />
-            {itemsPerPage > dataTableData.length && (
+            {(dataTableData.length > 0 && itemsPerPage > dataTableData.length) && (
                 <p>No more data found</p>
             )}
             <Pagination

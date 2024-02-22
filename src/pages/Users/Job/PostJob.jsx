@@ -136,7 +136,7 @@ const PostJob = () => {
   };
 
   return (
-    <div className="vh-100">
+    <div>
       {currentUser.currentSubscription !== null ? (
         remainingPosts > 0 ? (
           <JobPostForm {...JobPostFormProps} />

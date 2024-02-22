@@ -25,8 +25,8 @@ import SignUp from "../pages/Users/Auth/SignUp";
 import Email from "../pages/Users/Auth/Email";
 import OTP from "../pages/Users/Auth/OTP";
 import ResetPassword from "../pages/Users/Auth/ResetPassword";
-const Notifications = lazy(() => import("../pages/Users/Notifications"));
-import ErrorPage from "../pages/Users/ErrorPage";
+const Notifications = lazy(() => import("../pages/Notifications"));
+import ErrorPage from "../pages/ErrorPage";
 
 const UserRoutes = ({ isLoggedIn }) => {
 

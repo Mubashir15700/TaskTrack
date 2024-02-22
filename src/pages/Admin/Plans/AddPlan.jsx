@@ -9,7 +9,7 @@ const AddPlan = () => {
     const [planData, setPlanData] = useState({
         name: "",
         description: "",
-        type: "",
+        type: "monthly",
         amount: undefined,
         numberOfJobPosts: undefined
     });

@@ -1,3 +1,5 @@
+import FormErrorDisplay from "../Common/FormErrorDisplay";
+
 const PlanForm = ({
     title, planData, handleInputChange, handleSubmit, serverResponse, errors
 }) => {
@@ -14,7 +16,7 @@ const PlanForm = ({
                         value={planData.name}
                         onChange={handleInputChange}
                     />
-                    {errors.name && <span className="error-display">{errors.name}</span>}
+                    <FormErrorDisplay error={errors.name} />
                 </div>
                 <div className="col-md-12">
                     <label>Description</label>
@@ -25,7 +27,7 @@ const PlanForm = ({
                         value={planData.description}
                         onChange={handleInputChange}
                     />
-                    {errors.description && <span className="error-display">{errors.description}</span>}
+                    <FormErrorDisplay error={errors.description} />
                 </div>
                 <div className="col-12 d-md-flex justify-content-between">
                     <div className="col-md-6 col-12">
@@ -39,7 +41,7 @@ const PlanForm = ({
                             <option value="monthly">Monthly</option>
                             <option value="yearly">Yearly</option>
                         </select>
-                        {errors.type && <span className="error-display">{errors.type}</span>}
+                        <FormErrorDisplay error={errors.type} />
                     </div>
                     <div className="col-md-6 col-12">
                         <label>Amount</label>
@@ -50,7 +52,7 @@ const PlanForm = ({
                             value={planData.amount}
                             onChange={handleInputChange}
                         />
-                        {errors.amount && <span className="error-display">{errors.amount}</span>}
+                        <FormErrorDisplay error={errors.amount} />
                     </div>
                 </div>
                 <div className="col-md-12">
@@ -62,7 +64,7 @@ const PlanForm = ({
                         value={planData.numberOfJobPosts}
                         onChange={handleInputChange}
                     />
-                    {errors.numberOfJobPosts && <span className="error-display">{errors.numberOfJobPosts}</span>}
+                    <FormErrorDisplay error={errors.numberOfJobPosts} />
                 </div>
             </div>
             <button

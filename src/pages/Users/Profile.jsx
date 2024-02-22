@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";
 import ImageCrop from "../../components/Common/ImageCrop";
 import Address from "../../components/Users/Address";
+import FormErrorDisplay from "../../components/Common/FormErrorDisplay";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -171,7 +172,7 @@ const UserDetails = () => {
           <div className="mb-2">
             <ImageCrop onNewImageUrl={addCropImg} purpose={"profile"} />
           </div>
-          {errors.profile && <span className="error-display">{errors.profile}</span>}
+          <FormErrorDisplay error={errors.profile} />
           <div>
             <div className="form-group row">
               <div className="col-md-6">
@@ -183,7 +184,7 @@ const UserDetails = () => {
                   value={userData?.username}
                   onChange={handleInputChange}
                 />
-                {errors.username && <span className="error-display">{errors.username}</span>}
+                <FormErrorDisplay error={errors.username} />
               </div>
               <div className="col-md-6">
                 <label>Phone</label>
@@ -194,7 +195,7 @@ const UserDetails = () => {
                   value={userData?.phone}
                   onChange={handleInputChange}
                 />
-                {errors.phone && <span className="error-display">{errors.phone}</span>}
+                <FormErrorDisplay error={errors.phone} />
               </div>
             </div>
             <div className="form-group row">
@@ -207,7 +208,7 @@ const UserDetails = () => {
                   value={userData?.email}
                   onChange={handleInputChange}
                 />
-                {errors.email && <span className="error-display">{errors.email}</span>}
+                <FormErrorDisplay error={errors.email} />
               </div>
             </div>
             <div>

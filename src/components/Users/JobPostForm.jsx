@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Address from "./Address";
 import Fields from "./Fields";
+import FormErrorDisplay from "../Common/FormErrorDisplay";
 import { getApplicants } from "../../api/user/job";
 
 const JobPostForm = ({
@@ -64,7 +65,7 @@ const JobPostForm = ({
                         value={postData?.title || ""}
                         onChange={handleInputChange}
                     />
-                    {errors.title && <span className="error-display">{errors.title}</span>}
+                    <FormErrorDisplay error={errors.title} />
                 </div>
                 <div className="col-md-12">
                     <label>Description</label>
@@ -75,7 +76,7 @@ const JobPostForm = ({
                         value={postData?.description || ""}
                         onChange={handleInputChange}
                     />
-                    {errors.description && <span className="error-display">{errors.description}</span>}
+                    <FormErrorDisplay error={errors.description} />
                 </div>
                 <div className="form-group row">
                     <div className="col-md-4">
@@ -87,7 +88,7 @@ const JobPostForm = ({
                             value={postData?.date ? new Date(postData.date).toISOString().split("T")[0] : ""}
                             onChange={handleInputChange}
                         />
-                        {errors.date && <span className="error-display">{errors.date}</span>}
+                        <FormErrorDisplay error={errors.date} />
                     </div>
                     <div className="col-md-4">
                         <label>Time</label>
@@ -98,7 +99,7 @@ const JobPostForm = ({
                             value={postData?.time || ""}
                             onChange={handleInputChange}
                         />
-                        {errors.time && <span className="error-display">{errors.time}</span>}
+                        <FormErrorDisplay error={errors.time} />
                     </div>
                     <div className="col-md-4">
                         <label>Duration(hrs)</label>
@@ -109,7 +110,7 @@ const JobPostForm = ({
                             value={postData?.duration || ""}
                             onChange={handleInputChange}
                         />
-                        {errors.duration && <span className="error-display">{errors.duration}</span>}
+                        <FormErrorDisplay error={errors.duration} />
                     </div>
                 </div>
                 <Address
@@ -118,7 +119,7 @@ const JobPostForm = ({
                     onAddressChange={newAddressSelected}
                     usage={"postjob"}
                 />
-                {errors.location && <span className="error-display">{errors.location}</span>}
+                <FormErrorDisplay error={errors.location} />
                 {/* Fields Section */}
                 <div className="col-md-12">
                     <label>Required Fields</label>

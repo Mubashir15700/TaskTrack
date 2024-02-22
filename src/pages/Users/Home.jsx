@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setLoading } from "../../redux/slices/commonSlice";
 import Carousel from "react-bootstrap/Carousel";
 import { getActiveBanners } from "../../api/user/utils";
 import CarousalImage from "../../components/Users/CarousalImage";
@@ -11,18 +9,13 @@ import defBanner from "../../assets/images/bnr-def.jfif";
 const Home = () => {
   const [banners, setBanners] = useState([]);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const getBanner = async () => {
       try {
-        // dispatch(setLoading(true));
         const response = await getActiveBanners();
         setBanners(response.banners);
       } catch (error) {
         console.error("Error fetching banners:", error);
-      } finally {
-        // dispatch(setLoading(false));
       }
     };
 

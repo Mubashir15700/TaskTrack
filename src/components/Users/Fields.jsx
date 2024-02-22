@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import FormErrorDisplay from "../Common/FormErrorDisplay";
+
 const Fields = ({ field, index, errors, handleFieldChange, handleRemoveField, getJobApplicants }) => {
     return (
         <div className="field-container form-group row col-md-12 mb-2">
@@ -10,7 +13,7 @@ const Fields = ({ field, index, errors, handleFieldChange, handleRemoveField, ge
                     onChange={(e) => handleFieldChange(index, { name: e.target.value })}
                 />
                 {errors.hasOwnProperty(`fields[${index}].name`) && (
-                    <p className="error-display">Field name is required</p>
+                    <FormErrorDisplay error={"Field name is required"} />
                 )}
             </div>
             <div className="col-md-2">
@@ -22,7 +25,7 @@ const Fields = ({ field, index, errors, handleFieldChange, handleRemoveField, ge
                     onChange={(e) => handleFieldChange(index, { workers: e.target.value })}
                 />
                 {errors.hasOwnProperty(`fields[${index}].workers`) && (
-                    <p className="error-display">Number of workers must be a positive number</p>
+                    <FormErrorDisplay error={"Number of workers must be a positive number"} />
                 )}
             </div>
             <div className="col-md-3">
@@ -43,7 +46,7 @@ const Fields = ({ field, index, errors, handleFieldChange, handleRemoveField, ge
                     onChange={(e) => handleFieldChange(index, { wagePerHour: e.target.value })}
                 />
                 {errors.hasOwnProperty(`fields[${index}].wagePerHour`) && (
-                    <p className="error-display">Wage per hour must be a positive number</p>
+                    <FormErrorDisplay error={"Wage per hour must be a positive number"} />
                 )}
             </div>
             <div className="col-md-6">

@@ -1,4 +1,5 @@
 import Select from "react-select";
+import FormErrorDisplay from "../../../../components/Common/FormErrorDisplay";
 
 function SubForm2(
     { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, purpose, setChanged }
@@ -66,7 +67,7 @@ function SubForm2(
                         setFormData({ ...formData, languages: e.target.value });
                     }}
                 />
-                {errors.languages && <span className="error-display">{errors.languages}</span>}
+                <FormErrorDisplay error={errors.languages} />
             </div>
             <div className="col-md-12 mt-3">
                 <label>Education</label>
@@ -80,18 +81,18 @@ function SubForm2(
                         setFormData({ ...formData, education: e.target.value });
                     }}
                 />
-                {errors.education && <span className="error-display">{errors.education}</span>}
+                <FormErrorDisplay error={errors.duration} />
             </div>
             <div className="form-group row mt-3">
                 <div className="col-md-6">
                     <label>Available Days</label>
                     <Select {...DaysSelectProps} isMulti />
-                    {errors.avlDays && <span className="error-display">{errors.avlDays}</span>}
+                    <FormErrorDisplay error={errors.avlDays} />
                 </div>
                 <div className="col-md-6">
                     <label>Available Times</label>
                     <Select {...TimesSelectProps} isMulti />
-                    {errors.avlTimes && <span className="error-display">{errors.avlTimes}</span>}
+                    <FormErrorDisplay error={errors.avlTimes} />
                 </div>
             </div>
             <div className="form-group row mt-3">
@@ -108,7 +109,7 @@ function SubForm2(
                                     onChange={(e) => handleFieldChange(index, { name: e.target.value })}
                                 />
                                 {errors?.["fields[0].name"] && (
-                                    <p className="error-display">{errors["fields[0].name"]}</p>
+                                    <FormErrorDisplay error={errors["fields[0].name"]} />
                                 )}
                             </div>
                             <div className="col-md-6">
@@ -120,7 +121,7 @@ function SubForm2(
                                     onChange={(e) => handleFieldChange(index, { worksDone: e.target.value })}
                                 />
                                 {errors?.["fields[0].worksDone"] && (
-                                    <p className="error-display">{errors["fields[0].worksDone"]}</p>
+                                    <FormErrorDisplay error={errors["fields[0].worksDone"]} />
                                 )}
                             </div>
                         </div>
@@ -134,7 +135,7 @@ function SubForm2(
                                     onChange={(e) => handleFieldChange(index, { wagePerHour: e.target.value })}
                                 />
                                 {errors?.["fields[0].wagePerHour"] && (
-                                    <p className="error-display">{errors["fields[0].wagePerHour"]}</p>
+                                    <FormErrorDisplay error={errors["fields[0].wagePerHour"]} />
                                 )}
                             </div>
                             {formData.fields.length > 1 && (
@@ -147,7 +148,7 @@ function SubForm2(
                         </div>
                     </div>
                 ))}
-                {errors.fields && <p className="error-display">{errors.fields}</p>}
+                <FormErrorDisplay error={errors.fields} />
             </div>
             <button type="button" className="btn" onClick={handleAddField}>
                 <i className="bi bi-plus-circle"></i>

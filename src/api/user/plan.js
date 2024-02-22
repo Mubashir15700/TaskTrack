@@ -4,6 +4,9 @@ import handleAxiosRequest from "../../utils/axiosUtil";
 export const getPlans = async () =>
     handleAxiosRequest(axios.get("/plans"));
 
+export const getStripePublicKey = async () =>
+    handleAxiosRequest(axios.get("/stripe-public-key"));
+
 export const createSubscription = async (data) =>
     handleAxiosRequest(axios.post("/create-subscription", data));
 

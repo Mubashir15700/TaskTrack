@@ -1,4 +1,5 @@
 import ImageCrop from "../Common/ImageCrop";
+import FormErrorDisplay from "../Common/FormErrorDisplay";
 
 const BannerForm = ({
     title,
@@ -25,7 +26,7 @@ const BannerForm = ({
                         value={bannerData?.title}
                         onChange={handleInputChange}
                     />
-                    {errors.title && <span className="error-display">{errors.title}</span>}
+                    <FormErrorDisplay error={errors.title} />
                 </div>
                 <div className="col-md-12">
                     <label>Description</label>
@@ -36,7 +37,7 @@ const BannerForm = ({
                         value={bannerData?.description}
                         onChange={handleInputChange}
                     />
-                    {errors.description && <span className="error-display">{errors.description}</span>}
+                    <FormErrorDisplay error={errors.description} />
                 </div>
                 {(bannerData.image && !newImageSelected && previewUrl) && (
                     <div className="col-md-12">
@@ -44,17 +45,16 @@ const BannerForm = ({
                             src={previewUrl}
                             className="my-3 img-fluid"
                             style={{
-                                height: '200px',
-                                width: '300px',
+                                height: "200px",
+                                width: "300px",
                             }}
                         />
-                        {errors.image && <span className="error-display">{errors.image}</span>}
                     </div>
                 )}
                 <div className="col-md-12">
                     <ImageCrop onNewImageUrl={addCropImage} purpose={"banner"} />
-                    {errors.image && <span className="error-display">{errors.image}</span>}
                 </div>
+                <FormErrorDisplay error={errors.image} />
                 {changed && (
                     <button
                         className={`btn btn-primary mt-3`}

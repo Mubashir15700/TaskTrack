@@ -2,18 +2,17 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-import SweetAlert from "../../../components/Common/SweetAlert";
-import ItemsPerPageCount from "../../../components/Admin/ItemsPerPageCount";
-import Pagination from "../../../components/Admin/Pagination";
-import { getBanners, bannerAction, updateBannerOrder } from "../../../api/admin/banner";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import SweetAlert from "../../../components/Common/SweetAlert";
+import ItemsPerPageCount from "../../../components/Admin/ItemsPerPageCount";
+import Pagination from "../../../components/Admin/Pagination";
+import SortableBanner from "../../../components/Admin/SortableBanner";
+import { getBanners, bannerAction, updateBannerOrder } from "../../../api/admin/banner";
 
 const Banner = () => {
   const navigate = useNavigate();
@@ -50,7 +49,6 @@ const Banner = () => {
   }, [currentPage, searchResults, itemsPerPage]);
 
   const confirmListUnlist = async (bannerId, isActive) => {
-    console.log("confirmListUnlist");
     const result = await SweetAlert.confirmAction(
       `${isActive ? "Unlist" : "List"} banner`,
       `Are you sure you want to ${isActive ? "Unlist" : "List"} this banner?`,
@@ -65,7 +63,6 @@ const Banner = () => {
 
   const handleListUnlist = async (bannerId) => {
     try {
-      console.log("handleListUnlist");
       const response = await bannerAction(bannerId);
       if (response) {
         if (response.status === 200) {
@@ -102,112 +99,61 @@ const Banner = () => {
   };
 
   const onDragEnd = async (event) => {
-    console.log("onDragEnd");
-
-    const { active, over } = event;
-    if (active.id === over.id) {
-      return;
-    }
-
-    try {
-      const oldIndex = banners.findIndex((banner) => banner._id === active.id);
-      const newIndex = banners.findIndex((banner) => banner._id === over.id);
-
-      // Extract information about the dragged banner
-      const data = {
-        draggedBannerId: banners[oldIndex]._id,
-        prevOrder: oldIndex,
-        newOrder: newIndex,
-      };
-
-      const reOrderBannersResponse = await updateBannerOrder(data);
-
-      if (!reOrderBannersResponse || reOrderBannersResponse.status !== "success") {
-        toast.error("Error while updating banner's order");
+    const { active } = event;
+    const buttonText = event.activatorEvent.explicitOriginalTarget?.data;
+    if (buttonText && buttonText === "Edit") {
+      navigate(`/admin/banners/edit-banner/${active.id}`);
+    } else if (buttonText && buttonText.includes("List")) {
+      confirmListUnlist(active.id, false);
+    } else if (buttonText && buttonText.includes("Unlist")) {
+      confirmListUnlist(active.id, true);
+    } else {
+      const { over } = event;
+      if (active.id === over.id) {
         return;
       }
 
-      setBanners((prevBanners) => {
-        // Ensure that prevBanners is an array before using map
-        const updatedBanners = Array.isArray(prevBanners) ? arrayMove(prevBanners, oldIndex, newIndex) : prevBanners;
-        return updatedBanners;
-      });
-    } catch (error) {
-      console.error("Error updating banner order:", error);
-      toast.error("Error while updating banner's order");
+      try {
+        const oldIndex = banners.findIndex((banner) => banner._id === active.id);
+        const newIndex = banners.findIndex((banner) => banner._id === over.id);
+
+        // Extract information about the dragged banner
+        const data = {
+          draggedBannerId: banners[oldIndex]._id,
+          prevOrder: oldIndex,
+          newOrder: newIndex,
+        };
+
+        const reOrderBannersResponse = await updateBannerOrder(data);
+        if (!reOrderBannersResponse || reOrderBannersResponse.status !== 200) {
+          toast.error("Error while updating banner's order");
+          return;
+        }
+
+        setBanners((prevBanners) => {
+          // Ensure that prevBanners is an array before using map
+          const updatedBanners = Array.isArray(prevBanners) ? arrayMove(prevBanners, oldIndex, newIndex) : prevBanners;
+          return updatedBanners;
+        });
+      } catch (error) {
+        console.error("Error updating banner order:", error);
+        toast.error("Error while updating banner's order");
+      }
     }
-  };
-
-  const SortableBanner = ({ banner }) => {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-    } = useSortable({ id: banner._id });
-    const style = {
-      transition,
-      transform: CSS.Transform.toString(transform),
-    };
-
-    return (
-      <tr
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className="banner"
-      >
-        <td>{banner.title}</td>
-        <td>{banner.description.substring(0, 30)}...</td>
-        <td>
-          <img
-            src={`http://localhost:3000/uploads/banner/${banner?.image}`}
-            alt="Banner"
-            style={{ maxWidth: "150px", height: "auto", margin: "5px" }}
-          />
-        </td>
-        <td>{banner.isActive ? "Yes" : "No"}</td>
-        <td>
-          <div className="d-flex gap-2 justify-content-center">
-            <button
-              className="btn btn-primary"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                console.log("edit button");
-                navigate(`/admin/banners/edit-banner/${banner._id}`);
-              }}
-            >
-              Edit
-            </button>
-            <button className={`btn ${banner.isActive ? "btn-danger" : "btn-warning"}`}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                confirmListUnlist(banner._id, banner.isActive);
-              }}>
-              {banner.isActive ? "Unlist" : "List"}
-            </button>
-          </div>
-        </td>
-      </tr>
-    );
   };
 
   return (
     <div className="mt-3 col-10 mx-auto text-center">
       <div className="col-12 d-flex flex-column flex-md-row justify-content-between mt-3 mt-md-0">
         <h5 className="mt-4 mb-3 mb-md-0">Banners</h5>
-        <div className="col-md-3 d-flex justify-content-between">
-          <div className="mt-4">
+        <div className="col-md-4 d-flex justify-content-between align-items-center">
+          <div className="mt-3">
             <ItemsPerPageCount
               value={itemsPerPage}
               onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
             />
           </div>
-          <Link to={"/admin/banners/add-banner"} className="btn btn-sm btn-outline-primary align-self-center">
+          <Link to={"/admin/banners/add-banner"} className="btn btn-sm btn-outline-primary">
             +
           </Link>
         </div>
@@ -226,15 +172,23 @@ const Banner = () => {
                 </tr>
               </thead>
               <tbody>
-                {banners?.map((banner) => (
-                  <SortableBanner key={banner._id} banner={banner} />
-                ))}
+                {banners.length ? (
+                  banners?.map((banner) => (
+                    <SortableBanner key={banner._id} banner={banner} />
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5}>
+                      There are no records to display
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
         </SortableContext>
       </DndContext>
-      {itemsPerPage > banners.length && (
+      {(banners.length > 0 && itemsPerPage > banners.length) && (
         <p>No more data found</p>
       )}
       <Pagination
