@@ -34,7 +34,7 @@ const Home = () => {
         {banners.length ? (
           banners.map((banner, index) => (
             <Carousel.Item key={index}>
-              <CarousalImage src={`http://localhost:3000/uploads/banner/${banner?.image}`} />
+              <CarousalImage src={banner.image} />
               <Carousel.Caption>
                 <CarousalContent title={banner.title} description={banner.description} />
               </Carousel.Caption>
