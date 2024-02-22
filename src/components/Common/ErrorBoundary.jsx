@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ErrorContent from "./ErrorContent";
 
 const ErrorBoundary = ({ children }) => {
     const [hasError, setHasError] = useState(false);
@@ -20,9 +21,12 @@ const ErrorBoundary = ({ children }) => {
 
     if (hasError) {
         return (
-            <div className="d-flex justify-content-center align-items-center">
-                <p className="mt-5">Something went wrong.</p>
-            </div>
+            <ErrorContent
+                message={
+                    `Oops! Something went wrong.
+                    Please try refreshing the page or contact support if the issue persists.`
+                }
+            />
         );
     }
 
