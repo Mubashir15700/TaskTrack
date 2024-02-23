@@ -7,7 +7,7 @@ import { getLaborer } from "../../api/user/laborer";
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
     // the profile image URL
-    const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
+    const imageUrl = `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}`;
 
     const navigate = useNavigate();
 
