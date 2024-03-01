@@ -99,10 +99,9 @@ const LaborerDetails = () => {
         laborer ? (
           <div className="card">
             <div className="card-header">
-              {/* {laborer.user?.username} */}
             </div>
-            <div className="card-body">
-              <div className="d-flex justify-content-center align-items-center">
+            <div className="card-body d-md-flex">
+              <div className="col-md-4">
                 {laborer.user?.profile ? (
                   <img
                     src={`http://localhost:3000/uploads/profile/${laborer.user?.profile}`}
@@ -112,18 +111,20 @@ const LaborerDetails = () => {
                 ) : (
                   <i className="bi bi-person-circle fs-1 mb-3"></i>
                 )}
-              </div>
-              <div className="d-flex justify-content-center align-items-center me-5">
                 <p>{laborer.user?.username}</p>
+                <Link
+                  to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
+                  className="btn btn-outline-primary"
+                >
+                  <i className="bi bi-chat-dots"></i>
+                </Link>
               </div>
-            </div>
-            <div className="d-flex justify-content-center align-items-center me-5">
-              <Link
-                to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
-                className="btn btn-outline-primary"
-              >
-                <i className="bi bi-chat-dots"></i>
-              </Link>
+              <div className="col-md-8">
+                <div className="m-2">
+                  <p>Languages known: {laborer?.languages}</p>
+                  <p>Education: {laborer?.education}</p>
+                </div>
+              </div>
             </div>
             <div className="px-1">
               <Address
@@ -131,11 +132,6 @@ const LaborerDetails = () => {
                 currentAddress={laborer.user?.location}
                 usage={"display-laborer"}
               />
-            </div>
-            <hr className="my-3" />
-            <div className="m-2">
-              <p>Languages known: {laborer?.languages}</p>
-              <p>Education: {laborer?.education}</p>
             </div>
             <hr className="my-3" />
             <div className="mt-3">

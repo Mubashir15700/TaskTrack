@@ -10,8 +10,14 @@ export const profileSchema = Yup.object().shape({
 });
 
 export const workSchema = Yup.object().shape({
-    languages: Yup.string().required("Languages are required"),
-    education: Yup.string().required("Education is required"),
+    languages: Yup.array()
+        .of(Yup.string().required("At least one language should be selected"))
+        .min(1, "At least one language should be selected")
+        .required("Known languages are required"),
+    education: Yup.array()
+        .of(Yup.string().required("At least one education should be selected"))
+        .min(1, "At least one education should be selected")
+        .required("Education level is required"),
     avlDays: Yup.array()
         .of(Yup.string().required("At least one day should be selected"))
         .min(1, "At least one day should be selected")

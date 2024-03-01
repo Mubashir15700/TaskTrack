@@ -1,9 +1,55 @@
 import Select from "react-select";
+import iso6391 from "iso-639-1";
 import FormErrorDisplay from "../../../../components/Common/FormErrorDisplay";
 
 function SubForm2(
-    { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, purpose, setChanged }
+    { formData, setFormData, errors, handleFieldChange, handleRemoveField, handleAddField, setChanged }
 ) {
+    // Get all language names
+    const languageNames = iso6391.getAllNames();
+
+    // Create an array of objects with value and label properties
+    const SelectLanguageoptions = languageNames.map((language) => ({
+        value: language,
+        label: language,
+    }));
+
+    const LanguagesSelectProps = {
+        defaultValue: SelectLanguageoptions.filter((option) =>
+            formData.languages?.includes(option.value)
+        ),
+        options: SelectLanguageoptions,
+        onChange: (selectedOptions) => {
+            // Extract the values from selectedOptions
+            const selectedValues = selectedOptions.map((option) => option.value);
+
+            // Update the state with the selected values
+            setFormData({ ...formData, languages: selectedValues });
+            setChanged && setChanged(true);
+        },
+    };
+
+    const SelectEduLeveloptions = [
+        { value: "High School Diploma", label: "High School Diploma" },
+        { value: "Associate Degree", label: "Associate Degree" },
+        { value: "Bachelor\'s Degree", label: "Bachelor\'s Degree" },
+        { value: "Master\'s Degree", label: "Master\'s Degree" },
+    ];
+
+    const EduLevelSelectProps = {
+        defaultValue: SelectEduLeveloptions.filter((option) =>
+            formData.education?.includes(option.value)),
+        options: SelectEduLeveloptions,
+        onChange: (selectedOptions) => {
+            // Extract the values from selectedOptions
+            const selectedValues = selectedOptions.map((option) => option.value);
+
+            // Update the state with the selected values
+            setFormData({ ...formData, education: selectedValues });
+            setChanged && setChanged(true);
+        },
+    };
+
     const SelectDayoptions = [
         { value: "sunday", label: "Sunday" },
         { value: "monday", label: "Monday" },
@@ -12,15 +58,6 @@ function SubForm2(
         { value: "thursday", label: "Thursday" },
         { value: "friday", label: "Friday" },
         { value: "saturday", label: "Saturday" },
-    ];
-
-    const SelectTimeoptions = [
-        { value: "full time", label: "Full Time" },
-        { value: "part time", label: "Part Time" },
-        { value: "mornings", label: "Mornings" },
-        { value: "afternoons", label: "Afternoons" },
-        { value: "evenings", label: "Evenings" },
-        { value: "on call", label: "On Call" },
     ];
 
     const DaysSelectProps = {
@@ -37,6 +74,15 @@ function SubForm2(
             setChanged && setChanged(true);
         },
     };
+
+    const SelectTimeoptions = [
+        { value: "full time", label: "Full Time" },
+        { value: "part time", label: "Part Time" },
+        { value: "mornings", label: "Mornings" },
+        { value: "afternoons", label: "Afternoons" },
+        { value: "evenings", label: "Evenings" },
+        { value: "on call", label: "On Call" },
+    ];
 
     const TimesSelectProps = {
         defaultValue: SelectTimeoptions.filter((option) =>
@@ -57,31 +103,13 @@ function SubForm2(
             <h5 className="mb-2">Laborer Details</h5>
             <div className="col-md-12 mt-3">
                 <label>Known Languages</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="languages"
-                    value={formData.languages}
-                    onChange={(e) => {
-                        setChanged && setChanged(true);
-                        setFormData({ ...formData, languages: e.target.value });
-                    }}
-                />
+                <Select {...LanguagesSelectProps} isMulti />
                 <FormErrorDisplay error={errors.languages} />
             </div>
             <div className="col-md-12 mt-3">
-                <label>Education</label>
-                <input
-                    type="text"
-                    className="form-control"
-                    name="education"
-                    value={formData.education}
-                    onChange={(e) => {
-                        setChanged && setChanged(true);
-                        setFormData({ ...formData, education: e.target.value });
-                    }}
-                />
-                <FormErrorDisplay error={errors.duration} />
+                <label>Level of Education</label>
+                <Select {...EduLevelSelectProps} isMulti />
+                <FormErrorDisplay error={errors.education} />
             </div>
             <div className="form-group row mt-3">
                 <div className="col-md-6">
@@ -96,11 +124,11 @@ function SubForm2(
                 </div>
             </div>
             <div className="form-group row mt-3">
-                <label>Fields of work</label>
                 {formData.fields?.map((field, index) => (
                     <div key={index} className="field-container form-group row col-md-12 mb-2">
-                        <div className="row col-md-6">
+                        <div className="row col-md-8">
                             <div className="col-md-6">
+                                <label>Fields of work</label>
                                 <input
                                     type="text"
                                     className="form-control"
@@ -113,6 +141,7 @@ function SubForm2(
                                 )}
                             </div>
                             <div className="col-md-6">
+                                <label>Number of works done</label>
                                 <input
                                     type="number"
                                     className="form-control"
@@ -125,8 +154,9 @@ function SubForm2(
                                 )}
                             </div>
                         </div>
-                        <div className="row col-md-6">
-                            <div className="col-md-11">
+                        <div className="row col-md-4">
+                            <div className="col-md-10">
+                                <label>Preferred wage per hour</label>
                                 <input
                                     type="number"
                                     className="form-control"
@@ -139,7 +169,7 @@ function SubForm2(
                                 )}
                             </div>
                             {formData.fields.length > 1 && (
-                                <div className="col-md-1">
+                                <div className="col-md-1 mt-4">
                                     <button type="button" className="btn" onClick={() => handleRemoveField(index)}>
                                         <i className="bi bi-x-circle text-danger"></i>
                                     </button>

@@ -146,7 +146,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="col-8 my-3 mx-auto vh-100">
+    <div className="col-8 my-3 mx-auto">
       {currentUser ? (
         <div className="p-3 p-lg-5 border">
           <div className="d-flex align-items-end">

@@ -22,6 +22,7 @@ const JobPostForm = ({
     serverResponse,
     purpose
 }) => {
+
     const navigate = useNavigate();
 
     const [postData, setPostData] = useState(initialData || {});
@@ -51,6 +52,8 @@ const JobPostForm = ({
             console.log("Get applicants error: ", error);
         }
     };
+
+    console.log("JobPostForm: ", postData);
 
     return (
         <div className="col-10 my-5 mx-auto">

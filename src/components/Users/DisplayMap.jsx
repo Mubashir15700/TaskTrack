@@ -4,6 +4,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 const DisplayMap = ({ latitude, longitude }) => {
+
     useEffect(() => {
         try {
             // Check if map already exists

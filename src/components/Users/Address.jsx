@@ -5,7 +5,7 @@ import FormErrorDisplay from "../Common/FormErrorDisplay";
 import { getCurrentLocation, deleteLocation } from "../../api/user/profile";
 import { locationSchema } from "../../validations/userValidations/locationSchema";
 
-const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => {
+const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => { 
     const [selectedAddress, setSelectedAddress] = useState({});
     const [textareaValue, setTextareaValue] = useState("");
     const [mapVisible, setMapVisible] = useState(false);
@@ -54,11 +54,11 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
 
     const handleGetCurrentLocation = async () => {
         try {
+            setLoading(true);
             setManualEntryVisible(false);
             navigator.geolocation.getCurrentPosition(
                 async (pos) => {
                     if (pos && pos.coords) {
-                        setLoading(true);
                         const { latitude, longitude } = pos.coords;
                         const response = await getCurrentLocation({ latitude, longitude });
 

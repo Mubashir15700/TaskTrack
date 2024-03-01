@@ -11,4 +11,4 @@ export const getUserNotificationDetails = async (id) =>
     handleAxiosRequest(axios.get(`/notifications/${id}`));
 
 export const markNotificationOpened = async (id) =>
-    handleAxiosRequest(axios.patch(`/notification/${id}/mark-read`));
+    handleAxiosRequest(axios.patch(`/notifications/${id}/mark-read`));

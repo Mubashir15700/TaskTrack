@@ -51,7 +51,7 @@ const Notifications = () => {
     getAllNotifications();
   }, []);
 
-  const handleButtonClick = async (id, redirectTo) => {
+  const handleViewButtonClick = async (id, redirectTo) => {
     try {
       if (role === "admin") {
         await markNotificationOpened(id);
@@ -122,7 +122,7 @@ const Notifications = () => {
                         size="sm"
                         rounded
                         color="link"
-                        onClick={() => handleButtonClick(notification._id, notification.redirectTo)}
+                        onClick={() => handleViewButtonClick(notification._id, notification.redirectTo)}
                       >
                         View
                       </MDBBtn>

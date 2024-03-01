@@ -14,10 +14,10 @@ export const cancelApplication = async (data) => handleAxiosRequest(axios.post(
 ));
 
 export const getRemainingPosts = async (userId) => handleAxiosRequest(axios.get(
-    `/jobs/remaining-posts?userId=${userId}`
+    `/jobs/posts/remaining?userId=${userId}`
 ));
 
-export const postNewJob = async (data) => handleAxiosRequest(axios.post("/jobs/post", data));
+export const postNewJob = async (data) => handleAxiosRequest(axios.post("/jobs/posts/new", data));
 
 export const getListedJobs = async (id, pageParam) => handleAxiosRequest(axios.get(
     `/jobs/listed/${id}/${pageParam}`
@@ -28,12 +28,12 @@ export const getListedJob = async (id) => handleAxiosRequest(axios.get(
 ));
 
 export const updateListedJob = async (data) => handleAxiosRequest(axios.put(
-    `/jobs/edit`,
+    `/jobs/listed/edit`,
     data
 ));
 
 export const deleteListedJob = async (id) => handleAxiosRequest(axios.delete(
-    `/jobs/delete/${id}`
+    `/jobs/listed/${id}/delete`
 ));
 
 export const getApplicants = async (data) => handleAxiosRequest(axios.get(

@@ -138,6 +138,8 @@ const EditListedJob = () => {
         }
     };
 
+    console.log("EditListedJob: ", postData);
+
     const JobPostFormProps = {
         heading: `Edit ${postData.title}`,
         postData: postData,

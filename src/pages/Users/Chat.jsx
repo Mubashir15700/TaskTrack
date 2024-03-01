@@ -91,6 +91,7 @@ const Chat = () => {
                     receiverId: id,
                     message: currentMessage,
                     username: currentUser?.username,
+                    isRead: false,
                     time: new Date().toLocaleString("en-US", { hour12: true, timeZone: "UTC" }),
                 },
             ]);
@@ -113,18 +114,20 @@ const Chat = () => {
         scrollToBottom();
     };
 
-    // Function to update the read status of messages
-    const updateReadStatus = async (messageIds) => {
-        try {
-            const response = await updateMessagesReadStatus(messageIds);
-            if (response && response.status === 200) {
-                console.log("Read status updated successfully");
-            } else {
-                console.error("Failed to update read status");
+    // Function to update the read status of messages in messageList
+    const updateMessageListReadStatus = (messageIds) => {
+        // Create a copy of the messageList
+        const updatedMessageList = [...messageList];
+
+        // Update the read status of messages with matching messageIds
+        updatedMessageList.forEach((message) => {
+            if (messageIds.includes(message._id)) {
+                message.isRead = true;
             }
-        } catch (error) {
-            console.error("Error updating read status:", error);
-        }
+        });
+
+        // Return the updated messageList
+        return updatedMessageList;
     };
 
     useEffect(() => {
@@ -135,7 +138,14 @@ const Chat = () => {
 
         // Update the read status of unread messages
         if (unreadMessageIds.length > 0) {
-            updateReadStatus(unreadMessageIds);
+            updateMessagesReadStatus(unreadMessageIds)
+                .then(() => {
+                    // Update the messageList with updated read status
+                    setMessageList(updateMessageListReadStatus(unreadMessageIds));
+                })
+                .catch((error) => {
+                    console.error("Error updating read status:", error);
+                });
         }
 
     }, [messageList, id]);
