@@ -12,6 +12,7 @@ import {
 } from "../api/user/notification";
 
 import { MDBBtn, MDBListGroup, MDBListGroupItem } from "mdb-react-ui-kit";
+import IMAGE_URLS from "../config/imageUrls";
 
 const Notifications = () => {
   const dispatch = useDispatch();
@@ -91,23 +92,19 @@ const Notifications = () => {
                 >
                   <div className="d-md-flex align-items-center">
                     <div className="d-flex align-items-center">
-                      {notification?.from?.profile ? (
-                        <img
-                          src={`http://localhost:3000/uploads/profile/${notification?.from?.profile}`}
-                          alt="Profile"
-                          style={{ width: "45px", height: "45px" }}
-                          className="rounded-circle"
-                        />
-                      ) : (
-                        <i className="bi bi-person-circle fs-1 mb-3"></i>
-                      )}
-                      <div className="ms-3">
+                      <img
+                        src={notification?.from?.profile ?
+                          `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${notification?.from?.profile}` :
+                          IMAGE_URLS.avatar
+                        }
+                        alt="Profile"
+                        style={{ width: "40px" }}
+                        className="rounded-circle mb-2 mx-auto img-fluid"
+                      />
+                      {/* <div className="ms-3">
                         <p className="fw-bold mb-1">{notification?.from?.username}</p>
                         <p className="text-muted mb-0">{notification?.from?.email}</p>
-                      </div>
-                      {!notification.isOpened && (
-                        <i className="bi bi-dot text-danger fs-1"></i>
-                      )}
+                      </div> */}
                     </div>
                     <div>
                       <div className="ms-5">
@@ -117,6 +114,9 @@ const Notifications = () => {
                     </div>
                   </div>
                   <div className="d-md-flex col-2 justify-content-between">
+                    {/* {!notification.isOpened && (
+                      <i className="bi bi-dot text-danger fs-1"></i>
+                    )} */}
                     <div className="d-flex justify-content-center dropdown">
                       <MDBBtn
                         size="sm"

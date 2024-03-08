@@ -14,7 +14,4 @@ export const saveSubscription = async () =>
     handleAxiosRequest(axios.post("/subscription/save"));
 
 export const getActivePlan = async (subscriptionId) =>
-    handleAxiosRequest(axios.get(`/plans/active-plan?subscriptionId=${subscriptionId}`));
-
-export const cancelActivePlan = async (data) =>
-    handleAxiosRequest(axios.post("/plans/cancel", data));
+    handleAxiosRequest(axios.get(`/subscription/active-plan?subscriptionId=${subscriptionId}`));

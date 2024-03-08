@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import IMAGE_URLS from "../../config/imageUrls";
 
 const Job = ({
     isListed,
@@ -20,15 +21,15 @@ const Job = ({
             <div className="card-body d-flex flex-wrap justify-content-between">
                 {!isListed && (
                     <div className="col-md-3 col-12 mb-3">
-                        {profile ? (
-                            <img src={`http:/ocalhost:3000/uploads/profile/${profile}`}
-                                alt="emp-profile"
-                                className="img-fluid"
-                                width={"50px"}
-                            />
-                        ) : (
-                            <i className="bi bi-person-circle fs-1 mb-3"></i>
-                        )}
+                        <img
+                            src={profile ?
+                                `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${profile}` :
+                                IMAGE_URLS.avatar
+                            }
+                            alt="Profile"
+                            style={{ width: "50px" }}
+                            className="rounded-circle mb-2 mx-auto img-fluid"
+                        />
                         <p>{username}</p>
                     </div>
                 )}

@@ -1,80 +1,21 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { getLaborer } from "../../../api/user/laborer";
 import Address from "../../../components/Users/Address";
-import JobPostForm from "../../../components/Users/JobPostForm";
+import IMAGE_URLS from "../../../config/imageUrls";
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardText,
+  MDBCardBody,
+  MDBCardImage,
+  MDBBtn,
+} from "mdb-react-ui-kit";
 
-const LaborerDetails = () => {
+export default function LaborerDetails() {
   const [laborer, setLaborer] = useState({});
-  const [showFormIndex, setShowFormIndex] = useState(null);
-
-  const toggleForm = (index) => {
-    setShowFormIndex(prevIndex => prevIndex === index ? null : index);
-  };
-
-  const currentUser = useSelector((state) => state.user?.userData);
-
-  const [postData, setPostData] = useState({
-    userId: currentUser?._id,
-    title: "",
-    description: "",
-    date: undefined,
-    time: undefined,
-    duration: undefined,
-    location: currentUser?.location,
-    fields: [
-      {
-        materialsRequired: "",
-        wagePerHour: "",
-      },
-    ],
-  });
-
-  const [errors, setErrors] = useState({});
-  const [serverResponse, setServerResponse] = useState("");
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setPostData({
-      ...postData,
-      [name]: value,
-    });
-  };
-
-  const handleFieldChange = (index, fieldData) => {
-    const updatedFields = [...postData.fields];
-    updatedFields[index] = { ...updatedFields[index], ...fieldData };
-
-    setPostData({
-      ...postData,
-      fields: updatedFields,
-    });
-  };
-
-  const handleAddField = () => {
-    setPostData({
-      ...postData,
-      fields: [...postData.fields, { name: "", workers: 1 }],
-    });
-  };
-
-  const handleRemoveField = (index) => {
-    const updatedFields = [...postData.fields];
-    updatedFields.splice(index, 1);
-
-    setPostData({
-      ...postData,
-      fields: updatedFields,
-    });
-  };
-
-  const newAddressSelected = (address) => {
-    setPostData({
-      ...postData,
-      location: address,
-    });
-  };
 
   const { id } = useParams();
 
@@ -94,98 +35,126 @@ const LaborerDetails = () => {
   }, [id]);
 
   return (
-    <div className="col-md-8 col-10 my-3 mx-auto">
-      {
-        laborer ? (
-          <div className="card">
-            <div className="card-header">
-            </div>
-            <div className="card-body d-md-flex">
-              <div className="col-md-4">
-                {laborer.user?.profile ? (
-                  <img
-                    src={`http://localhost:3000/uploads/profile/${laborer.user?.profile}`}
-                    alt="emp-profile"
-                    className="img-fluid"
-                  />
-                ) : (
-                  <i className="bi bi-person-circle fs-1 mb-3"></i>
-                )}
-                <p>{laborer.user?.username}</p>
-                <Link
-                  to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
-                  className="btn btn-outline-primary"
-                >
-                  <i className="bi bi-chat-dots"></i>
-                </Link>
-              </div>
-              <div className="col-md-8">
-                <div className="m-2">
-                  <p>Languages known: {laborer?.languages}</p>
-                  <p>Education: {laborer?.education}</p>
+    <section style={{ backgroundColor: "#eee" }}>
+      <MDBContainer className="py-5">
+        <MDBRow>
+          <MDBCol lg="4">
+            <MDBCard className="mb-4">
+              <MDBCardBody className="text-center">
+                <MDBCardImage
+                  src={laborer.user?.profile ?
+                    `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${laborer.user?.profile}` :
+                    IMAGE_URLS.avatar
+                  }
+                  alt="avatar"
+                  className="rounded-circle"
+                  style={{ width: "150px" }}
+                  fluid />
+                <p className="text-muted mb-1">{laborer.user?.username}</p>
+                <div className="d-flex justify-content-center mb-2">
+                  <MDBBtn>Follow</MDBBtn>
+                  <Link
+                    to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
+                    className="btn btn-outline-primary ms-2"
+                  >
+                    <i className="bi bi-chat-dots"></i>
+                  </Link>
                 </div>
-              </div>
-            </div>
-            <div className="px-1">
-              <Address
-                label={"Location"}
-                currentAddress={laborer.user?.location}
-                usage={"display-laborer"}
-              />
-            </div>
-            <hr className="my-3" />
-            <div className="mt-3">
-              {laborer.fields && laborer.fields.map((field, index) => (
-                <div key={index}>
-                  <div className="p-3 mb-3">
-                    <p className="mb-3"><strong>Work Category: {field.name}</strong></p>
-                    <div className="row">
-                      <div className="col-md-6">
-                        <p className="mb-1">Workers Done Before: {field.worksDone}</p>
-                        <p className="mb-1">Wage Per Hour: <strong>{field.wagePerHour}</strong></p>
+              </MDBCardBody>
+            </MDBCard>
+
+            <MDBCard className="mb-4 mb-lg-0">
+              <MDBCardBody className="p-2">
+                <Address
+                  label={"Location"}
+                  currentAddress={laborer.user?.location}
+                  usage={"display-laborer"}
+                />
+              </MDBCardBody>
+            </MDBCard>
+          </MDBCol>
+          <MDBCol lg="8">
+            <MDBCard className="mb-4">
+              <MDBCardBody>
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Full Name</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">{laborer.user?.username}</MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Email</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">{laborer.user?.email}</MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Education</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">{laborer?.education}</MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Known Languages</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">{laborer?.languages}</MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Available Days</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">
+                      {(Array.isArray(laborer?.avlDays) ? laborer.avlDays.join(', ') : laborer?.avlDays)}
+                    </MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Available Times</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">
+                      {(Array.isArray(laborer?.avlTimes) ? laborer.avlTimes.join(', ') : laborer?.avlTimes)}
+                    </MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+              </MDBCardBody>
+            </MDBCard>
+
+            <MDBRow>
+              <MDBCol >
+                <MDBCard className="mb-4 mb-md-0">
+                  <MDBCardBody>
+                    <MDBCardText className="mb-4">Expertise</MDBCardText>
+                    {laborer.fields && laborer.fields.map((field, index) => (
+                      <div key={index}>
+                        <MDBCardText className="mb-1" style={{ fontSize: "1rem" }}>{field.name}</MDBCardText>
+                        <MDBCardText className="mb-1 text-muted" style={{ fontSize: ".77rem" }}>Number of Works Done Before: {field.worksDone}</MDBCardText>
+                        <MDBCardText className="mb-1 text-muted" style={{ fontSize: ".77rem" }}>Preferred Wage per hour: {field.wagePerHour}</MDBCardText>
                       </div>
-                      {showFormIndex !== index && (
-                        <div className="col-md-3">
-                          <button
-                            className="btn btn-outline-primary"
-                            onClick={() => toggleForm(index)}
-                          >
-                            Request
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  {showFormIndex === index && (
-                    <div>
-                      <JobPostForm
-                        heading={"Send Request"}
-                        postData={postData}
-                        handleInputChange={handleInputChange}
-                        errors={errors}
-                        newAddressSelected={newAddressSelected}
-                        handleFieldChange={handleFieldChange}
-                        handleRemoveField={handleRemoveField}
-                        handleAddField={handleAddField}
-                        buttonText={"Send Request"}
-                        handleSubmit={""}
-                        serverResponse={serverResponse}
-                        purpose={"Send Request"}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div>
-            No laborer found
-          </div>
-        )
-      }
-    </div>
+                    ))}
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+            </MDBRow>
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
+    </section>
   );
 };
-
-export default LaborerDetails;

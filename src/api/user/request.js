@@ -6,7 +6,7 @@ export const sendRequest = async (data) => {
 };
 
 export const getPrevRequest = async (id) => {
-    return handleAxiosRequest(axios.get(`/request/${id}`));
+    return handleAxiosRequest(axios.get(`/request/pending/${id}`));
 };
 
 export const updateRequest = async (data) => {

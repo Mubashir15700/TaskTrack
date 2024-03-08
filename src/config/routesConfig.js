@@ -23,6 +23,7 @@ export const userRoutesToCheck = [
 // List of admin routes where Header and Footer should be displayed
 export const adminRoutesToCheck = [
     "/admin",
+    "/admin/",
     "/admin/users",
     /^\/admin\/users\/[\w-]+\/?$/,
     "/admin/laborer-requests",

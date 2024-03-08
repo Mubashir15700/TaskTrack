@@ -8,6 +8,7 @@ import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";
 import ImageCrop from "../../components/Common/ImageCrop";
 import Address from "../../components/Users/Address";
 import FormErrorDisplay from "../../components/Common/FormErrorDisplay";
+import IMAGE_URLS from "../../config/imageUrls";
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ const UserDetails = () => {
   };
 
   // the profile image URL
-  const imageUrl = `http://localhost:3000/uploads/profile/${currentUser?.profile}`;
+  const imageUrl = `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}`;
 
   const AddressProps = {
     userId: currentUser?._id,
@@ -166,7 +167,12 @@ const UserDetails = () => {
               />
             )}
             {(!currentUser.profile && !newImageSelected) && (
-              <i className="bi bi-person-circle fs-1 mb-3"></i>
+              <img
+                src={IMAGE_URLS.avatar}
+                alt="Profile"
+                style={{ maxHeight: "130px", width: "150px" }}
+                className="rounded-circle img-fluid"
+              />
             )}
           </div>
           <div className="mb-2">

@@ -36,6 +36,7 @@ const WorksHistory = () => {
     const getAnyPendingRequest = async () => {
         try {
             const response = await getPrevRequest(currentUserId);
+            console.log("getPrevRequest: ", response);
             if (response && response.status === 200) {
                 const responseData = response.request;
                 if (responseData) {

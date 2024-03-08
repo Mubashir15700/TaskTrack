@@ -35,7 +35,7 @@ const ViewApplicants = () => {
             const actionTook = action === "accept" ? "accepted" : "rejected";
             const response = await applicantAction(
                 { jobId, fieldName, laborerId, actionTook, reason }
-                );
+            );
             if (response && response.status === 200) {
                 toast.success("Success");
                 // Update the UI by modifying the state
@@ -74,7 +74,7 @@ const ViewApplicants = () => {
                                 <div className="col-3 mb-3">
                                     {applicant?.userId?.profile ? (
                                         <img
-                                            src={`http://localhost:3000/uploads/profile/${applicant?.userId?.profile}`}
+                                            src={`${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${applicant?.userId?.profile}`}
                                             alt="emp-profile"
                                             className="img-fluid"
                                             width={"50px"}

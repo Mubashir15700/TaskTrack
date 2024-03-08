@@ -1,19 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import initializeUser from "../../utils/initializeUser";
-import SweetAlert from "../../components/Common/SweetAlert";
 import {
-    getPlans, getActivePlan, getStripePublicKey, createSubscription, cancelActivePlan
+    getPlans, getActivePlan, getStripePublicKey, createSubscription
 } from "../../api/user/plan";
 import { loadStripe } from "@stripe/stripe-js/pure";
 
 const Subscription = () => {
     const [activePlan, setActivePlan] = useState({});
     const [plans, setPlans] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const dispatch = useDispatch();
+    // Define loading state for each button
+    const [loading, setLoading] = useState(null);
 
     const userData = useSelector((state) => state.user.userData);
 
@@ -47,8 +44,8 @@ const Subscription = () => {
         currentSubscription && getActivePlanDetails();
     }, []);
 
-    const makePayment = async (plan) => {
-        setLoading(true);
+    const openStripe = async (plan) => {
+        setLoading(plan._id);
         try {
             const getPublicKeyResponse = await getStripePublicKey();
 
@@ -88,40 +85,7 @@ const Subscription = () => {
                 toast.error("An error occured");
             }
         } finally {
-            setLoading(false);
-        }
-    };
-
-    const confirmCancelPlan = async () => {
-        const result = await SweetAlert.confirmAction(
-            "Cancel Subscription",
-            "Are you sure you want to cancel current subscription?",
-            "Confirm",
-            "#d9534f"
-        );
-
-        if (result.isConfirmed) {
-            cancelCurrentPlan();
-        }
-    };
-
-    const cancelCurrentPlan = async () => {
-        try {
-            const response = await cancelActivePlan({
-                subscriptionId: activePlan.subscriptionId,
-                userId: _id
-            });
-            if (response && response.status === 200) {
-                toast.success(response.message);
-                setActivePlan({});
-                initializeUser("user", dispatch);
-            } else {
-                toast.error("Failed to cancel subscription: ", response.message);
-                console.log("Failed to cancel subscription: ", response.message);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("An error occured");
+            setLoading(null);
         }
     };
 
@@ -152,9 +116,18 @@ const Subscription = () => {
                                 <p>Status: {activePlan?.isActive ? "Active" : "Inactive"}</p>
                                 <button
                                     className="btn btn-secondary my-3"
-                                    onClick={confirmCancelPlan}
+                                    disabled={loading === activePlan._id}
+                                    onClick={() => openStripe(activePlan)}
                                 >
-                                    Cancel Plan
+                                    {loading === activePlan._id && (
+                                        <span
+                                            className="spinner-border spinner-border-sm me-1"
+                                            aria-hidden="true"
+                                        ></span>
+                                    )}
+                                    {loading === activePlan._id ? "Opening Stripe..." :
+                                        "Manage"
+                                    }
                                 </button>
                             </div>
                         </div>
@@ -199,30 +172,23 @@ const Subscription = () => {
                                                 </span>
                                                 <span className="float-right">Style</span>
                                             </div>
-                                            {
-                                                activePlan?.planId?._id === plan._id ? (
-                                                    <button
-                                                        className="btn btn-secondary my-3"
-                                                        onClick={confirmCancelPlan}
-                                                    >
-                                                        Cancel Plan
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        className="btn btn-outline-primary my-3"
-                                                        disabled={loading}
-                                                        onClick={() => makePayment(plan)}
-                                                    >
-                                                        {loading && (
-                                                            <span
-                                                                className="spinner-border spinner-border-sm me-1"
-                                                                aria-hidden="true"
-                                                            ></span>
-                                                        )}
-                                                        {loading ? "Opening Stripe..." : "Choose Plan"}
-                                                    </button>
-                                                )
-                                            }
+                                            <button
+                                                className="btn btn-outline-primary my-3"
+                                                disabled={loading === plan._id}
+                                                onClick={() => openStripe(plan)}
+                                            >
+                                                {loading === plan._id && (
+                                                    <span
+                                                        className="spinner-border spinner-border-sm me-1"
+                                                        aria-hidden="true"
+                                                    ></span>
+                                                )}
+                                                {loading === plan._id ? "Opening Stripe..." :
+                                                    activePlan?.planId?._id === plan._id ?
+                                                        "Manage" :
+                                                        "Choose Plan"
+                                                }
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NearMeButton from "../../../components/Users/NearMeButton";
 import { getLaborers } from "../../../api/user/laborer";
-import prfPlaceholder from "../../../assets/images/prf-placeholder.jfif";
+import IMAGE_URLS from "../../../config/imageUrls";
 
 const Laborers = () => {
   const [laborers, setLaborers] = useState([]);
@@ -34,7 +34,7 @@ const Laborers = () => {
     }
   });
 
-  const getAllLaborers = async (lat, lon) => {
+  const getAllLaborers = async (page, lat, lon) => {
     try {
       const response = await getLaborers(currentUserId, page, lat, lon);
       if (response && response.status === 200) {
@@ -57,7 +57,7 @@ const Laborers = () => {
       const parsedLaborers = searchResults.results.map(parseLocation);
       setLaborers(parsedLaborers);
     } else {
-      getAllLaborers();
+      getAllLaborers(page);
     }
   }, [searchResults]);
 
@@ -65,9 +65,8 @@ const Laborers = () => {
   const handleNearMeClick = () => {
     if (lat && lon) {
       setLaborers([]);
-      setPage(1);
       setTotalPages(0);
-      getAllLaborers(lat, lon);
+      getAllLaborers(1, lat, lon);
     } else {
       // Do something if lat and lon are not available
       toast.error("Latitude and longitude are not available.");
@@ -98,21 +97,15 @@ const Laborers = () => {
                 <Link to={`/laborers/${laborer?.user?._id}`} className="text-decoration-none">
                   <div className="card">
                     <div className="card-body text-center">
-                      {laborer?.user?.profile ? (
-                        <img
-                          src={`http://localhost:3000/uploads/profile/${laborer?.user?.profile}`}
-                          alt="Profile"
-                          style={{ height: "100px", width: "100px" }}
-                          className="rounded-3 mb-2 mx-auto img-fluid"
-                        />
-                      ) : (
-                        <img
-                          src={prfPlaceholder}
-                          alt="Profile"
-                          style={{ height: "100px", width: "100px" }}
-                          className="rounded-3 mb-2 mx-auto img-fluid"
-                        />
-                      )}
+                      <img
+                        src={laborer.user?.profile ?
+                          `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${laborer.user?.profile}` :
+                          IMAGE_URLS.avatar
+                        }
+                        alt="Profile"
+                        style={{ width: "150px" }}
+                        className="rounded-circle mb-2 mx-auto img-fluid"
+                      />
                       <h6 className="card-subtitle text-muted mb-2">{laborer?.user?.username}</h6>
                       <p>Job Skills: {laborer?.fields?.map(field => field.name).join(', ')}</p>
                       <p>{laborer?.user?.location?.district}, {laborer?.user?.location?.state}</p>

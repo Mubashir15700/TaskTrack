@@ -100,12 +100,12 @@ const Banner = () => {
 
   const onDragEnd = async (event) => {
     const { active } = event;
-    const buttonText = event.activatorEvent.explicitOriginalTarget?.data;
-    if (buttonText && buttonText === "Edit") {
+    const buttonText = event.activatorEvent.srcElement.innerText;
+    if (buttonText && buttonText === "EDIT") {
       navigate(`/admin/banners/edit-banner/${active.id}`);
-    } else if (buttonText && buttonText.includes("List")) {
+    } else if (buttonText && buttonText.includes("LIST")) {
       confirmListUnlist(active.id, false);
-    } else if (buttonText && buttonText.includes("Unlist")) {
+    } else if (buttonText && buttonText.includes("UNLIST")) {
       confirmListUnlist(active.id, true);
     } else {
       const { over } = event;

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
-  MDBBtn, MDBContainer, MDBCard, MDBCardBody, MDBInput
+  MDBBtn, MDBContainer, MDBCard, MDBCardBody
 } from "mdb-react-ui-kit";
 import OtpInput from "react-otp-input";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";

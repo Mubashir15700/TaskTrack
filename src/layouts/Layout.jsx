@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import Routers from "../routes/Routers";
+import MainRouter from "../routes/MainRouter";
 import AdminHeader from "../components/Admin/AdminHeader";
 import Header from "../components/Users/Header";
 import Footer from "../components/Users/Footer";
@@ -21,7 +21,7 @@ const Layout = () => {
         userRole === "admin" ? <AdminHeader /> : <Header />
       )}
       <main style={{ flex: 1, paddingTop: shouldDisplayHeaderFooter ? "72px" : 0 }}>
-        <Routers />
+        <MainRouter />
       </main>
       {shouldDisplayHeaderFooter &&
         (userRole === "user" && !location.pathname.includes("chat")) &&

@@ -1,6 +1,6 @@
 const SearchBar = ({ role, onSearch, onSelect }) => {
     return (
-        <form className="w-50 input-group search-form" role="search">
+        <form className="w-75 input-group search-form" role="search">
             <input
                 className="w-50 form-control search-input"
                 type="search"

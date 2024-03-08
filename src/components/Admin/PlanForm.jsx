@@ -66,13 +66,13 @@ const PlanForm = ({
                     />
                     <FormErrorDisplay error={errors.numberOfJobPosts} />
                 </div>
+                <button
+                    className={`btn btn-primary mt-3`}
+                    onClick={handleSubmit}
+                >
+                    {title}
+                </button>
             </div>
-            <button
-                className={`btn btn-primary mt-3`}
-                onClick={handleSubmit}
-            >
-                {title}
-            </button>
             {serverResponse && (
                 <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
                     {serverResponse.message}

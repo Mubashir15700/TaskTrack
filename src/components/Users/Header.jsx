@@ -157,16 +157,6 @@ const Header = () => {
               </NavLink>
             </MDBNavbarItem>
             <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/about" className="nav-link" aria-current="page">
-                About
-              </NavLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/contact" className="nav-link" aria-current="page">
-                Contact
-              </NavLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="align-self-lg-center">
               <NavLink to="/laborers" className="nav-link" aria-current="page">
                 Laborers
               </NavLink>
@@ -191,15 +181,11 @@ const Header = () => {
           </MDBNavbarNav>
 
           <SearchBar role={"user"} onSearch={handleSearch} onSelect={changeSearchSelect} />
+
           {!isLoggedIn &&
-            <div className="d-flex my-md-2 my-lg-0">
-              <NavLink to="/login" type="button" className="btn btn-light me-3">
-                Login
-              </NavLink>
-              <NavLink to="/sign-up" className="btn btn-primary" type="submit">
-                Sign Up
-              </NavLink>
-            </div>
+            <NavLink to="/login" type="button" className="btn btn-primary my-2 my-lg-0 ms-lg-2">
+              Login
+            </NavLink>
           }
         </MDBCollapse>
       </MDBContainer>

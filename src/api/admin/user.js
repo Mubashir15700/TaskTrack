@@ -9,5 +9,5 @@ export const getUsers = async (itemsPerPage, currentPage) =>
 export const getUser = async (id) =>
     handleAxiosRequest(axios.get(`/admin/users/${id}`));
 
-export const userAction = async (id) =>
-    handleAxiosRequest(axios.post(`/admin/users/${id}/block-unblock`));
+export const userAction = async (data) =>
+    handleAxiosRequest(axios.post(`/admin/users/${data.userId}/block-unblock`, { reason: data.reason }));

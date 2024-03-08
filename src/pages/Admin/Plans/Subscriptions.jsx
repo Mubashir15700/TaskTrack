@@ -18,7 +18,6 @@ const Subscriptions = () => {
       try {
         const response = await getSubscriptions(itemsPerPage, currentPage);
         if (response && response.status === 200 && response.subscriptions) {
-          console.log(response.subscriptions);
           setSubscriptions(response.subscriptions);
           setPageCount(response.totalPages);
         } else {

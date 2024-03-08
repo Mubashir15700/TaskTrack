@@ -53,8 +53,6 @@ const JobPostForm = ({
         }
     };
 
-    console.log("JobPostForm: ", postData);
-
     return (
         <div className="col-10 my-5 mx-auto">
             <div className="p-3 p-lg-5 border">

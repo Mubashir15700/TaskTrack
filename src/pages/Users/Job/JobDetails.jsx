@@ -5,9 +5,22 @@ import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import { getJob, applyJob, cancelApplication } from "../../../api/user/job";
 import Address from "../../../components/Users/Address";
+import IMAGE_URLS from "../../../config/imageUrls";
 import socket from "../../../socket/socket";
+import {
+  MDBCol,
+  MDBContainer,
+  MDBRow,
+  MDBCard,
+  MDBCardText,
+  MDBCardBody,
+  MDBCardImage,
+  MDBBtn,
+  MDBCardTitle,
+} from "mdb-react-ui-kit";
 
-const JobDetails = () => {
+export default function JobDetails() {
+
   const [job, setJob] = useState({});
 
   const currentUserId = useSelector(state => state.user?.userData?._id);
@@ -89,94 +102,135 @@ const JobDetails = () => {
   };
 
   return (
-    <div className="col-md-8 col-10 my-3 mx-auto">
-      <h3 className="mb-4">{job.title}</h3>
-      {
-        job ? (
-          <div className="card">
-            <div className="card-header d-flex justify-content-between">
-              <p>{job.title}</p>
-              <p>
-                Posted on: {new Date(job.postedAt).toLocaleDateString(undefined, {
-                  day: "2-digit", month: "short", year: "numeric"
-                })}
-              </p>
-            </div>
-            <div className="card-body d-flex flex-column flex-md-row justify-content-between">
-              <div className="col-md-4">
-                {job.userDetails?.profile ? (
-                  <img src={`http://localhost:3000/uploads/profile/${job?.userDetails?.profile}`} alt="emp-profile" />
-                ) : (
-                  <i className="bi bi-person-circle fs-1 mb-3"></i>
-                )}
-                <div>
-                  <p className="">{job?.userDetails?.username}</p>
-                  <div className="d-flex align-items-center me-3">
-                    <Link
-                      to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
-                      className="btn btn-outline-primary"
-                    >
-                      <i className="bi bi-chat-dots"></i>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <div className="d-flex align-items-center col-md-8">
-                <p className="card-text">{job.description}</p>
-              </div>
-            </div>
-            <div className="px-1">
-              <Address
-                label={"Location"}
-                currentAddress={job.location}
-                usage={"display-job"}
-              />
-            </div>
-            <div className="mt-3">
-              {job.fields && job.fields.map((field, index) => (
-                <div key={index} className="p-3 mb-3">
-                  <p className="mb-3"><strong>Work Category: {field.name}</strong></p>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <p className="mb-1">Workers Needed: {field.workers}</p>
-                      <p className="mb-1">Materials Required: {field.materialsRequired}</p>
+    <section style={{ backgroundColor: "#eee" }}>
+      <MDBContainer className="py-5">
+        {
+          job ? (
+            <MDBRow>
+              <MDBCol lg="4">
+                <MDBCard className="mb-4">
+                  <MDBCardText className="m-2">Posted By</MDBCardText>
+                  <MDBCardBody className="text-center">
+                    <MDBCardImage
+                      src={job.userDetails?.profile ?
+                        `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${job?.userDetails?.profile}` :
+                        IMAGE_URLS.avatar
+                      }
+                      alt="avatar"
+                      className="rounded-circle"
+                      style={{ width: "150px" }}
+                      fluid />
+                    <p className="text-muted mb-1">{job?.userDetails?.username}</p>
+                    <div className="d-flex justify-content-center mb-2">
+                      <MDBBtn>Follow</MDBBtn>
+                      <Link
+                        to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
+                        className="btn btn-outline-primary ms-2"
+                      >
+                        <i className="bi bi-chat-dots"></i>
+                      </Link>
                     </div>
-                    <div className="col-md-3">
-                      <p className="mb-1"><strong>Wage Per Hour:</strong> {field.wagePerHour}</p>
-                      <p>Status: {job.status}</p>
-                    </div>
-                    <div className="col-md-3">
-                      {(currentUserId && job.status !== "closed") && (
-                        hasExpressedInterest(field, currentUserId) ? (
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => confirmAction("Cancel Application", "Are you sure you want to cancel this application?", field.name)}
-                          >
-                            Cancel Application
-                          </button>
-                        ) : (
-                          <button
-                            className="btn btn-outline-primary"
-                            onClick={() => confirmAction("Express Interest", "Are you sure you want to express interest in this field?", field.name)}
-                          >
-                            Express Interest
-                          </button>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  </MDBCardBody>
+                </MDBCard>
+
+                <MDBCard className="mb-4 mb-lg-0">
+                  <MDBCardBody className="p-2">
+                    <Address
+                      label={"Location"}
+                      currentAddress={job?.location}
+                      usage={"display-laborer"}
+                    />
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBCol>
+              <MDBCol lg="8">
+                <MDBCard className="mb-4">
+                  <MDBCardBody>
+                    <MDBRow>
+                      <MDBCol className="d-flex justify-content-between">
+                        <MDBCardText>{job.title}</MDBCardText>
+                        <MDBCardText>
+                          Posted on: {new Date(job.postedAt).toLocaleDateString(undefined, {
+                            day: "2-digit", month: "short", year: "numeric"
+                          })}
+                        </MDBCardText>
+                      </MDBCol>
+                    </MDBRow>
+                    <MDBRow>
+                      <MDBCol>
+                        <MDBCardText className="text-muted">{job.description}</MDBCardText>
+                      </MDBCol>
+                    </MDBRow>
+                    <hr />
+                    <MDBRow>
+                      <MDBCol>
+                        <MDBCardText className="text-muted">
+                          Deadline: {new Date(job.date).toLocaleDateString(undefined, {
+                            day: "2-digit", month: "short", year: "numeric"
+                          })}, {job.time}
+                        </MDBCardText>
+                        <MDBCardText className="text-muted">
+                          Duration: {job.duration}(hrs)
+                        </MDBCardText>
+                      </MDBCol>
+                      <MDBCol>
+                        <MDBCardText className="text-muted">
+                          Status: {job.status}
+                        </MDBCardText>
+                      </MDBCol>
+                    </MDBRow>
+                  </MDBCardBody>
+                </MDBCard>
+
+                <MDBRow>
+                  <MDBCol>
+                    <MDBCard className="mb-4 mb-md-0">
+                      <MDBCardBody>
+                        <MDBCardText className="mb-4">Required Workers</MDBCardText>
+                        {job.fields && job.fields.map((field, index) => (
+                          <MDBCardBody key={index}>
+                            <MDBCardTitle>{field.name}</MDBCardTitle>
+                            <MDBCardText>
+                              Workers Needed: {field.workers}
+                            </MDBCardText>
+                            <MDBCardText>
+                              Materials Required: {field.materialsRequired}
+                            </MDBCardText>
+                            <MDBCardText>
+                              Wage Per Hour: {field.wagePerHour}
+                            </MDBCardText>
+                            {(currentUserId && job.status !== "closed") && (
+                              hasExpressedInterest(field, currentUserId) ? (
+                                <MDBBtn
+                                  className="bg-danger"
+                                  onClick={() => confirmAction("Cancel Application", "Are you sure you want to cancel this application?", field.name)}
+                                >
+                                  Cancel Application
+                                </MDBBtn>
+                              ) : (
+                                <MDBBtn
+                                  onClick={() => confirmAction("Express Interest", "Are you sure you want to express interest in this field?", field.name)}
+                                >
+                                  Express Interest
+                                </MDBBtn>
+                              )
+                            )}
+                            <hr />
+                          </MDBCardBody>
+                        ))}
+                      </MDBCardBody>
+                    </MDBCard>
+                  </MDBCol>
+                </MDBRow>
+              </MDBCol>
+            </MDBRow>
+          ) : (
+            <div>
+              No job found
             </div>
-          </div>
-        ) : (
-          <div>
-            No job found
-          </div>
-        )
-      }
-    </div>
+          )
+        }
+      </MDBContainer>
+    </section>
   );
 };
-
-export default JobDetails;

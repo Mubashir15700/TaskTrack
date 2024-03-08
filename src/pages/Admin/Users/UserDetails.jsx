@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getUser, userAction } from "../../../api/admin/user";
 import Address from "../../../components/Users/Address";
 import SweetAlert from "../../../components/Common/SweetAlert";
+import IMAGE_URLS from "../../../config/imageUrls";
 
 const UserDetails = () => {
     const [user, setUser] = useState();
@@ -37,17 +38,18 @@ const UserDetails = () => {
             `${isBlocked ? "Unblock" : "Block"}`,
             `Are you sure you want to ${isBlocked ? "Unblock" : "Block"} this user?`,
             `${isBlocked ? "Unblock" : "Block"}`,
-            "#d9534f"
+            "#d9534f",
+            `${!isBlocked ? "text" : ""}`
         );
 
         if (result.isConfirmed) {
-            handleBlockUnblock();
+            handleBlockUnblock(result.value);
         }
     };
 
-    const handleBlockUnblock = async () => {
+    const handleBlockUnblock = async (reason) => {
         try {
-            const response = await userAction(id);
+            const response = await userAction({ userId: id, reason });
             if (response) {
                 if (response.status === 200) {
                     const updatedUserResponse = await getUser(id);
@@ -75,18 +77,15 @@ const UserDetails = () => {
             {user ? (
                 <div className="p-3 p-lg-5 border">
                     <div>
-                        {user.profile ? (
-                            <img
-                                src={`http://localhost:3000/uploads/profile/${user?.profile}`}
-                                alt="profileImage"
-                                style={{ height: "130px", width: "150px" }}
-                                className="rounded-3"
-                            />
-                        ) : (
-                            <div id="personIcon" style={{ display: "block" }}>
-                                <i className="bi bi-person-circle fs-1"></i>
-                            </div>
-                        )}
+                        <img
+                            src={user?.profile ?
+                                `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${user?.profile}` :
+                                IMAGE_URLS.avatar
+                            }
+                            alt="Profile"
+                            style={{ width: "150px" }}
+                            className="rounded-circle mb-2 mx-auto img-fluid"
+                        />
                     </div>
                     <div>
                         <div className="form-group row">

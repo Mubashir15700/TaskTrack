@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 import { getUsers, userAction } from "../../../api/admin/user";
+import IMAGE_URLS from "../../../config/imageUrls";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -87,16 +88,15 @@ const Users = () => {
       name: "User",
       selector: (row) => row.profile,
       cell: row => (
-        row.profile ? (
-          <img
-            src={`http://localhost:3000/uploads/profile/${row?.profile}`}
-            alt="Profile"
-            style={{ width: "50px", height: "40px" }}
-            className="rounded-5"
-          />
-        ) : (
-          <i className="bi bi-person-circle fs-1"></i>
-        )
+        <img
+          src={row.profile ?
+            `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${row.profile}` :
+            IMAGE_URLS.avatar
+          }
+          alt="Profile"
+          style={{ width: "40px" }}
+          className="rounded-circle mb-2 mx-auto img-fluid"
+        />
       ),
     },
     {

@@ -84,7 +84,7 @@ const RequestDetails = () => {
                     {/* <div>
                         {request.user.profile ? (
                             <img
-                                src={`http://localhost:3000/uploads/profile/${request.user?.profile}`}
+                                src={`${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${request.user?.profile}`}
                                 alt="profileImage"
                                 style={{ height: "130px", width: "150px" }}
                                 className="rounded-3"

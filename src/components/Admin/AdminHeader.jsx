@@ -19,6 +19,7 @@ import {
     MDBNavbarItem,
     MDBCollapse,
 } from "mdb-react-ui-kit";
+import axios from "../../config/axiosConfig";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -61,16 +62,26 @@ const Header = () => {
     }, [dispatch, notificationsCount, socket]);
 
     const handleSearch = async (e) => {
+        // Check if the search input is not empty
         if (e.target.value !== "") {
-            const response = await search({
-                searchWith: e.target.value,
-                searchOn: searchSelect
-            });
-            if (response) {
-                if (response.status === 200) {
+            // Create a CancelToken source
+            const cancelTokenSource = axios.CancelToken.source();
+
+            try {
+                // Perform the search request with the cancel token
+                const response = await search({
+                    searchWith: e.target.value,
+                    searchOn: searchSelect
+                }, cancelTokenSource.token);
+
+                // Check if the response is successful (status code 200)
+                if (response && response.status === 200) {
+                    // Dispatch the search results to Redux store
                     dispatch(setSearchResults({
                         searchOn: searchSelect, results: response.result
                     }));
+
+                    // Navigate to the appropriate page based on searchSelect
                     if (searchSelect === "users") {
                         navigate("/admin/users");
                     } else if (searchSelect === "plans") {
@@ -79,15 +90,23 @@ const Header = () => {
                         navigate("/admin/banners");
                     }
                 } else {
-                    setError("An error occured while searching");
+                    // Handle the case where the response status is not 200
+                    setError("An error occurred while searching");
                 }
-            } else {
-                setError("An error occured while searching");
+            } catch (error) {
+                // Handle errors, including cancellation
+                if (axios.isCancel(error)) {
+                    console.log("Search request canceled:", error.message);
+                } else {
+                    setError("An error occurred while searching");
+                }
+            } finally {
+                // Cancel the request if component unmounts or performs a new search
+                cancelTokenSource.cancel("Request canceled by the user");
             }
         } else {
-            dispatch(setSearchResults({
-                searchOn: null, results: null
-            }));
+            // Clear the search results if the search input is empty
+            dispatch(setSearchResults({ searchOn: null, results: null }));
         }
     };
 

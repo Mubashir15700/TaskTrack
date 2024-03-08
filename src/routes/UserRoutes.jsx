@@ -1,8 +1,6 @@
 import { lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "../pages/Users/Home";
-import About from "../pages/Users/About";
-import Contact from "../pages/Users/Contact";
 const Jobs = lazy(() => import("../pages/Users/Job/Jobs"));
 import PostJob from "../pages/Users/Job/PostJob";
 const ListedJobs = lazy(() => import("../pages/Users/Job/ListedJobs"));
@@ -35,8 +33,6 @@ const UserRoutes = ({ isLoggedIn }) => {
 
     const routes = [
         { path: "/", element: <Home /> },
-        { path: "/about", element: <About /> },
-        { path: "/contact", element: <Contact /> },
         { path: "/jobs", element: <Jobs /> },
         { path: "/jobs/:id", element: <JobDetails /> },
         { path: "/laborers", element: <Laborers /> },

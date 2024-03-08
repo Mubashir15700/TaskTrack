@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { getLaborer } from "../../api/user/laborer";
+import IMAGE_URLS from "../../config/imageUrls";
 
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
-    // the profile image URL
-    const imageUrl = `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}`;
 
     const navigate = useNavigate();
 
@@ -42,16 +41,15 @@ const Account = () => {
             {/* user profile view */}
             <div className="col-md-3 card mb-3">
                 <div className="card-body text-center">
-                    {currentUser?.profile ? (
-                        <img
-                            src={imageUrl}
-                            alt="Profile"
-                            style={{ height: "130px", width: "150px" }}
-                            className="rounded-3 mb-2 mx-auto"
-                        />
-                    ) : (
-                        <i className="bi bi-person-circle fs-1 mb-3"></i>
-                    )}
+                    <img
+                        src={currentUser?.profile ?
+                            `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}` :
+                            IMAGE_URLS.avatar
+                        }
+                        alt="Profile"
+                        style={{ width: "100px" }}
+                        className="rounded-circle mb-2 mx-auto img-fluid"
+                    />
                     <h6 className="card-subtitle text-muted mb-2">{currentUser?.username}</h6>
                     <Link to="/profile" className="btn btn-primary">
                         View

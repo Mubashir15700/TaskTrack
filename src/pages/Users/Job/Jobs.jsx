@@ -22,7 +22,7 @@ const Jobs = () => {
   }
   const { lat, lon } = currentUserLocation || {};
 
-  const getAllJobs = async (lat, lon) => {
+  const getAllJobs = async (page, lat, lon) => {
     try {
       const response = await getJobs(currentUserId, page, lat, lon);
       if (response && response.status === 200) {
@@ -42,7 +42,7 @@ const Jobs = () => {
     if (searchResults.searchOn === "jobs") {
       setJobs(searchResults.results);
     } else {
-      getAllJobs();
+      getAllJobs(page);
     }
   }, [searchResults]);
 
@@ -50,9 +50,8 @@ const Jobs = () => {
   const handleNearMeClick = () => {
     if (lat && lon) {
       setJobs([]);
-      setPage(1);
       setTotalPages(0);
-      getAllJobs(lat, lon);
+      getAllJobs(1, lat, lon);
     } else {
       // Do something if lat and lon are not available
       toast.error("Latitude and longitude are not available.");
@@ -61,7 +60,7 @@ const Jobs = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3 vh-100">
+    <div className="col-10 mx-auto mt-3">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="mb-0">Jobs</h3>
         <NearMeButton
