@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import { getJob, applyJob, cancelApplication } from "../../../api/user/job";
 import Address from "../../../components/Users/Address";
-import IMAGE_URLS from "../../../config/imageUrls";
+import ProfileCard from "../../../components/Users/ProfileCard";
 import socket from "../../../socket/socket";
 import {
   MDBCol,
@@ -14,7 +14,6 @@ import {
   MDBCard,
   MDBCardText,
   MDBCardBody,
-  MDBCardImage,
   MDBBtn,
   MDBCardTitle,
 } from "mdb-react-ui-kit";
@@ -108,31 +107,12 @@ export default function JobDetails() {
           job ? (
             <MDBRow>
               <MDBCol lg="4">
-                <MDBCard className="mb-4">
-                  <MDBCardText className="m-2">Posted By</MDBCardText>
-                  <MDBCardBody className="text-center">
-                    <MDBCardImage
-                      src={job.userDetails?.profile ?
-                        `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${job?.userDetails?.profile}` :
-                        IMAGE_URLS.avatar
-                      }
-                      alt="avatar"
-                      className="rounded-circle"
-                      style={{ width: "150px" }}
-                      fluid />
-                    <p className="text-muted mb-1">{job?.userDetails?.username}</p>
-                    <div className="d-flex justify-content-center mb-2">
-                      <MDBBtn>Follow</MDBBtn>
-                      <Link
-                        to={`/chat/${job?.userId}/${job?.userDetails?.username}`}
-                        className="btn btn-outline-primary ms-2"
-                      >
-                        <i className="bi bi-chat-dots"></i>
-                      </Link>
-                    </div>
-                  </MDBCardBody>
-                </MDBCard>
-
+                <ProfileCard
+                  imageSrc={job.userDetails?.profile}
+                  title={"Posted By"}
+                  userId={job?.userId}
+                  username={job?.userDetails?.username}
+                />
                 <MDBCard className="mb-4 mb-lg-0">
                   <MDBCardBody className="p-2">
                     <Address

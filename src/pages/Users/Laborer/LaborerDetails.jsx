@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getLaborer } from "../../../api/user/laborer";
 import Address from "../../../components/Users/Address";
-import IMAGE_URLS from "../../../config/imageUrls";
+import ProfileCard from "../../../components/Users/ProfileCard";
 import {
   MDBCol,
   MDBContainer,
@@ -10,8 +10,6 @@ import {
   MDBCard,
   MDBCardText,
   MDBCardBody,
-  MDBCardImage,
-  MDBBtn,
 } from "mdb-react-ui-kit";
 
 export default function LaborerDetails() {
@@ -39,30 +37,11 @@ export default function LaborerDetails() {
       <MDBContainer className="py-5">
         <MDBRow>
           <MDBCol lg="4">
-            <MDBCard className="mb-4">
-              <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src={laborer.user?.profile ?
-                    `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${laborer.user?.profile}` :
-                    IMAGE_URLS.avatar
-                  }
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: "150px" }}
-                  fluid />
-                <p className="text-muted mb-1">{laborer.user?.username}</p>
-                <div className="d-flex justify-content-center mb-2">
-                  <MDBBtn>Follow</MDBBtn>
-                  <Link
-                    to={`/chat/${laborer.user?._id}/${laborer.user?.username}`}
-                    className="btn btn-outline-primary ms-2"
-                  >
-                    <i className="bi bi-chat-dots"></i>
-                  </Link>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-
+            <ProfileCard
+              imageSrc={laborer.user?.profile}
+              userId={laborer.user?._id}
+              username={laborer.user?.username}
+            />
             <MDBCard className="mb-4 mb-lg-0">
               <MDBCardBody className="p-2">
                 <Address
