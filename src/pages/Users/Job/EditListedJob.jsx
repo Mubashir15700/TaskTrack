@@ -137,9 +137,7 @@ const EditListedJob = () => {
             setServerResponse({ status: "failed", message: "An error occurred during deleteing job" });
         }
     };
-
-    console.log("EditListedJob: ", postData);
-
+    
     const JobPostFormProps = {
         heading: `Edit ${postData.title}`,
         postData: postData,

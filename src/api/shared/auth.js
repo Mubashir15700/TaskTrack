@@ -7,9 +7,6 @@ export const checkAuth = async (data) =>
 export const login = async (data) =>
     handleAxiosRequest(axios.post(`/auth/login`, data), "login error: ");
 
-export const loginWithGoogle = async (data) =>
-    handleAxiosRequest(axios.post(`/auth/login-with-google`, data), "login with google error: ");
-
 export const userSignUp = async (data) =>
     handleAxiosRequest(axios.post(`/auth/sign-up`, data), "sign-up error: ");
 

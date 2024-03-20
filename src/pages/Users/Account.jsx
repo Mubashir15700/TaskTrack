@@ -4,6 +4,12 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { getLaborer } from "../../api/user/laborer";
 import IMAGE_URLS from "../../config/imageUrls";
+import {
+    MDBCard,
+    MDBCardBody,
+    MDBCardImage,
+    MDBBtn,
+} from "mdb-react-ui-kit";
 
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
@@ -39,29 +45,36 @@ const Account = () => {
     return (
         <div className="col-10 my-5 mx-auto d-md-flex align-items-center">
             {/* user profile view */}
-            <div className="col-md-3 card mb-3">
-                <div className="card-body text-center">
-                    <img
-                        src={currentUser?.profile ?
-                            `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}` :
-                            IMAGE_URLS.avatar
-                        }
-                        alt="Profile"
-                        style={{ width: "100px" }}
-                        className="rounded-circle mb-2 mx-auto img-fluid"
-                    />
-                    <h6 className="card-subtitle text-muted mb-2">{currentUser?.username}</h6>
-                    <Link to="/profile" className="btn btn-primary">
-                        View
-                    </Link>
-                </div>
-                {currentUser.isJobSeeker && (
-                    <div className="d-flex justify-content-center">
-                        <Link onClick={goToLaborerProfile}>
-                            Manage Laborer Profile
+            <div className="col-md-5 card mb-3">
+                <MDBCard>
+                    <MDBCardBody className="text-center">
+                        <MDBCardImage
+                            src={currentUser?.profile ?
+                                `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}` :
+                                IMAGE_URLS.avatar
+                            }
+                            alt="avatar"
+                            className="rounded-circle"
+                            style={{ width: "150px" }}
+                            fluid />
+                        <p className="mb-1">{currentUser?.username}</p>
+                        <p className="text-muted mb-1">{currentUser?.email}</p>
+                        <p className="text-muted mb-1">{currentUser?.phone}</p>
+                        <p className="text-muted mb-4">
+                            {currentUser?.location?.district}, {currentUser?.location?.state}
+                        </p>
+                        <Link to="/profile" className="d-flex justify-content-center">
+                            <MDBBtn>Edit</MDBBtn>
                         </Link>
-                    </div>
-                )}
+                        {currentUser.isJobSeeker && (
+                            <div className="d-flex justify-content-center">
+                                <Link onClick={goToLaborerProfile}>
+                                    Manage Laborer Profile
+                                </Link>
+                            </div>
+                        )}
+                    </MDBCardBody>
+                </MDBCard>
             </div>
             <div className="d-grid gap-2 col-md-6 mx-auto">
                 <Link to="/jobs/listed-jobs" className="btn btn-outline-primary">

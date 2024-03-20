@@ -1,42 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { GoogleLogin } from "@react-oauth/google";
-import initializeUser from "../../utils/initializeUser";
-import { loginWithGoogle } from "../../api/shared/auth";
+import { MDBBtn, MDBIcon } from "mdb-react-ui-kit";
 
-const GLogin = ({ onServerResponse }) => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-
-    const handleLogin = async (data) => {
+const GLogin = () => {
+    const loginWithGoogle = () => {
         try {
-            const response = await loginWithGoogle({ token: data.credential });
-            if (response && response.status === 200) {
-                initializeUser("user", dispatch);
-                navigate("/");
-            } else {
-                onServerResponse({ status: "failed", message: response.message });
-            }
+            // Open Google OAuth authentication URL
+            window.open(`${import.meta.env.VITE_AXIOS_BASE_URL}/auth/google`, "_self");
         } catch (error) {
-            console.error("Error during login with google:", error);
-            onServerResponse({ status: "failed", message: error.message });
+            // Handle errors, such as if the URL is invalid or window.open fails
+            console.error("Error occurred while logging in with Google:", error);
+            // Optionally, display an error message to the user
+            alert("An error occurred while logging in with Google. Please try again later.");
         }
     };
 
-    const handleError = async (data) => {
-        console.log("An error occurred during Google login: ", data);
-        onServerResponse({ status: "failed", message: "An error occurred during Google login" });
-    };
-
     return (
-        <GoogleLogin
-            onSuccess={credentialResponse => {
-                handleLogin(credentialResponse);
-            }}
-            onError={credentialResponse => {
-                handleError(credentialResponse)
-            }}
-        />
+        <MDBBtn tag="a" color="none" className="m-1" onClick={loginWithGoogle}>
+            <MDBIcon fab icon="google" size="lg" style={{ color: "#dd4b39" }} /> Sign In With Google
+        </MDBBtn>
     );
 };
 

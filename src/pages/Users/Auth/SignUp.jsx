@@ -9,6 +9,7 @@ import { setUserData } from "../../../redux/slices/userSlice";
 import { userSignUp } from "../../../api/shared/auth";
 import handleInputChange from "../../../utils/formUtils/handleInputChange";
 import handleFormErrors from "../../../utils/formUtils/handleFormErrors";
+import GLogin from "../../../components/Users/GLogin";
 import PasswordInput from "../../../components/FormElements/PasswordInput";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";
 import logo from "../../../assets/images/logo.png";
@@ -132,6 +133,9 @@ const SignUp = () => {
               </div>
             )}
             <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignUp}>Sign up</MDBBtn>
+            <div className="mb-2 d-flex justify-content-center">
+              <GLogin onServerResponse={setServerResponse} />
+            </div>
             <p>
               Already have an account?<Link className="link" to="/login">Log In</Link>
             </p>

@@ -5,6 +5,15 @@ import { useSelector } from "react-redux";
 import { applicantAction } from "../../../api/user/job";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import socket from "../../../socket/socket";
+import {
+    MDBCard,
+    MDBCardBody,
+    MDBBadge,
+    MDBBtn,
+    MDBCardFooter,
+    MDBIcon,
+} from "mdb-react-ui-kit";
+import IMAGE_URLS from "../../../config/imageUrls";
 
 const ViewApplicants = () => {
     const location = useLocation();
@@ -69,47 +78,56 @@ const ViewApplicants = () => {
             {
                 applicantsData.length ? (
                     applicantsData.map((applicant, index) => (
-                        <div className="card mb-3" key={index}>
-                            <div className="card-body d-flex flex-wrap justify-content-between">
-                                <div className="col-3 mb-3">
-                                    {applicant?.userId?.profile ? (
+                        <MDBCard key={index}>
+                            <MDBCardBody>
+                                <div className="d-md-flex justify-content-between align-items-center">
+                                    <div className="d-flex align-items-center">
                                         <img
-                                            src={`${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${applicant?.userId?.profile}`}
-                                            alt="emp-profile"
-                                            className="img-fluid"
-                                            width={"50px"}
+                                            src={applicant?.userId?.profile ?
+                                                `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${applicant?.userId?.profile}` :
+                                                IMAGE_URLS.avatar
+                                            }
+                                            alt=""
+                                            style={{ width: "45px", height: "45px" }}
+                                            className="rounded-circle"
                                         />
-                                    ) : (
-                                        <i className="bi bi-person-circle fs-1 mb-3"></i>
-                                    )}
-                                    <p>{applicant?.userId?.username}</p>
-                                </div>
-                                <div className="col-3">
-                                    <Link to={`/laborers/${applicant?.userId?._id}`} className="btn btn-primary btn-block">
-                                        View More
-                                    </Link>
-                                </div>
-                                <div className="col-3 mb-3">
-                                    <p>Status: {applicant?.status}</p>
-                                </div>
-                                {(jobStatus !== "closed" && applicant?.status === "pending") && (
-                                    <div className="d-flex flex-column flex-sm-row">
+                                        <div className="mx-3">
+                                            <p className="fw-bold mb-1">{applicant?.userId?.username}</p>
+                                            <p className="text-muted mb-0">{applicant?.userId?.email}</p>
+                                        </div>
+                                        <MDBBadge pill color="success" light>
+                                            {applicant?.status}
+                                        </MDBBadge>
+                                    </div>
+                                    {/* {(jobStatus !== "closed" && applicant?.status === "pending") && ( */}
+                                    <div className="d-flex flex-column flex-sm-row align-items-center">
                                         <button
-                                            className="btn btn-warning my-3 me-2"
+                                            className="btn btn-warning me-2"
                                             onClick={() => confirmApproveReject(applicant?.userId?._id, "accept")}
                                         >
                                             Approve
                                         </button>
                                         <button
-                                            className="btn btn-danger my-3"
+                                            className="btn btn-danger "
                                             onClick={() => confirmApproveReject(applicant?.userId?._id, "reject")}
                                         >
                                             Reject
                                         </button>
                                     </div>
-                                )}
-                            </div>
-                        </div>
+                                    {/* )} */}
+                                </div>
+                            </MDBCardBody>
+                            <MDBCardFooter background="light" border="0" className="p-2 d-flex justify-content-around">
+                                <Link to={`/laborers/${applicant?.userId?._id}`}>
+                                    <MDBBtn size="sm" rounded color="link">
+                                        View
+                                    </MDBBtn>
+                                </Link>
+                                <MDBBtn color="link" rippleColor="primary" className="text-reset m-0">
+                                    Message <MDBIcon fas icon="envelope" />
+                                </MDBBtn>
+                            </MDBCardFooter>
+                        </MDBCard>
                     ))
                 ) : (
                     <div>

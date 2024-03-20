@@ -87,7 +87,9 @@ export default function LaborerDetails() {
                     <MDBCardText>Known Languages</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{laborer?.languages}</MDBCardText>
+                    <MDBCardText className="text-muted">
+                      {(Array.isArray(laborer?.languages) ? laborer.languages.join(", ") : laborer?.languages)}
+                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -97,7 +99,7 @@ export default function LaborerDetails() {
                   </MDBCol>
                   <MDBCol sm="9">
                     <MDBCardText className="text-muted">
-                      {(Array.isArray(laborer?.avlDays) ? laborer.avlDays.join(', ') : laborer?.avlDays)}
+                      {(Array.isArray(laborer?.avlDays) ? laborer.avlDays.join(", ") : laborer?.avlDays)}
                     </MDBCardText>
                   </MDBCol>
                 </MDBRow>

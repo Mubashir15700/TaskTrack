@@ -51,13 +51,13 @@ function SubForm2(
     };
 
     const SelectDayoptions = [
-        { value: "sunday", label: "Sunday" },
-        { value: "monday", label: "Monday" },
-        { value: "tuesday", label: "Tuesday" },
+        { value: "Sunday", label: "Sunday" },
+        { value: "Monday", label: "Monday" },
+        { value: "Tuesday", label: "Tuesday" },
         { value: "Wednesday", label: "wednesday" },
-        { value: "thursday", label: "Thursday" },
-        { value: "friday", label: "Friday" },
-        { value: "saturday", label: "Saturday" },
+        { value: "Thursday", label: "Thursday" },
+        { value: "Friday", label: "Friday" },
+        { value: "Saturday", label: "Saturday" },
     ];
 
     const DaysSelectProps = {
@@ -76,12 +76,12 @@ function SubForm2(
     };
 
     const SelectTimeoptions = [
-        { value: "full time", label: "Full Time" },
-        { value: "part time", label: "Part Time" },
-        { value: "mornings", label: "Mornings" },
-        { value: "afternoons", label: "Afternoons" },
-        { value: "evenings", label: "Evenings" },
-        { value: "on call", label: "On Call" },
+        { value: "Full Time", label: "Full Time" },
+        { value: "Part Time", label: "Part Time" },
+        { value: "Mornings", label: "Mornings" },
+        { value: "Afternoons", label: "Afternoons" },
+        { value: "Evenings", label: "Evenings" },
+        { value: "On Call", label: "On Call" },
     ];
 
     const TimesSelectProps = {
