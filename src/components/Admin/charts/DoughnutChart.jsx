@@ -1,21 +1,26 @@
 import { Doughnut } from "react-chartjs-2";
-import Chart from "chart.js/auto";
 
-const DoughnutChart = () => {
+const DoughnutChart = ({ data }) => {
     return (
-        <Doughnut
-            data={{
-                labels: ["Dataset 1", "Dataset 2"],
-                datasets: [
-                    {
-                        data: [300, 200],
-                        backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(75, 192, 192, 0.2)"],
-                        borderColor: ["rgba(255, 99, 132, 1)", "rgba(75, 192, 192, 1)"],
-                        borderWidth: 1,
-                    },
-                ],
-            }}
-        />
+        <div>
+            {data ? (
+                <Doughnut
+                    data={{
+                        labels: ["Laborers", "Employers"],
+                        datasets: [
+                            {
+                                data: [data.laborersCount, data.employersCount],
+                                backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(75, 192, 192, 0.2)"],
+                                borderColor: ["rgba(255, 99, 132, 1)", "rgba(75, 192, 192, 1)"],
+                                borderWidth: 1,
+                            },
+                        ],
+                    }}
+                />
+            ) : (
+                <p>Loading...</p>
+            )}
+        </div>
     );
 };
 
