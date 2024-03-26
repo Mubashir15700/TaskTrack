@@ -69,14 +69,11 @@ const Login = ({ role }) => {
           style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
         >
           <MDBCardBody
-            className="p-5 shadow-5 d-flex flex-column justify-content-center align-items-center"
+            className="shadow-5 d-flex flex-column justify-content-center align-items-center"
           >
             <img src={logo} alt="logo" />
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </p>
             <h2 className="fw-bold mb-5">Login to your account</h2>
-            <div className="w-75">
+            <div className="col-12 col-md-8">
               <div className="mb-3">
                 <MDBInput
                   label={"Username"}

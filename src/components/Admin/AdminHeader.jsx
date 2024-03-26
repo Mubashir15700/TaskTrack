@@ -110,6 +110,10 @@ const Header = () => {
         }
     };
 
+    const changeOpenBasicState = () => {
+        setOpenBasic(!openBasic);
+    };
+
     const changeSearchSelect = (selectedValue) => {
         setSearchSelect(selectedValue);
     };
@@ -135,7 +139,7 @@ const Header = () => {
                     aria-controls="navbarSupportedContent"
                     aria-expanded="false"
                     aria-label="Toggle navigation"
-                    onClick={() => setOpenBasic(!openBasic)}
+                    onClick={changeOpenBasicState}
                 >
                     <MDBIcon icon="bars" fas />
                 </MDBNavbarToggler>
@@ -143,36 +147,42 @@ const Header = () => {
                 <MDBCollapse navbar open={openBasic}>
                     <MDBNavbarNav className="mr-auto mb-2 mb-lg-0">
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin" className="nav-link" aria-current="page" end>
+                            <NavLink to="/admin" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page" end>
                                 Dashboard
                             </NavLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin/users" className="nav-link" aria-current="page">
+                            <NavLink to="/admin/users" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page">
                                 Users
                             </NavLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin/subscription-plans" className="nav-link" aria-current="page">
+                            <NavLink to="/admin/subscription-plans" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page">
                                 Pricing
                             </NavLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin/subscriptions" className="nav-link" aria-current="page">
+                            <NavLink to="/admin/subscriptions" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page">
                                 Subscriptions
                             </NavLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin/laborer-requests" className="nav-link" aria-current="page">
+                            <NavLink to="/admin/laborer-requests" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page">
                                 Requests
                             </NavLink>
                         </MDBNavbarItem>
                         <MDBNavbarItem className="align-self-lg-center">
-                            <NavLink to="/admin/banners" className="nav-link" aria-current="page">
+                            <NavLink to="/admin/banners" className="nav-link" onClick={changeOpenBasicState}
+                                aria-current="page">
                                 Banners
                             </NavLink>
                         </MDBNavbarItem>
-                        <NavDropDown role={"admin"} onError={setError} />
+                        <NavDropDown role={"admin"} onError={setError} changeOpenBasicState={changeOpenBasicState} />
                     </MDBNavbarNav>
                     <SearchBar role={"admin"} onSearch={handleSearch} onSelect={changeSearchSelect} />
                 </MDBCollapse>

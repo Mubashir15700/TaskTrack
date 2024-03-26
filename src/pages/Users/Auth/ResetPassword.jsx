@@ -66,11 +66,11 @@ const ResetPassword = () => {
                     style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
                 >
                     <MDBCardBody
-                        className="p-5 shadow-5 d-flex flex-column justify-content-center align-items-center"
+                        className="shadow-5 d-flex flex-column justify-content-center align-items-center"
                     >
                         <img src={logo} alt="logo" />
                         <h2 className="fw-bold mb-5">Enter new password</h2>
-                        <div className="w-75">
+                        <div className="col-12 col-md-8">
                             <PasswordInput
                                 showPassword={showPassword}
                                 handleChange={handleChange}

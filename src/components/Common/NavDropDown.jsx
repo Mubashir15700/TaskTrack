@@ -6,7 +6,7 @@ import { setLoading } from "../../redux/slices/commonSlice";
 import SweetAlert from "./SweetAlert";
 import { logout } from "../../api/shared/auth";
 
-const NavDropDown = ({ role, onError }) => {
+const NavDropDown = ({ role, onError, changeOpenBasicState }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -58,7 +58,7 @@ const NavDropDown = ({ role, onError }) => {
             <ul className="dropdown-menu">
                 {role === "user" && (
                     <li>
-                        <NavLink to="/account" className="dropdown-item" aria-current="page">
+                        <NavLink to="/account" className="dropdown-item" onClick={changeOpenBasicState} aria-current="page">
                             <i className="bi bi-person-circle"></i> Account
                         </NavLink>
                     </li>
@@ -68,6 +68,7 @@ const NavDropDown = ({ role, onError }) => {
                         to={role === "user" ? "/notifications" : "/admin/notifications"}
                         {...role && { state: role }}
                         className="dropdown-item"
+                        onClick={changeOpenBasicState}
                         aria-current="page">
                         <div className="d-flex align-items-center">
                             <i className="bi bi-bell me-1"></i>

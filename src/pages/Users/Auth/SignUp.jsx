@@ -64,20 +64,17 @@ const SignUp = () => {
   };
 
   return (
-    <MDBContainer fluid className="col-md-8 col-10 pt-4">
+    <MDBContainer fluid className="col-md-8 col-10 mt-5">
       <MDBCard
         className="cascading-right"
         style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
       >
         <MDBCardBody
-          className="p-5 shadow-5 d-flex flex-column justify-content-center align-items-center"
+          className="shadow-5 d-flex flex-column justify-content-center align-items-center"
         >
           <img src={logo} alt="logo" />
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          </p>
           <h2 className="fw-bold mb-5">Sign up now</h2>
-          <div className="w-75">
+          <div className="col-12 col-md-8">
             <div className="mb-3">
               <MDBRow>
                 <MDBCol size="12" sm="6 mb-3 mb-md-0">

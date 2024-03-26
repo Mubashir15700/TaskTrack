@@ -11,7 +11,8 @@ export default function Chat() {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [showScrollButton, setShowScrollButton] = useState(false);
-    // const [showChatList, setShowChatList] = useState(true); // State to toggle between chat list and chat box
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+    const [showChatList, setShowChatList] = useState(true); // State to toggle between chat list and chat box
 
     const currentUser = useSelector((state) => state.user.userData);
     const { username } = useParams();
@@ -50,6 +51,16 @@ export default function Chat() {
     }, [currentUser?._id, id]);
 
     useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth <= 767);
+        };
+
+        // Call handleResize initially to set the initial state
+        handleResize();
+
+        // Add event listener for window resize
+        window.addEventListener("resize", handleResize);
+
         const messageContainer = document.querySelector(".message-container");
 
         const handleScroll = () => {
@@ -59,6 +70,7 @@ export default function Chat() {
         messageContainer?.addEventListener("scroll", handleScroll);
 
         return () => {
+            window.removeEventListener("resize", handleResize);
             messageContainer?.removeEventListener("scroll", handleScroll);
         };
     }, []);
@@ -158,26 +170,56 @@ export default function Chat() {
                     <MDBCard id="chat3" style={{ borderRadius: "15px" }}>
                         <MDBCardBody>
                             <MDBRow>
-                                {/* {showChatList && ( */}
-                                <ChatList
-                                    username={username}
-                                />
-                                {/* )} */}
-                                {/* {!showChatList && ( */}
-                                <ChatBox
-                                    messageList={messageList}
-                                    currentUser={currentUser}
-                                    currentMessage={currentMessage}
-                                    setCurrentMessage={setCurrentMessage}
-                                    sendMessage={sendMessage}
-                                    handleToggleEmojiPicker={handleToggleEmojiPicker}
-                                    handleScrollButtonClick={handleScrollButtonClick}
-                                    handleSelectEmoji={handleSelectEmoji}
-                                    showScrollButton={showScrollButton}
-                                    showEmojiPicker={showEmojiPicker}
-                                    id={id}
-                                />
-                                {/* )} */}
+                                {!isSmallScreen ? (
+                                    <>
+                                        <ChatList
+                                            setShowChatList={setShowChatList}
+                                            username={username}
+                                        />
+                                        <ChatBox
+                                            messageList={messageList}
+                                            currentUser={currentUser}
+                                            currentMessage={currentMessage}
+                                            setCurrentMessage={setCurrentMessage}
+                                            sendMessage={sendMessage}
+                                            handleToggleEmojiPicker={handleToggleEmojiPicker}
+                                            handleScrollButtonClick={handleScrollButtonClick}
+                                            handleSelectEmoji={handleSelectEmoji}
+                                            showScrollButton={showScrollButton}
+                                            showEmojiPicker={showEmojiPicker}
+                                            id={id}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        {showChatList ? (
+                                            <ChatList
+                                                setShowChatList={setShowChatList}
+                                                username={username}
+                                            />
+                                        ) : (
+                                            <>
+                                                <i
+                                                    className="bi bi-arrow-left"
+                                                    onClick={() => setShowChatList(true)}
+                                                />
+                                                <ChatBox
+                                                    messageList={messageList}
+                                                    currentUser={currentUser}
+                                                    currentMessage={currentMessage}
+                                                    setCurrentMessage={setCurrentMessage}
+                                                    sendMessage={sendMessage}
+                                                    handleToggleEmojiPicker={handleToggleEmojiPicker}
+                                                    handleScrollButtonClick={handleScrollButtonClick}
+                                                    handleSelectEmoji={handleSelectEmoji}
+                                                    showScrollButton={showScrollButton}
+                                                    showEmojiPicker={showEmojiPicker}
+                                                    id={id}
+                                                />
+                                            </>
+                                        )}
+                                    </>
+                                )}
                             </MDBRow>
                         </MDBCardBody>
                     </MDBCard>

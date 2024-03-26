@@ -1,7 +1,7 @@
 import IMAGE_URLS from "../../config/imageUrls";
 import { MDBCol, MDBIcon, MDBTypography, MDBInputGroup } from "mdb-react-ui-kit";
 
-const ChatList = ({ username }) => {
+const ChatList = ({ username, setShowChatList }) => {
     return (
         <MDBCol md="6" lg="5" xl="4" className="mb-4 mb-md-0">
             <div className="p-3">
@@ -25,8 +25,8 @@ const ChatList = ({ username }) => {
                     style={{ maxHeight: "400px" }}
                 >
                     <li className="p-2">
-                        <a
-                            href="#!"
+                        <div
+                            onClick={() => setShowChatList(false)}
                             className="d-flex justify-content-between"
                         >
                             <div className="d-flex flex-row">
@@ -48,7 +48,7 @@ const ChatList = ({ username }) => {
                             <div className="pt-1">
                                 <p className="small text-muted mb-1">Yesterday</p>
                             </div>
-                        </a>
+                        </div>
                     </li>
                 </MDBTypography>
             </div>

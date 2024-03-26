@@ -133,6 +133,10 @@ const Header = () => {
 
   const [openBasic, setOpenBasic] = useState(false);
 
+  const changeOpenBasicState = () => {
+    setOpenBasic(!openBasic);
+  };
+
   return (
     <MDBNavbar expand="lg" light bgColor="light" className="fixed-top">
       <MDBContainer fluid>
@@ -144,7 +148,7 @@ const Header = () => {
           aria-controls="navbarSupportedContent"
           aria-expanded="false"
           aria-label="Toggle navigation"
-          onClick={() => setOpenBasic(!openBasic)}
+          onClick={changeOpenBasicState}
         >
           <MDBIcon icon="bars" fas />
         </MDBNavbarToggler>
@@ -152,17 +156,17 @@ const Header = () => {
         <MDBCollapse navbar open={openBasic}>
           <MDBNavbarNav className="mb-2 mb-lg-0">
             <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/" className="nav-link" aria-current="page">
+              <NavLink to="/" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
                 Home
               </NavLink>
             </MDBNavbarItem>
             <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/laborers" className="nav-link" aria-current="page">
+              <NavLink to="/laborers" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
                 Laborers
               </NavLink>
             </MDBNavbarItem>
             <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/jobs" className="nav-link" aria-current="page">
+              <NavLink to="/jobs" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
                 Jobs
               </NavLink>
             </MDBNavbarItem>
@@ -171,11 +175,12 @@ const Header = () => {
                 <NavLink
                   to="/jobs/post-job"
                   className="btn btn-primary align-self-center"
+                  onClick={changeOpenBasicState}
                   type="submit"
                 >
                   Post Job
                 </NavLink>
-                <NavDropDown role={"user"} onError={setError} />
+                <NavDropDown role={"user"} onError={setError} changeOpenBasicState={changeOpenBasicState} />
               </div>
             )}
           </MDBNavbarNav>

@@ -38,7 +38,7 @@ const OTP = () => {
       await otpSchema.validate({ otp });
 
       // If validation passes, proceed with OTP verification
-      const response = await verifyOtp({ otp, email });
+      const response = await verifyOtp({ otp, email, purpose });
 
       if (response) {
         setServerResponse(response);
@@ -86,8 +86,11 @@ const OTP = () => {
       });
     }, 1000);
 
-    // Clear the interval when the component is unmounted
-    return () => clearInterval(intervalId);
+    // Cleanup function to remove item from localStorage
+    return () => {
+      clearInterval(intervalId);
+      localStorage.removeItem("otpTimer");
+    };
   }, []);
 
   // Convert seconds to minutes and seconds for display
@@ -102,11 +105,11 @@ const OTP = () => {
           style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
         >
           <MDBCardBody
-            className="p-5 shadow-5 d-flex flex-column justify-content-center align-items-center"
+            className="shadow-5 d-flex flex-column justify-content-center align-items-center"
           >
             <img src={logo} alt="logo" />
             <h2 className="fw-bold mb-5">Enter the otp</h2>
-            <div className="w-75">
+            <div className="col-12 col-md-8">
               <div className="mb-3">
                 <OtpInput
                   value={otp}
