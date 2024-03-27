@@ -13,7 +13,12 @@ const Success = () => {
     useEffect(() => {
         const saveSubscriptionResult = async () => {
             try {
-                const saveResponse = await saveSubscription();
+                // Get sessionId from localStorage
+                const sessionId = localStorage.getItem("sessionId");
+
+                // Send sessionId to the backend
+                const saveResponse = await saveSubscription({ sessionId }); // Pass sessionId to saveSubscription
+
                 if (saveResponse && saveResponse.status === 200) {
                     if (currentUser.currentSubscription === null) {
                         initializeUser("user", dispatch);
@@ -22,11 +27,14 @@ const Success = () => {
             } catch (error) {
                 toast.error("Failed to save subscription data");
                 console.log("Save subscription result error: ", error);
+            } finally {
+                // Remove sessionId from localStorage
+                localStorage.removeItem("sessionId");
             }
         };
 
         saveSubscriptionResult();
-    }, [currentUser]);
+    }, []);
 
     return (
         <SubscriptionStatus

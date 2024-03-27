@@ -10,8 +10,8 @@ export const getStripePublicKey = async () =>
 export const createSubscription = async (data) =>
     handleAxiosRequest(axios.post("/subscription/create", data));
 
-export const saveSubscription = async () =>
-    handleAxiosRequest(axios.post("/subscription/save"));
+export const saveSubscription = async (data) =>
+    handleAxiosRequest(axios.post("/subscription/save", data));
 
 export const getActivePlan = async (subscriptionId) =>
     handleAxiosRequest(axios.get(`/subscription/active-plan?subscriptionId=${subscriptionId}`));
