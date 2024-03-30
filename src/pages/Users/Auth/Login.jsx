@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
@@ -26,6 +26,22 @@ const Login = ({ role }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [serverResponse, setServerResponse] = useState("");
+
+  useEffect(() => {
+    // Parse the URL query parameters
+    const queryParams = new URLSearchParams(window.location.search);
+
+    // Get the error message from the query parameters
+    const errorMessage = queryParams.get("error");
+    if (errorMessage) {
+      // Update the serverResponse state with the error message
+      setServerResponse({
+        status: "failed",
+        message: errorMessage
+      });
+    }
+  }, []); // Run this effect only once, when the component mounts
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

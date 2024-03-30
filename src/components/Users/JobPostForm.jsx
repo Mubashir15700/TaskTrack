@@ -86,6 +86,7 @@ const JobPostForm = ({
                             type="date"
                             className="form-control"
                             name="date"
+                            min={new Date().toISOString().split("T")[0]}
                             value={postData?.date ? new Date(postData.date).toISOString().split("T")[0] : ""}
                             onChange={handleInputChange}
                         />
