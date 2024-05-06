@@ -57,11 +57,18 @@ const NavDropDown = ({ role, onError, changeOpenBasicState }) => {
             </a>
             <ul className="dropdown-menu">
                 {role === "user" && (
-                    <li>
-                        <NavLink to="/account" className="dropdown-item" onClick={changeOpenBasicState} aria-current="page">
-                            <i className="bi bi-person-circle"></i> Account
-                        </NavLink>
-                    </li>
+                    <>
+                        <li>
+                            <NavLink to="/account" className="dropdown-item" onClick={changeOpenBasicState} aria-current="page">
+                                <i className="bi bi-person-circle"></i> Account
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink to="/chats" className="dropdown-item" onClick={changeOpenBasicState} aria-current="page">
+                                <i className="bi bi-chat-dots"></i> Chats
+                            </NavLink>
+                        </li>
+                    </>
                 )}
                 <li>
                     <NavLink

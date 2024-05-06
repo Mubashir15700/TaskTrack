@@ -25,6 +25,7 @@ import {
   MDBNavbarItem,
   MDBCollapse,
 } from "mdb-react-ui-kit";
+import debounce from "../../utils/searchDebounce";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -123,6 +124,8 @@ const Header = () => {
     }
   };
 
+  const delayedSearch = debounce(handleSearch, 300); // 300 milliseconds debounce delay
+
   const changeSearchSelect = (selectedValue) => {
     setSearchSelect(selectedValue);
   };
@@ -138,7 +141,7 @@ const Header = () => {
   };
 
   return (
-    <MDBNavbar expand="lg" light bgColor="light" className="fixed-top">
+    <MDBNavbar expand="lg" light className="fixed-top" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
       <MDBContainer fluid>
         <MDBNavbarBrand href="#">
           <img src={logo} alt="logo" className="mt-2" style={{ height: "40px" }} />
@@ -150,48 +153,51 @@ const Header = () => {
           aria-label="Toggle navigation"
           onClick={changeOpenBasicState}
         >
-          <MDBIcon icon="bars" fas />
+          {openBasic ?
+            <MDBIcon fas icon="times" /> :
+            <MDBIcon icon="bars" fas />
+          }
         </MDBNavbarToggler>
 
         <MDBCollapse navbar open={openBasic}>
-          <MDBNavbarNav className="mb-2 mb-lg-0">
-            <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
-                Home
-              </NavLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/laborers" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
-                Laborers
-              </NavLink>
-            </MDBNavbarItem>
-            <MDBNavbarItem className="align-self-lg-center">
-              <NavLink to="/jobs" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
-                Jobs
-              </NavLink>
-            </MDBNavbarItem>
-            {isLoggedIn && (
-              <div className="d-flex ms-lg-3">
-                <NavLink
-                  to="/jobs/post-job"
-                  className="btn btn-primary align-self-center"
-                  onClick={changeOpenBasicState}
-                  type="submit"
-                >
-                  Post Job
-                </NavLink>
-                <NavDropDown role={"user"} onError={setError} changeOpenBasicState={changeOpenBasicState} />
-              </div>
-            )}
-          </MDBNavbarNav>
+          {isLoggedIn ? (
+            <>
+              <MDBNavbarNav className="mb-2 mb-lg-0">
+                <MDBNavbarItem className="align-self-lg-center">
+                  <NavLink to="/laborers" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
+                    Laborers
+                  </NavLink>
+                </MDBNavbarItem>
+                <MDBNavbarItem className="align-self-lg-center">
+                  <NavLink to="/jobs" onClick={changeOpenBasicState} className="nav-link" aria-current="page">
+                    Jobs
+                  </NavLink>
+                </MDBNavbarItem>
+                <div className="d-flex ms-lg-3">
+                  <NavLink
+                    to="/jobs/post-job"
+                    className="btn btn-primary align-self-center"
+                    onClick={changeOpenBasicState}
+                    type="submit"
+                  >
+                    Post Job
+                  </NavLink>
+                  <NavDropDown role={"user"} onError={setError} changeOpenBasicState={changeOpenBasicState} />
+                </div>
+              </MDBNavbarNav>
 
-          <SearchBar role={"user"} onSearch={handleSearch} onSelect={changeSearchSelect} />
-
-          {!isLoggedIn &&
-            <NavLink to="/login" type="button" className="btn btn-primary my-2 my-lg-0 ms-lg-2">
-              Login
-            </NavLink>
-          }
+              <SearchBar role={"user"} onSearch={delayedSearch} onSelect={changeSearchSelect} />
+            </>
+          ) : (
+            <div className="ms-auto">
+              <NavLink to="/login" type="button" className="btn btn-primary mx-1">
+                Login
+              </NavLink>
+              <NavLink to="/sign-up" type="button" className="btn border border-primary">
+                Sign Up
+              </NavLink>
+            </div>
+          )}
         </MDBCollapse>
       </MDBContainer>
     </MDBNavbar>

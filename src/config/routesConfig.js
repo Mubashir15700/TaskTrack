@@ -17,6 +17,7 @@ export const userRoutesToCheck = [
     "/manage-subscription",
     "/notifications",
     /^\/notifications\/[\w-]+?$/,
+    "/chats",
     /^\/chat\/[\w-]+\/[\w-]+$/
 ];
 

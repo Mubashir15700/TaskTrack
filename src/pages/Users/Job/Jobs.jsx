@@ -10,9 +10,11 @@ const Jobs = () => {
   const [jobs, setJobs] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const searchResults = useSelector(state => state.user?.searchResults);
   const currentUserId = useSelector(state => state.user?.userData?._id);
+
   let currentUserLocation;
   if (currentUserId) {
     currentUserLocation = useSelector(state => state.user?.userData?.location);
@@ -24,6 +26,7 @@ const Jobs = () => {
 
   const getAllJobs = async (page, lat, lon) => {
     try {
+      setLoading(true);
       const response = await getJobs(currentUserId, page, lat, lon);
       if (response && response.status === 200) {
         setJobs((prevJobs) => [...prevJobs, ...response.jobs]);
@@ -35,6 +38,8 @@ const Jobs = () => {
     } catch (error) {
       toast.error("An error occured while fetching jobs");
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,45 +66,50 @@ const Jobs = () => {
 
   return (
     <div className="col-10 mx-auto mt-3">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3 className="mb-0">Jobs</h3>
-        <NearMeButton
-          text={"Find jobs near me"}
-          purpose={"jobs"}
-          onClickNearMe={handleNearMeClick}
-        />
-      </div>
-      {
-        jobs.length ? (
-          <InfiniteScroll
-            dataLength={jobs.length}
-            hasMore={page <= totalPages}
-            loader={<div>Hang on, loading content...</div>}
-            next={() => getAllJobs()}
-          >
-            {jobs.map((job, index) => (
-              <div className="card mb-3" key={index}>
-                <Job
-                  isListed={false}
-                  title={job.title}
-                  profile={job.userDetails?.profile}
-                  username={job.userDetails?.username}
-                  description={job.description}
-                  village={job.location?.village}
-                  district={job.location?.district}
-                  postedAt={job.postedAt}
-                  status={job.status}
-                  id={job._id}
-                />
-              </div>
-            ))}
-          </InfiniteScroll>
-        ) : (
-          <div>
-            No jobs found
+      {loading ? (
+        <>Loading...</>
+      ) : (
+        <>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="mb-0">Jobs</h3>
+            <NearMeButton
+              text={"Find jobs near me"}
+              purpose={"jobs"}
+              onClickNearMe={handleNearMeClick}
+            />
           </div>
-        )
-      }
+
+          {jobs.length ? (
+            <InfiniteScroll
+              dataLength={jobs.length}
+              hasMore={page <= totalPages}
+              loader={<div>Hang on, loading content...</div>}
+              next={() => getAllJobs()}
+            >
+              {jobs.map((job, index) => (
+                <div className="card mb-3" key={index}>
+                  <Job
+                    isListed={false}
+                    title={job.title}
+                    profile={job.userDetails?.profile}
+                    username={job.userDetails?.username}
+                    description={job.description}
+                    village={job.location?.village}
+                    district={job.location?.district}
+                    postedAt={job.postedAt}
+                    status={job.status}
+                    id={job._id}
+                  />
+                </div>
+              ))}
+            </InfiniteScroll>
+          ) : (
+            <div>
+              No data found
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };

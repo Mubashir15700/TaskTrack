@@ -30,9 +30,10 @@ const UserRoutes = ({ isLoggedIn }) => {
 
     const navigateToLogin = () => <Navigate to="/login" />;
     const navigateToHome = () => <Navigate to="/" />;
+    const navigateToLaborers = () => <Navigate to="/laborers" />;
 
     const routes = [
-        { path: "/", element: <Home /> },
+        { path: "/", element: !isLoggedIn ? <Home /> : navigateToLaborers() },
         { path: "/jobs", element: <Jobs /> },
         { path: "/jobs/:id", element: <JobDetails /> },
         { path: "/laborers", element: <Laborers /> },
@@ -51,6 +52,7 @@ const UserRoutes = ({ isLoggedIn }) => {
         { path: "/jobs/listed-jobs/:id", element: isLoggedIn ? <EditListedJob /> : navigateToLogin() },
         { path: "/jobs/view-applicants", element: isLoggedIn ? <ViewApplicants /> : navigateToLogin() },
         { path: "/jobs/works-history", element: isLoggedIn ? <WorksHistory /> : navigateToLogin() },
+        { path: "/chats", element: isLoggedIn ? <Chat /> : navigateToLogin() },
         { path: "/chat/:id/:username", element: isLoggedIn ? <Chat /> : navigateToLogin() },
         { path: "/laborer-profile", element: isLoggedIn ? <LaborerProfile /> : navigateToLogin() },
         { path: "/become-laborer-form", element: isLoggedIn ? <Form /> : navigateToLogin() },

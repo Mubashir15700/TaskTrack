@@ -140,6 +140,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                         className="form-control"
                         defaultValue={textareaValue}
                         disabled
+                        style={{ resize: "none" }}
                     />
                     {(textareaValue !== "No Location provided" && usage === "profile") && (
                         <button className="btn" onClick={handleDeleteLocation}>

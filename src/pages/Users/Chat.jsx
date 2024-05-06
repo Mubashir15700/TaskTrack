@@ -176,19 +176,21 @@ export default function Chat() {
                                             setShowChatList={setShowChatList}
                                             username={username}
                                         />
-                                        <ChatBox
-                                            messageList={messageList}
-                                            currentUser={currentUser}
-                                            currentMessage={currentMessage}
-                                            setCurrentMessage={setCurrentMessage}
-                                            sendMessage={sendMessage}
-                                            handleToggleEmojiPicker={handleToggleEmojiPicker}
-                                            handleScrollButtonClick={handleScrollButtonClick}
-                                            handleSelectEmoji={handleSelectEmoji}
-                                            showScrollButton={showScrollButton}
-                                            showEmojiPicker={showEmojiPicker}
-                                            id={id}
-                                        />
+                                        {id &&
+                                            <ChatBox
+                                                messageList={messageList}
+                                                currentUser={currentUser}
+                                                currentMessage={currentMessage}
+                                                setCurrentMessage={setCurrentMessage}
+                                                sendMessage={sendMessage}
+                                                handleToggleEmojiPicker={handleToggleEmojiPicker}
+                                                handleScrollButtonClick={handleScrollButtonClick}
+                                                handleSelectEmoji={handleSelectEmoji}
+                                                showScrollButton={showScrollButton}
+                                                showEmojiPicker={showEmojiPicker}
+                                                id={id}
+                                            />
+                                        }
                                     </>
                                 ) : (
                                     <>
@@ -203,19 +205,21 @@ export default function Chat() {
                                                     className="bi bi-arrow-left"
                                                     onClick={() => setShowChatList(true)}
                                                 />
-                                                <ChatBox
-                                                    messageList={messageList}
-                                                    currentUser={currentUser}
-                                                    currentMessage={currentMessage}
-                                                    setCurrentMessage={setCurrentMessage}
-                                                    sendMessage={sendMessage}
-                                                    handleToggleEmojiPicker={handleToggleEmojiPicker}
-                                                    handleScrollButtonClick={handleScrollButtonClick}
-                                                    handleSelectEmoji={handleSelectEmoji}
-                                                    showScrollButton={showScrollButton}
-                                                    showEmojiPicker={showEmojiPicker}
-                                                    id={id}
-                                                />
+                                                {id &&
+                                                    <ChatBox
+                                                        messageList={messageList}
+                                                        currentUser={currentUser}
+                                                        currentMessage={currentMessage}
+                                                        setCurrentMessage={setCurrentMessage}
+                                                        sendMessage={sendMessage}
+                                                        handleToggleEmojiPicker={handleToggleEmojiPicker}
+                                                        handleScrollButtonClick={handleScrollButtonClick}
+                                                        handleSelectEmoji={handleSelectEmoji}
+                                                        showScrollButton={showScrollButton}
+                                                        showEmojiPicker={showEmojiPicker}
+                                                        id={id}
+                                                    />
+                                                }
                                             </>
                                         )}
                                     </>
