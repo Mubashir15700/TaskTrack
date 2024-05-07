@@ -56,7 +56,10 @@ const Home = () => {
           <div className="row justify-content-md-center">
             <div className="col-12 col-md-10 col-lg-8 col-xl-7 col-xxl-6">
               <h2 className="mb-4 display-5 text-center">Services</h2>
-              <p className="text-secondary mb-5 text-center">Connect employers with laborers for various tasks, including plumbing, electrical work, and more.</p>
+              <p className="text-secondary mb-5 text-center">
+                Explore a world of skilled tradespeople ready to tackle any task.
+                From HVAC technicians to locksmiths, find the perfect professional for your project.
+              </p>
               <hr className="w-50 mx-auto mb-5 mb-xl-9 border-dark-subtle" />
             </div>
           </div>
@@ -69,8 +72,10 @@ const Home = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-hammer text-primary mb-4" viewBox="0 0 16 16">
                   <path d="M10.734 1.871l2.143 2.143a1.5 1.5 0 0 1 1.832 1.831l-2.143 2.143a.5.5 0 0 1-.117.061L10.5 10.07V9.04L4.826 3.366.293 7.9a1 1 0 1 0 1.414 1.414l4.54-4.54 1.028 1.028h1.03L11.795.976a.5.5 0 0 1 .061-.117zM14.41 5.995a.5.5 0 0 0-.71 0l-10 10a.5.5 0 1 0 .707.708l10-10a.5.5 0 0 0 0-.708z" />
                 </svg>
-                <h5 className="m-2">Plumbing Services</h5>
-                <p className="m-0 text-secondary">Find skilled laborers for plumbing tasks such as pipe repair, installation, and maintenance.</p>
+                <h5 className="m-2">Real-time Notifications</h5>
+                <p className="m-0 text-secondary">
+                  Stay informed with our real-time notifications, ensuring you never miss an important update.
+                </p>
               </div>
             </div>
             <div className="col-12 col-sm-6 col-lg-4">
@@ -79,8 +84,10 @@ const Home = () => {
                   <path d="M5.793 14.5a.5.5 0 0 1-.479-.647l1.42-4.552a.5.5 0 0 0-.318-.642l-5.553-1.864a.5.5 0 0 1-.267-.85l4.854-4.39a.5.5 0 0 1 .742.638L1.884 7.05a.5.5 0 0 0 .267.85l5.552 1.863a.5.5 0 0 1 .317.642l-1.42 4.552a.5.5 0 0 1-.478.348z" />
                   <path d="M10.207 1.5a.5.5 0 0 1 .479.647l-1.42 4.552a.5.5 0 0 0 .318.642l5.553 1.864a.5.5 0 0 1 .267.85l-4.854 4.39a.5.5 0 0 1-.742-.638l4.854-4.39a.5.5 0 0 0-.267-.85l-5.552-1.863a.5.5 0 0 1-.317-.642l1.42-4.552a.5.5 0 0 1 .478-.348z" />
                 </svg>
-                <h5 className="m-2">Electrical Services</h5>
-                <p className="m-0 text-secondary">Hire experienced electricians for electrical wiring, repair, and installation tasks.</p>
+                <h5 className="m-2">Stripe Payment Integration</h5>
+                <p className="m-0 text-secondary">
+                  Enjoy secure and hassle-free transactions with our Stripe payment integration.
+                </p>
               </div>
             </div>
             <div className="col-12 col-sm-6 col-lg-4">
@@ -89,7 +96,9 @@ const Home = () => {
                   <path d="M1 8a7 7 0 1 1 14 0 7 7 0 0 1-14 0Zm4.5-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-4Zm6-2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm-6 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-4Z" />
                 </svg>
                 <h5 className="m-2">Chatting</h5>
-                <p className="m-0 text-secondary">Communicate with laborers and employers through real-time chat for seamless collaboration.</p>
+                <p className="m-0 text-secondary">
+                  Stay connected and communicate effortlessly with our integrated chatting feature.
+                </p>
               </div>
             </div>
           </div>
