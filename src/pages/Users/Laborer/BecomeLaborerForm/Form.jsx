@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUserData as updateUserData } from "../../../../redux/slices/userSlice";
 import toast from "react-hot-toast";
 import { sendRequest, updateRequest } from "../../../../api/user/request";
-import { profileSchema, workSchema } from "../../../../validations/userValidations/becomeLaborerSchema";
+import { profileSchema, workSchema } from "../../../../utils/validations/userValidations/becomeLaborerSchema";
 import SubForm1 from "./SubForm1";
 import SubForm2 from "./SubForm2";
 // import SubForm3 from "./SubForm3";

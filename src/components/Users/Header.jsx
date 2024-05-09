@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
-import { setSearchResults } from "../../redux/slices/userSlice";
 import SearchBar from "../Common/SearchBar";
-import { search } from "../../api/shared/utility";
 import socket from "../../socket/socket";
 import {
   handleNotifyRequestAction,
@@ -25,10 +23,8 @@ import {
   MDBNavbarItem,
   MDBCollapse,
 } from "mdb-react-ui-kit";
-import debounce from "../../utils/searchDebounce";
 
 const Header = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(state => state.user.isLoggedIn);
@@ -85,50 +81,7 @@ const Header = () => {
     };
   }, [currentUserId, dispatch, notificationsCount, socket]);
 
-  const [searchSelect, setSearchSelect] = useState("laborers");
   const [error, setError] = useState("");
-
-  const handleSearch = async (e) => {
-    try {
-      const inputValue = e.target.value.trim();
-
-      if (inputValue !== "") {
-        const response = await search({
-          currentUserId,
-          searchWith: inputValue,
-          searchOn: searchSelect
-        });
-
-        if (response && response.status === 200) {
-          const { result } = response;
-
-          dispatch(setSearchResults({
-            searchOn: searchSelect,
-            results: result
-          }));
-
-          const destination = (searchSelect === "laborers") ? "/laborers" : "/jobs";
-          navigate(destination);
-        } else {
-          setError("An error occurred while searching");
-        }
-      } else {
-        dispatch(setSearchResults({
-          searchOn: null,
-          results: null
-        }));
-      }
-    } catch (error) {
-      console.error("Error during search:", error);
-      setError("An error occurred while searching");
-    }
-  };
-
-  const delayedSearch = debounce(handleSearch, 300); // 300 milliseconds debounce delay
-
-  const changeSearchSelect = (selectedValue) => {
-    setSearchSelect(selectedValue);
-  };
 
   useEffect(() => {
     error && toast.error(error);
@@ -137,11 +90,14 @@ const Header = () => {
   const [openBasic, setOpenBasic] = useState(false);
 
   const changeOpenBasicState = () => {
-    setOpenBasic(!openBasic);
+    // Check if the screen width is less than 992
+    if (window.innerWidth < 992) {
+      setOpenBasic(!openBasic);
+    }
   };
 
   return (
-    <MDBNavbar expand="lg" light className="fixed-top" style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
+    <MDBNavbar expand="lg" light bgColor="white" className="fixed-top">
       <MDBContainer fluid>
         <MDBNavbarBrand href="#">
           <img src={logo} alt="logo" className="mt-2" style={{ height: "40px" }} />
@@ -186,7 +142,7 @@ const Header = () => {
                 </div>
               </MDBNavbarNav>
 
-              <SearchBar role={"user"} onSearch={delayedSearch} onSelect={changeSearchSelect} />
+              <SearchBar role={"user"} onError={setError} />
             </>
           ) : (
             <div className="ms-auto">

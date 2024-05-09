@@ -47,14 +47,14 @@ const NavDropDown = ({ role, onError, changeOpenBasicState }) => {
 
     return (
         <div className={`nav-item dropdown ${role === "user" && "mx-4"}`}>
-            <a className="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button className="nav-link" data-bs-toggle="dropdown" aria-expanded="false">
                 <i className="bi bi-caret-down-square-fill fs-2"></i>
                 {count > 0 && (
-                    <span className="badge bg-danger text-light position-absolute top-0 start-10 translate-middle">
+                    <span className="badge bg-danger text-light position-absolute start-10 translate-middle">
                         {count}
                     </span>
                 )}
-            </a>
+            </button>
             <ul className="dropdown-menu">
                 {role === "user" && (
                     <>

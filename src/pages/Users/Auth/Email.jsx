@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-    MDBBtn, MDBContainer, MDBCard, MDBCardBody, MDBInput
-} from "mdb-react-ui-kit";
+import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
+import AuthWrapper from "../../../components/Common/AuthWrapper";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";
-import { emailSchema } from "../../../validations/userValidations/emailSchema";
+import { emailSchema } from "../../../utils/validations/userValidations/emailSchema";
 import { confirmEmail } from "../../../api/shared/auth";
-import logo from "../../../assets/images/logo.png";
 
 const Email = () => {
     const navigate = useNavigate();
@@ -49,48 +47,34 @@ const Email = () => {
     };
 
     return (
-        <div className="vh-100 d-flex flex-column justify-content-center align-items-center">
-            <MDBContainer fluid className="col-md-8 col-10">
-                <MDBCard
-                    className="cascading-right"
-                    style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
+        <AuthWrapper title={"Enter your email"}>
+
+            <div className="mb-3">
+                <MDBInput
+                    label={"Email"}
+                    name={"email"}
+                    onChange={handleChange}
+                    type={"email"}
+                />
+                {errors &&
+                    <FormErrorDisplay error={errors} />
+                }
+            </div>
+            {serverResponse && (
+                <div
+                    className={`alert ${serverResponse.status === "failed" ?
+                        "alert-danger" :
+                        "alert-success"} mt-3`
+                    }
+                    role="alert"
                 >
-                    <MDBCardBody
-                        className="shadow-5 d-flex flex-column justify-content-center align-items-center"
-                    >
-                        <img src={logo} alt="logo" />
-                        <h2 className="fw-bold mb-5">Enter your email</h2>
-                        <div className="col-12 col-md-8">
-                            <div className="mb-3">
-                                <MDBInput
-                                    label={"Email"}
-                                    name={"email"}
-                                    onChange={handleChange}
-                                    type={"email"}
-                                />
-                                {errors &&
-                                    <FormErrorDisplay error={errors} />
-                                }
-                            </div>
-                            {serverResponse && (
-                                <div
-                                    className={`alert ${serverResponse.status === "failed" ?
-                                        "alert-danger" :
-                                        "alert-success"} mt-3`
-                                    }
-                                    role="alert"
-                                >
-                                    {serverResponse.message}
-                                </div>
-                            )}
-                            <MDBBtn className="w-100 mb-4" size="md" onClick={handleConfirmEmail}>
-                                Verify
-                            </MDBBtn>
-                        </div>
-                    </MDBCardBody>
-                </MDBCard>
-            </MDBContainer>
-        </div>
+                    {serverResponse.message}
+                </div>
+            )}
+            <MDBBtn className="w-100 mb-4" size="md" onClick={handleConfirmEmail}>
+                Verify
+            </MDBBtn>
+        </AuthWrapper>
     );
 };
 

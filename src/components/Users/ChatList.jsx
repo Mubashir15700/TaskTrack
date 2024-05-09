@@ -45,8 +45,8 @@ const ChatList = ({ setShowChatList }) => {
                     style={{ maxHeight: "400px" }}
                 >
                     {chatLists.length ?
-                        chatLists.map((chat) => (
-                            <Link to={`/chat/${chat.otherUser._id}/${chat.otherUser.username}`} className="p-2" key={chat.otherUser._id}>
+                        chatLists.map((chat, index) => (
+                            <Link to={`/chat/${chat.otherUser._id}/${chat.otherUser.username}`} className="p-2" key={index}>
                                 <div
                                     onClick={() => setShowChatList(false)}
                                     className="d-flex justify-content-between"

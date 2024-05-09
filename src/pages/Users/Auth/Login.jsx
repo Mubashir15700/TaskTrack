@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  MDBBtn, MDBContainer, MDBCard, MDBCardBody, MDBInput
-} from "mdb-react-ui-kit";
+import { MDBBtn, MDBInput } from "mdb-react-ui-kit";
+import AuthWrapper from "../../../components/Common/AuthWrapper";
 import GLogin from "../../../components/Users/GLogin";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";
 import handleInputChange from "../../../utils/formUtils/handleInputChange";
 import handleFormErrors from "../../../utils/formUtils/handleFormErrors";
-import { loginSchema } from "../../../validations/userValidations/loginSchema";
+import { loginSchema } from "../../../utils/validations/userValidations/loginSchema";
 import initializeUser from "../../../utils/initializeUser";
 import { login } from "../../../api/shared/auth";
-import logo from "../../../assets/images/logo.png";
 
 const Login = ({ role }) => {
   const dispatch = useDispatch();
@@ -78,87 +76,72 @@ const Login = ({ role }) => {
   };
 
   return (
-    <div className="vh-100 d-flex flex-column justify-content-center align-items-center">
-      <MDBContainer fluid className="col-md-8 col-10">
-        <MDBCard
-          className="cascading-right"
-          style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
+    <AuthWrapper title={"Login to your account"}>
+      <div className="mb-3">
+        <MDBInput
+          label={"Username"}
+          name={"username"}
+          onChange={handleChange}
+          type={"text"}
+        />
+        {errors.username &&
+          <FormErrorDisplay error={errors.username} />
+        }
+      </div>
+      <div className="d-flex position-relative">
+        <MDBInput
+          label={"Password"}
+          name={"password"}
+          onChange={handleChange}
+          type={showPassword ? "text" : "password"}
+        />
+        <MDBBtn
+          className="mx-2 position-absolute end-0 top-50 translate-middle-y"
+          color="tertiary"
+          rippleColor="light"
         >
-          <MDBCardBody
-            className="shadow-5 d-flex flex-column justify-content-center align-items-center"
-          >
-            <img src={logo} alt="logo" />
-            <h2 className="fw-bold mb-5">Login to your account</h2>
-            <div className="col-12 col-md-8">
-              <div className="mb-3">
-                <MDBInput
-                  label={"Username"}
-                  name={"username"}
-                  onChange={handleChange}
-                  type={"text"}
-                />
-                {errors.username &&
-                  <FormErrorDisplay error={errors.username} />
-                }
-              </div>
-              <div className="d-flex position-relative">
-                <MDBInput
-                  label={"Password"}
-                  name={"password"}
-                  onChange={handleChange}
-                  type={showPassword ? "text" : "password"}
-                />
-                <MDBBtn
-                  className="mx-2 position-absolute end-0 top-50 translate-middle-y"
-                  color="tertiary"
-                  rippleColor="light"
-                >
-                  <i
-                    className={`fas text-dark ${showPassword ?
-                      "fa-eye-slash" :
-                      "fa-eye"}`
-                    }
-                    onClick={togglePasswordVisibility}
-                  ></i>
-                </MDBBtn>
-              </div>
-              {errors.password &&
-                <FormErrorDisplay error={errors.password} />
-              }
-              {role === "user" &&
-                <div className="d-flex align-items-start">
-                  <Link className="link" to="/verify-email">Forgot password?</Link>
-                </div>
-              }
-              {serverResponse && (
-                <div
-                  className={`alert ${serverResponse.status === "failed" ?
-                    "alert-danger" :
-                    "alert-success"} mt-3`
-                  }
-                  role="alert"
-                >
-                  {serverResponse.message}
-                </div>
-              )}
-              <MDBBtn className="w-100 my-4" size="md" onClick={handleLogin}>Login</MDBBtn>
-              {role === "user" &&
-                (
-                  <>
-                    <div className="mb-2 d-flex justify-content-center">
-                      <GLogin onServerResponse={setServerResponse} />
-                    </div>
-                    <p>
-                      Don't have an account?<Link className="link" to="/sign-up">Sign Up</Link>
-                    </p>
-                  </>
-                )
-              }
+          <i
+            className={`fas text-dark ${showPassword ?
+              "fa-eye-slash" :
+              "fa-eye"}`
+            }
+            onClick={togglePasswordVisibility}
+          ></i>
+        </MDBBtn>
+      </div>
+      {errors.password &&
+        <FormErrorDisplay error={errors.password} />
+      }
+      {role === "user" &&
+        <div className="d-flex align-items-start">
+          <Link className="link" to="/verify-email">Forgot password?</Link>
+        </div>
+      }
+      {serverResponse && (
+        <div
+          className={`alert ${serverResponse.status === "failed" ?
+            "alert-danger" :
+            "alert-success"} mt-3`
+          }
+          role="alert"
+        >
+          {serverResponse.message}
+        </div>
+      )}
+      <MDBBtn className="w-100 my-4" size="md" onClick={handleLogin}>Login</MDBBtn>
+      {role === "user" &&
+        (
+          <>
+            <div className="mb-2 d-flex justify-content-center">
+              <GLogin onServerResponse={setServerResponse} />
             </div>
-          </MDBCardBody>
-        </MDBCard>
-      </MDBContainer>
-    </div>
+            <p>
+              Don't have an account?<Link className="link" to="/sign-up">Sign Up</Link>
+            </p>
+          </>
+        )
+      }
+    </AuthWrapper>
   );
 };
 

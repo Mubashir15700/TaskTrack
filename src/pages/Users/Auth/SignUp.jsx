@@ -1,18 +1,16 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  MDBBtn, MDBContainer, MDBCard, MDBCardBody, MDBRow, MDBCol, MDBInput
-} from "mdb-react-ui-kit";
-import { signupSchema } from "../../../validations/userValidations/signUpSchema";
+import { MDBBtn, MDBRow, MDBCol, MDBInput } from "mdb-react-ui-kit";
+import { signupSchema } from "../../../utils/validations/userValidations/signUpSchema";
 import { setUserData } from "../../../redux/slices/userSlice";
 import { userSignUp } from "../../../api/shared/auth";
 import handleInputChange from "../../../utils/formUtils/handleInputChange";
 import handleFormErrors from "../../../utils/formUtils/handleFormErrors";
+import AuthWrapper from "../../../components/Common/AuthWrapper";
 import GLogin from "../../../components/Users/GLogin";
 import PasswordInput from "../../../components/FormElements/PasswordInput";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";
-import logo from "../../../assets/images/logo.png";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -64,82 +62,69 @@ const SignUp = () => {
   };
 
   return (
-    <MDBContainer fluid className="col-md-8 col-10 mt-5">
-      <MDBCard
-        className="cascading-right"
-        style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
-      >
-        <MDBCardBody
-          className="shadow-5 d-flex flex-column justify-content-center align-items-center"
-        >
-          <img src={logo} alt="logo" />
-          <h2 className="fw-bold mb-5">Sign up now</h2>
-          <div className="col-12 col-md-8">
-            <div className="mb-3">
-              <MDBRow>
-                <MDBCol size="12" sm="6 mb-3 mb-md-0">
-                  <MDBInput
-                    label={"Username"}
-                    name={"username"}
-                    onChange={handleChange}
-                    type={"text"}
-                  />
-                  {errors.username &&
-                    <FormErrorDisplay error={errors.username} />
-                  }
-                </MDBCol>
-                <MDBCol size="12" sm="6">
-                  <MDBInput
-                    label={"Phone"}
-                    name={"phone"}
-                    onChange={handleChange}
-                    type={"tel"}
-                  />
-                  {errors.phone &&
-                    <FormErrorDisplay error={errors.phone} />
-                  }
-                </MDBCol>
-              </MDBRow>
-            </div>
-            <div className="mb-3">
-              <MDBInput
-                label={"Email"}
-                name={"email"}
-                onChange={handleChange}
-                type={"email"}
-              />
-              {errors.email &&
-                <FormErrorDisplay error={errors.email} />
-              }
-            </div>
-            <PasswordInput
-              showPassword={showPassword}
-              handleChange={handleChange}
-              togglePasswordVisibility={togglePasswordVisibility}
-              errors={errors}
+    <AuthWrapper title={"Sign up now"}>
+      <div className="mb-3">
+        <MDBRow>
+          <MDBCol size="12" sm="6 mb-3 mb-md-0">
+            <MDBInput
+              label={"Username"}
+              name={"username"}
+              onChange={handleChange}
+              type={"text"}
             />
-            {serverResponse && (
-              <div
-                className={`alert ${serverResponse.status === "failed" ?
-                  "alert-danger" :
-                  "alert-success"} mt-3`
-                }
-                role="alert"
-              >
-                {serverResponse.message}
-              </div>
-            )}
-            <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignUp}>Sign up</MDBBtn>
-            <div className="mb-2 d-flex justify-content-center">
-              <GLogin onServerResponse={setServerResponse} />
-            </div>
-            <p>
-              Already have an account?<Link className="link" to="/login">Log In</Link>
-            </p>
-          </div>
-        </MDBCardBody>
-      </MDBCard>
-    </MDBContainer>
+            {errors.username &&
+              <FormErrorDisplay error={errors.username} />
+            }
+          </MDBCol>
+          <MDBCol size="12" sm="6">
+            <MDBInput
+              label={"Phone"}
+              name={"phone"}
+              onChange={handleChange}
+              type={"tel"}
+            />
+            {errors.phone &&
+              <FormErrorDisplay error={errors.phone} />
+            }
+          </MDBCol>
+        </MDBRow>
+      </div>
+      <div className="mb-3">
+        <MDBInput
+          label={"Email"}
+          name={"email"}
+          onChange={handleChange}
+          type={"email"}
+        />
+        {errors.email &&
+          <FormErrorDisplay error={errors.email} />
+        }
+      </div>
+      <PasswordInput
+        showPassword={showPassword}
+        handleChange={handleChange}
+        togglePasswordVisibility={togglePasswordVisibility}
+        errors={errors}
+      />
+      {serverResponse && (
+        <div
+          className={`alert ${serverResponse.status === "failed" ?
+            "alert-danger" :
+            "alert-success"} mt-3`
+          }
+          role="alert"
+        >
+          {serverResponse.message}
+        </div>
+      )}
+      <MDBBtn className="w-100 mb-4" size="md" onClick={handleSignUp}>Sign up</MDBBtn>
+      <div className="mb-2 d-flex justify-content-center">
+        <GLogin onServerResponse={setServerResponse} />
+      </div>
+      <p>
+        Already have an account?<Link className="link" to="/login">Log In</Link>
+      </p>
+    </AuthWrapper>
   );
 };
 

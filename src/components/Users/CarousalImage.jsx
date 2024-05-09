@@ -3,9 +3,9 @@ const CarousalImage = ({ src }) => {
         <>
             <div>
                 <img style={{ height: "80vh" }}
-                    className="d-block w-100"
+                    className="w-100"
                     src={src}
-                    alt="First slide"
+                    alt="Banner Image"
                 />
             </div>
             <div

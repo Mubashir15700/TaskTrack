@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { addBanner } from "../../../api/admin/banner";
 import BannerForm from "../../../components/Admin/BannerForm";
-import bannerSchema from "../../../validations/adminValidations/bannerSchema";
+import bannerSchema from "../../../utils/validations/adminValidations/bannerSchema";
 
 const AddBanner = () => {
     const navigate = useNavigate();
@@ -38,7 +38,7 @@ const AddBanner = () => {
 
     const handleAddBanner = async () => {
         try {
-            await bannerSchema.validate(bannerData, { abortEarly: false });
+            await bannerSchema.validate(bannerData, { abortEarly: false, context: { isEdit: false } });
             setErrors({});
 
             const formData = new FormData();
@@ -57,6 +57,7 @@ const AddBanner = () => {
                 }
             }
         } catch (error) {
+            console.log(error);
             if (error.name === "ValidationError") {
                 const validationErrors = {};
                 error.inner.forEach(err => {

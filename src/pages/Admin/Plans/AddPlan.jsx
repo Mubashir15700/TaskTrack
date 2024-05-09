@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { addPlan } from "../../../api/admin/plan";
 import PlanForm from "../../../components/Admin/PlanForm";
-import planSchema from "../../../validations/adminValidations/planSchema";
+import planSchema from "../../../utils/validations/adminValidations/planSchema";
 
 const AddPlan = () => {
     const [planData, setPlanData] = useState({

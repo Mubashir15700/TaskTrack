@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import DisplayMap from "../../components/Users/DisplayMap";
 import FormErrorDisplay from "../Common/FormErrorDisplay";
 import { getCurrentLocation, deleteLocation } from "../../api/user/profile";
-import { locationSchema } from "../../validations/userValidations/locationSchema";
+import { locationSchema } from "../../utils/validations/userValidations/locationSchema";
 
 const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDeleted, usage }) => { 
     const [selectedAddress, setSelectedAddress] = useState({});

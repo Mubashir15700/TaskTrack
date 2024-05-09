@@ -3,10 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getBanner, editBanner } from "../../../api/admin/banner";
 import BannerForm from "../../../components/Admin/BannerForm";
-import bannerSchema from "../../../validations/adminValidations/bannerSchema";
+import bannerSchema from "../../../utils/validations/adminValidations/bannerSchema";
 
 const EditBanner = () => {
-    const [bannerData, setBannerData] = useState({});
+    const [bannerData, setBannerData] = useState({
+        title: "",
+        description: "",
+        image: "",
+    });
     const [previewUrl, setPreviewUrl] = useState("");
     const [newImageSelected, setNewImageSelected] = useState(false);
     const [changed, setChanged] = useState(false);
@@ -21,7 +25,7 @@ const EditBanner = () => {
             try {
                 const response = await getBanner(id);
                 if (response && response.status === 200 && response.banner) {
-                    const banner = response.banner
+                    const banner = response.banner;
                     setBannerData(banner);
                     setPreviewUrl(banner.image)
                 } else {
@@ -61,7 +65,13 @@ const EditBanner = () => {
 
     const handleEditBanner = async () => {
         try {
-            await bannerSchema.validate(bannerData, { abortEarly: false });
+            if (!newImageSelected) {
+                // If no new image is selected, remove the existing image from the banner data
+                delete bannerData.image;
+            }
+            
+            await bannerSchema.validate(bannerData, { abortEarly: false, context: { isEdit: true } });
+            
             setErrors({});
 
             const formData = new FormData();
@@ -70,7 +80,7 @@ const EditBanner = () => {
             formData.append("description", bannerData.description);
             formData.append("image", bannerData.image);
 
-            const response = await editBanner(formData);
+            const response = await editBanner(formData, newImageSelected);
 
             if (response) {
                 setServerResponse(response);
@@ -82,6 +92,7 @@ const EditBanner = () => {
                 toast.error(response?.message || "An error occurred during editing banner");
             }
         } catch (error) {
+            console.log(error);
             if (error.name === "ValidationError") {
                 const validationErrors = {};
                 error.inner.forEach(err => {

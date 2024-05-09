@@ -82,23 +82,28 @@ function ImageCrop({ onNewImageUrl, purpose }) {
             {image && cropperVisible && (
                 <>
                     <div className="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50"></div>
-                    <div className="d-flex flex-column align-items-center">
-                        <Cropper {...CropperProps} />
-                        <div className="position-absolute bottom-0 start-50 translate-middle-x">
-                            <button className="btn btn-danger me-2">
-                                <i
-                                    className="bi bi-x-circle text-white cursor-pointer"
-                                    style={{ zIndex: 1001, cursor: "pointer" }}
-                                    onClick={handleCancelClick}
-                                />
-                            </button>
-                            <button className="btn btn-primary me-2">
-                                <i
-                                    className="bi bi-crop text-white me-2"
-                                    style={{ zIndex: 1001, cursor: "pointer" }}
-                                    onClick={getCropData}
-                                />
-                            </button>
+                    <div
+                        className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center"
+                        style={{ zIndex: 9999 }}
+                    >
+                        <div className="d-flex justify-content-center">
+                            <div>
+                                <Cropper {...CropperProps} />
+                                <div className="d-flex justify-content-center mt-2">
+                                    <button className="btn btn-danger me-2" onClick={handleCancelClick}>
+                                        <i
+                                            className="bi bi-x-circle text-white cursor-pointer"
+                                            style={{ zIndex: 1001, cursor: "pointer" }}
+                                        />
+                                    </button>
+                                    <button className="btn btn-primary me-2" onClick={getCropData}>
+                                        <i
+                                            className="bi bi-crop text-white me-2"
+                                            style={{ zIndex: 1001, cursor: "pointer" }}
+                                        />
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>

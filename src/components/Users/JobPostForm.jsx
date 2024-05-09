@@ -54,127 +54,125 @@ const JobPostForm = ({
     };
 
     return (
-        <div className="col-10 my-5 mx-auto">
-            <div className="p-3 p-lg-5 border">
-                <h3 className="mb-2">{heading}</h3>
-                <div className="col-md-12">
-                    <label>Title</label>
+        <div className="p-3 p-lg-5 border">
+            <h3 className="mb-2">{heading}</h3>
+            <div className="col-md-12">
+                <label>Title</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="title"
+                    value={postData?.title || ""}
+                    onChange={handleInputChange}
+                />
+                <FormErrorDisplay error={errors.title} />
+            </div>
+            <div className="col-md-12">
+                <label>Description</label>
+                <textarea
+                    type="text"
+                    className="form-control"
+                    name="description"
+                    value={postData?.description || ""}
+                    onChange={handleInputChange}
+                />
+                <FormErrorDisplay error={errors.description} />
+            </div>
+            <div className="form-group row">
+                <div className="col-md-4">
+                    <label>Date</label>
                     <input
-                        type="text"
+                        type="date"
                         className="form-control"
-                        name="title"
-                        value={postData?.title || ""}
+                        name="date"
+                        min={new Date().toISOString().split("T")[0]}
+                        value={postData?.date ? new Date(postData.date).toISOString().split("T")[0] : ""}
                         onChange={handleInputChange}
                     />
-                    <FormErrorDisplay error={errors.title} />
+                    <FormErrorDisplay error={errors.date} />
                 </div>
-                <div className="col-md-12">
-                    <label>Description</label>
-                    <textarea
-                        type="text"
+                <div className="col-md-4">
+                    <label>Time</label>
+                    <input
+                        type="time"
                         className="form-control"
-                        name="description"
-                        value={postData?.description || ""}
+                        name="time"
+                        value={postData?.time || ""}
                         onChange={handleInputChange}
                     />
-                    <FormErrorDisplay error={errors.description} />
+                    <FormErrorDisplay error={errors.time} />
                 </div>
+                <div className="col-md-4">
+                    <label>Duration(hrs)</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        name="duration"
+                        value={postData?.duration || ""}
+                        onChange={handleInputChange}
+                    />
+                    <FormErrorDisplay error={errors.duration} />
+                </div>
+            </div>
+            <Address
+                label={"Location"}
+                currentAddress={postData.location}
+                onAddressChange={newAddressSelected}
+                usage={"postjob"}
+            />
+            <FormErrorDisplay error={errors.location} />
+            {/* Fields Section */}
+            <div className="col-md-12">
+                <label>Required Fields</label>
+                {postData.fields?.map((field, index) => (
+                    <Fields
+                        key={index}
+                        field={field}
+                        index={index}
+                        errors={errors}
+                        handleFieldChange={handleFieldChange}
+                        handleRemoveField={handleRemoveField}
+                        getJobApplicants={getJobApplicants}
+                    />
+                ))}
+                <button type="button" className="btn" onClick={handleAddField}>
+                    <i className="bi bi-plus-circle"></i>
+                </button>
+            </div>
+            {/* End of Fields Section */}
+            {(heading !== "Post New Job" && purpose !== "Send Request") && (
                 <div className="form-group row">
                     <div className="col-md-4">
-                        <label>Date</label>
-                        <input
-                            type="date"
+                        <label>Status</label>
+                        <select
                             className="form-control"
-                            name="date"
-                            min={new Date().toISOString().split("T")[0]}
-                            value={postData?.date ? new Date(postData.date).toISOString().split("T")[0] : ""}
+                            name="status"
+                            value={postData?.status}
                             onChange={handleInputChange}
-                        />
-                        <FormErrorDisplay error={errors.date} />
+                        >
+                            <option value="open">Open</option>
+                            <option value="in progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
                     </div>
-                    <div className="col-md-4">
-                        <label>Time</label>
-                        <input
-                            type="time"
-                            className="form-control"
-                            name="time"
-                            value={postData?.time || ""}
-                            onChange={handleInputChange}
-                        />
-                        <FormErrorDisplay error={errors.time} />
-                    </div>
-                    <div className="col-md-4">
-                        <label>Duration(hrs)</label>
-                        <input
-                            type="number"
-                            className="form-control"
-                            name="duration"
-                            value={postData?.duration || ""}
-                            onChange={handleInputChange}
-                        />
-                        <FormErrorDisplay error={errors.duration} />
+                    <div className="col-md-4 mt-4">
+                        <button className="btn btn-danger" onClick={handleDeleteJob}>Delete this job</button>
                     </div>
                 </div>
-                <Address
-                    label={"Location"}
-                    currentAddress={postData.location}
-                    onAddressChange={newAddressSelected}
-                    usage={"postjob"}
-                />
-                <FormErrorDisplay error={errors.location} />
-                {/* Fields Section */}
-                <div className="col-md-12">
-                    <label>Required Fields</label>
-                    {postData.fields?.map((field, index) => (
-                        <Fields
-                            key={index}
-                            field={field}
-                            index={index}
-                            errors={errors}
-                            handleFieldChange={handleFieldChange}
-                            handleRemoveField={handleRemoveField}
-                            getJobApplicants={getJobApplicants}
-                        />
-                    ))}
-                    <button type="button" className="btn" onClick={handleAddField}>
-                        <i className="bi bi-plus-circle"></i>
-                    </button>
+            )}
+            {(heading === "Post New Job" || isChanged) && (
+                <button
+                    className="btn btn-primary mt-3"
+                    onClick={handleSubmit}
+                >
+                    {buttonText}
+                </button>
+            )}
+            {serverResponse && (
+                <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                    {serverResponse.message}
                 </div>
-                {/* End of Fields Section */}
-                {(heading !== "Post New Job" && purpose !== "Send Request") && (
-                    <div className="form-group row">
-                        <div className="col-md-4">
-                            <label>Status</label>
-                            <select
-                                className="form-control"
-                                name="status"
-                                value={postData?.status}
-                                onChange={handleInputChange}
-                            >
-                                <option value="open">Open</option>
-                                <option value="in progress">In Progress</option>
-                                <option value="completed">Completed</option>
-                            </select>
-                        </div>
-                        <div className="col-md-4 mt-4">
-                            <button className="btn btn-danger" onClick={handleDeleteJob}>Delete this job</button>
-                        </div>
-                    </div>
-                )}
-                {(heading === "Post New Job" || isChanged) && (
-                    <button
-                        className="btn btn-primary mt-3"
-                        onClick={handleSubmit}
-                    >
-                        {buttonText}
-                    </button>
-                )}
-                {serverResponse && (
-                    <div className={`alert ${serverResponse.status !== 200 ? "alert-danger" : "alert-success"} mt-3`} role="alert">
-                        {serverResponse.message}
-                    </div>
-                )}
-            </div>
+            )}
         </div>
     );
 };

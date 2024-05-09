@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import {
-  MDBBtn, MDBContainer, MDBCard, MDBCardBody
-} from "mdb-react-ui-kit";
+import { MDBBtn } from "mdb-react-ui-kit";
 import OtpInput from "react-otp-input";
+import AuthWrapper from "../../../components/Common/AuthWrapper";
 import FormErrorDisplay from "../../../components/Common/FormErrorDisplay";
-import { otpSchema } from "../../../validations/userValidations/otpSchema";
+import { otpSchema } from "../../../utils/validations/userValidations/otpSchema";
 import { setLoggedIn } from "../../../redux/slices/userSlice";
 import { verifyOtp, resendOtp } from "../../../api/shared/auth";
-import logo from "../../../assets/images/logo.png";
 
 const OTP = () => {
   const navigate = useNavigate();
@@ -98,59 +96,44 @@ const OTP = () => {
   const seconds = timer % 60;
 
   return (
-    <div className="vh-100 d-flex flex-column justify-content-center align-items-center">
-      <MDBContainer fluid className="col-md-8 col-10 pt-4">
-        <MDBCard
-          className="cascading-right"
-          style={{ background: "hsla(0, 0%, 100%, 0.55)", backdropFilter: "blur(30px)" }}
+    <AuthWrapper title={"Enter verification otp"}>
+      <div className="mb-3">
+        <OtpInput
+          value={otp}
+          onChange={setOtp}
+          numInputs={6}
+          renderSeparator={<span>*</span>}
+          renderInput={(props) => <input {...props} className="w-100 py-1" />}
+        />
+        {errors &&
+          <FormErrorDisplay error={errors} />
+        }
+      </div>
+      {serverResponse && (
+        <div
+          className={`alert ${serverResponse.status === "failed" ?
+            "alert-danger" :
+            "alert-success"} mt-3`
+          }
+          role="alert"
         >
-          <MDBCardBody
-            className="shadow-5 d-flex flex-column justify-content-center align-items-center"
-          >
-            <img src={logo} alt="logo" />
-            <h2 className="fw-bold mb-5">Enter the otp</h2>
-            <div className="col-12 col-md-8">
-              <div className="mb-3">
-                <OtpInput
-                  value={otp}
-                  onChange={setOtp}
-                  numInputs={6}
-                  renderSeparator={<span>*</span>}
-                  renderInput={(props) => <input {...props} className="w-100 py-1" />}
-                />
-                {errors &&
-                  <FormErrorDisplay error={errors} />
-                }
-              </div>
-              {serverResponse && (
-                <div
-                  className={`alert ${serverResponse.status === "failed" ?
-                    "alert-danger" :
-                    "alert-success"} mt-3`
-                  }
-                  role="alert"
-                >
-                  {serverResponse.message}
-                </div>
-              )}
-              <div className="d-flex flex-column">
-                {timer > 0 && (
-                  <span className="timer">
-                    Time remaining: {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
-                  </span>
-                )}
-                {timer === 0 && (
-                  <Link onClick={handleResend} className="link mt-1">
-                    Resend OTP
-                  </Link>
-                )}
-              </div>
-              <MDBBtn className="w-100 mb-4" size="md" onClick={handleVerification}>Verify</MDBBtn>
-            </div>
-          </MDBCardBody>
-        </MDBCard>
-      </MDBContainer>
-    </div>
+          {serverResponse.message}
+        </div>
+      )}
+      <div className="d-flex flex-column">
+        {timer > 0 && (
+          <span className="timer">
+            Time remaining: {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+          </span>
+        )}
+        {timer === 0 && (
+          <Link onClick={handleResend} className="link mt-1">
+            Resend OTP
+          </Link>
+        )}
+      </div>
+      <MDBBtn className="w-100 mb-4" size="md" onClick={handleVerification}>Verify</MDBBtn>
+    </AuthWrapper>
   );
 };
 

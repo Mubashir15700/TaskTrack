@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { getPlan, editPlan } from "../../../api/admin/plan";
 import PlanForm from "../../../components/Admin/PlanForm";
-import planSchema from "../../../validations/adminValidations/planSchema";
+import planSchema from "../../../utils/validations/adminValidations/planSchema";
 
 const EditPlan = () => {
     const [planData, setPlanData] = useState({

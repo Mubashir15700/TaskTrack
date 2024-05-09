@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { profileSchema } from "../../validations/userValidations/profileSchema";
+import { profileSchema } from "../../utils/validations/userValidations/profileSchema";
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
 import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";

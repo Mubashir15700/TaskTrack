@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { postNewJob, getRemainingPosts } from "../../../api/user/job";
-import { jobSchema } from "../../../validations/userValidations/jobSchema";
+import { jobSchema } from "../../../utils/validations/userValidations/jobSchema";
 import JobPostForm from "../../../components/Users/JobPostForm";
 
 const PostJob = () => {
@@ -27,6 +27,7 @@ const PostJob = () => {
     ],
   });
   const [remainingPosts, setRemainingPosts] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [serverResponse, setServerResponse] = useState("");
 
@@ -34,6 +35,7 @@ const PostJob = () => {
 
   useEffect(() => {
     const getRemainingPostsCount = async () => {
+      setLoading(true);
       try {
         const response = await getRemainingPosts(currentUser?._id);
         if (response && response.status === 200) {
@@ -44,6 +46,8 @@ const PostJob = () => {
       } catch (error) {
         toast.error("An error occured while fetching remaining post's count");
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -136,27 +140,29 @@ const PostJob = () => {
   };
 
   return (
-    <div>
-      {currentUser.currentSubscription !== null ? (
-        remainingPosts > 0 ? (
-          <JobPostForm {...JobPostFormProps} />
+    <div className="col-10 my-3 mx-auto">
+      {loading ? <>Loading...</> : (
+        currentUser.currentSubscription !== null ? (
+          remainingPosts > 0 ? (
+            <JobPostForm {...JobPostFormProps} />
+          ) : (
+            <div>
+              <p>
+                You have reached the maximum allowed number of job posts for your current subscription.
+              </p>
+              <Link to="/manage-subscription">
+                Manage Subscription!
+              </Link>
+            </div>
+          )
         ) : (
-          <div className="col-10 my-3 mx-auto">
-            <p>
-              You have reached the maximum allowed number of job posts for your current subscription.
-            </p>
+          <div>
+            <p>No active subscription found.</p>
             <Link to="/manage-subscription">
-              Manage Subscription!
+              Upgrade to Unlock Premium Features!
             </Link>
           </div>
         )
-      ) : (
-        <div className="col-10 my-3 mx-auto">
-          <p>No active subscription found.</p>
-          <Link to="/manage-subscription">
-            Upgrade to Unlock Premium Features!
-          </Link>
-        </div>
       )}
     </div>
   );
