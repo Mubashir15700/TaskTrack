@@ -75,7 +75,7 @@ const Laborers = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3 vh-100">
+    <div className="col-10 mx-auto mt-3">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="mb-0">Laborers</h3>
         <NearMeButton
@@ -91,7 +91,7 @@ const Laborers = () => {
           loader={<div>Hang on, loading content...</div>}
           next={() => getAllLaborers()}
         >
-          <div className="row col-12">
+          <div className="row">
             {laborers.map((laborer, index) => (
               <div className="col-md-4 mb-3" key={index}>
                 <Link to={`/laborers/${laborer?.user?._id}`} className="text-decoration-none">
@@ -107,7 +107,7 @@ const Laborers = () => {
                         className="rounded-circle mb-2 mx-auto img-fluid"
                       />
                       <h6 className="card-subtitle text-muted mb-2">{laborer?.user?.username}</h6>
-                      <p>Job Skills: {laborer?.fields?.map(field => field.name).join(', ')}</p>
+                      <p>Job Skills: {laborer?.fields?.map(field => field.name).join(", ")}</p>
                       <p>{laborer?.user?.location?.district}, {laborer?.user?.location?.state}</p>
                     </div>
                   </div>

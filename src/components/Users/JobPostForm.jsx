@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { Tooltip } from "react-tooltip";
 import Address from "./Address";
 import Fields from "./Fields";
 import FormErrorDisplay from "../Common/FormErrorDisplay";
@@ -135,7 +136,16 @@ const JobPostForm = ({
                         getJobApplicants={getJobApplicants}
                     />
                 ))}
-                <button type="button" className="btn" onClick={handleAddField}>
+                <Tooltip
+                    id="add-field-tooltip"
+                    anchorSelect=".add-field-button"
+                    place="left"
+                    effect="solid"
+                    content={"Add new field"}
+                >
+                    Add new field
+                </Tooltip>
+                <button type="button" className="btn add-field-button" onClick={handleAddField}>
                     <i className="bi bi-plus-circle"></i>
                 </button>
             </div>

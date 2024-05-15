@@ -4,12 +4,7 @@ import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { getLaborer } from "../../api/user/laborer";
 import IMAGE_URLS from "../../config/imageUrls";
-import {
-    MDBCard,
-    MDBCardBody,
-    MDBCardImage,
-    MDBBtn,
-} from "mdb-react-ui-kit";
+import { MDBCard, MDBCardBody, MDBCardImage, MDBBtn } from "mdb-react-ui-kit";
 
 const Account = () => {
     const currentUser = useSelector((state) => state.user.userData);
@@ -60,9 +55,6 @@ const Account = () => {
                         <p className="mb-1">{currentUser?.username}</p>
                         <p className="text-muted mb-1">{currentUser?.email}</p>
                         <p className="text-muted mb-1">{currentUser?.phone}</p>
-                        <p className="text-muted mb-4">
-                            {currentUser?.location?.district}, {currentUser?.location?.state}
-                        </p>
                         <Link to="/profile" className="d-flex justify-content-center">
                             <MDBBtn>Edit</MDBBtn>
                         </Link>

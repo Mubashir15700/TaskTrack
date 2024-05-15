@@ -1,18 +1,10 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { applicantAction } from "../../../api/user/job";
 import SweetAlert from "../../../components/Common/SweetAlert";
 import socket from "../../../socket/socket";
-import {
-    MDBCard,
-    MDBCardBody,
-    MDBBadge,
-    MDBBtn,
-    MDBCardFooter,
-    MDBIcon,
-} from "mdb-react-ui-kit";
+import { MDBCard, MDBCardBody, MDBBadge, MDBBtn, MDBCardFooter, MDBIcon } from "mdb-react-ui-kit";
 import IMAGE_URLS from "../../../config/imageUrls";
 
 const ViewApplicants = () => {
@@ -20,10 +12,7 @@ const ViewApplicants = () => {
     const [applicantsData, setApplicantsData] = useState(location.state?.applicantsData || []);
     const job = location.state?.job;
     const jobId = location.state?.jobId;
-    const jobStatus = location.state?.status;
     const fieldName = location.state?.fieldName;
-
-    const currentUserId = useSelector((state) => state.user.userData?._id);
 
     const confirmApproveReject = async (laborerId, action) => {
         const result = await SweetAlert.confirmAction(
@@ -108,7 +97,7 @@ const ViewApplicants = () => {
                                             Approve
                                         </button>
                                         <button
-                                            className="btn btn-danger "
+                                            className="btn btn-danger"
                                             onClick={() => confirmApproveReject(applicant?.userId?._id, "reject")}
                                         >
                                             Reject

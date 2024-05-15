@@ -220,7 +220,7 @@ const Address = ({ userId, label, currentAddress, onAddressChange, onLocationDel
                 {(usage !== "display-job" && usage !== "display-laborer" && usage !== "admin") && (
                     <div className="d-flex flex-column flex-md-row justify-content-between mt-3">
                         <button
-                            className="btn btn-primary col-md-5 my-sm-1"
+                            className="btn btn-primary col-md-5 my-sm-1 mb-1"
                             disabled={loading}
                             onClick={handleGetCurrentLocation}
                         >

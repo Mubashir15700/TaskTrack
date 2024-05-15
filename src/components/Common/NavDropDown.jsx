@@ -36,7 +36,7 @@ const NavDropDown = ({ role, onError, changeOpenBasicState }) => {
         const response = await logout({ role });
         if (response && response.status === 200) {
             role === "admin" ? dispatch(setLoggedIn(false)) : dispatch(setUserLoggedIn(false));
-            const navigateTo = role === "admin" ? "/admin/login" : "/";
+            const navigateTo = role === "admin" ? "/admin/login" : "/login";
             navigate(navigateTo);
         } else {
             onError("An error occured while logging out");

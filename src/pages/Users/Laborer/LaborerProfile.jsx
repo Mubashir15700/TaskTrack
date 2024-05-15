@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import SubForm2 from "../Laborer/BecomeLaborerForm/SubForm2";
-import { workSchema } from "../../../validations/userValidations/becomeLaborerSchema";
+import { workSchema } from "../../../utils/validations/userValidations/becomeLaborerSchema";
 import { updateLaborerProfile } from "../../../api/user/profile";
 
 const LaborerProfile = () => {

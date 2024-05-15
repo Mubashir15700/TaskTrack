@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
-import {
-    getPlans, getActivePlan, getStripePublicKey, createSubscription
-} from "../../api/user/plan";
+import { getPlans, getActivePlan, getStripePublicKey, createSubscription } from "../../api/user/plan";
 import { loadStripe } from "@stripe/stripe-js/pure";
 
 const Subscription = () => {
@@ -147,7 +145,7 @@ const Subscription = () => {
                         {plans?.length ? (
                             plans.map((plan, index) => (
                                 <div
-                                    className="card col-8 col-lg-3 py-5 pb-lg-0 mx-2"
+                                    className="card col-8 col-lg-3 py-5 pb-lg-0 m-2"
                                     key={index}
                                 >
                                     <div className="wrap-price">
