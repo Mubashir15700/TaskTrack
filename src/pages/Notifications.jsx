@@ -75,7 +75,7 @@ const Notifications = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3">
+    <div className="col-10 my-3 mx-auto">
       <h3 className="mb-4">Notifications</h3>
       {notifications && notifications.length ? (
         <InfiniteScroll

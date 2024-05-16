@@ -48,7 +48,6 @@ const Email = () => {
 
     return (
         <AuthWrapper title={"Enter your email"}>
-
             <div className="mb-3">
                 <MDBInput
                     label={"Email"}

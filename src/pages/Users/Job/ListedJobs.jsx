@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Job from "../../../components/Users/Job";
@@ -29,7 +29,7 @@ const ListedJobs = () => {
     }, []);
 
     return (
-        <div className="col-10 mx-auto mt-3">
+        <div className="col-10 mx-auto my-3">
             <h3 className="mb-4">Your Listed Jobs</h3>
             {
                 jobs.length ? (

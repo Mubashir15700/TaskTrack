@@ -38,46 +38,48 @@ const Account = () => {
     };
 
     return (
-        <div className="col-10 my-5 mx-auto d-md-flex align-items-center">
+        <div className="col-10 my-3 mx-auto">
             {/* user profile view */}
-            <div className="col-md-5 card mb-3">
-                <MDBCard>
-                    <MDBCardBody className="text-center">
-                        <MDBCardImage
-                            src={currentUser?.profile ?
-                                `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}` :
-                                IMAGE_URLS.avatar
-                            }
-                            alt="avatar"
-                            className="rounded-circle"
-                            style={{ width: "150px" }}
-                            fluid />
-                        <p className="mb-1">{currentUser?.username}</p>
-                        <p className="text-muted mb-1">{currentUser?.email}</p>
-                        <p className="text-muted mb-1">{currentUser?.phone}</p>
-                        <Link to="/profile" className="d-flex justify-content-center">
-                            <MDBBtn>Edit</MDBBtn>
-                        </Link>
-                        {currentUser.isJobSeeker && (
-                            <div className="d-flex justify-content-center">
-                                <Link onClick={goToLaborerProfile}>
-                                    Manage Laborer Profile
-                                </Link>
-                            </div>
-                        )}
-                    </MDBCardBody>
-                </MDBCard>
-            </div>
-            <div className="d-grid gap-2 col-md-6 mx-auto">
-                <Link to="/jobs/listed-jobs" className="btn btn-outline-primary">
-                    Listed Jobs
-                </Link>
-                <Link to="/jobs/works-history" className="btn btn-outline-primary">
-                    Work History
-                </Link>
-                <Link to="/manage-subscription" className="btn btn-outline-primary">
-                    Manage Subscriptions
-                </Link>
+            <div className="d-md-flex align-items-center">
+                <div className="col-md-5 card mb-3">
+                    <MDBCard>
+                        <MDBCardBody className="text-center">
+                            <MDBCardImage
+                                src={currentUser?.profile ?
+                                    `${import.meta.env.VITE_AXIOS_BASE_URL}/uploads/profile/${currentUser?.profile}` :
+                                    IMAGE_URLS.avatar
+                                }
+                                alt="avatar"
+                                className="rounded-circle"
+                                style={{ width: "150px" }}
+                                fluid />
+                            <p className="mb-1">{currentUser?.username}</p>
+                            <p className="text-muted mb-1">{currentUser?.email}</p>
+                            <p className="text-muted mb-1">{currentUser?.phone}</p>
+                            <Link to="/profile" className="d-flex justify-content-center">
+                                <MDBBtn>Edit</MDBBtn>
+                            </Link>
+                            {currentUser.isJobSeeker && (
+                                <div className="d-flex justify-content-center">
+                                    <Link onClick={goToLaborerProfile}>
+                                        Manage Laborer Profile
+                                    </Link>
+                                </div>
+                            )}
+                        </MDBCardBody>
+                    </MDBCard>
+                </div>
+                <div className="d-grid gap-2 col-md-6 mx-auto">
+                    <Link to="/jobs/listed-jobs" className="btn btn-outline-primary">
+                        Listed Jobs
+                    </Link>
+                    <Link to="/jobs/works-history" className="btn btn-outline-primary">
+                        Work History
+                    </Link>
+                    <Link to="/manage-subscription" className="btn btn-outline-primary">
+                        Manage Subscriptions
+                    </Link>
+                </div>
             </div>
         </div>
     );

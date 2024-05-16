@@ -35,16 +35,6 @@ function Form() {
         avlTimes: prevRequest?.avlTimes,
         fields: prevRequest?.fields ?? [defaultField],
     });
-    // const [formData, setFormData] = useState({
-    //     email: "",
-    //     password: "",
-    //     confirmPassword: "",
-    //     firstName: "",
-    //     lastName: "",
-    //     username: "",
-    //     nationality: "",
-    //     other: "",
-    // });
 
     const [page, setPage] = useState(0);
     const [errors, setErrors] = useState({});
@@ -96,12 +86,6 @@ function Form() {
                 handleAddField={handleAddField}
                 errors={errors}
             />;
-        } else {
-            // return <SubForm3
-            //     formData={formData}
-            //     setFormData={setFormData}
-            //     errors={errors}
-            // />;
         }
     };
 
@@ -206,47 +190,49 @@ function Form() {
     };
 
     return (
-        <div className="col-10 my-5 mx-auto p-3 p-lg-5 border mt-5">
-            <div className="header">
-                <h3 className="mb-4">Become A Laborer</h3>
-            </div>
-            <div className="progress mb-3">
-                <div
-                    className="progress-bar"
-                    role="progressbar"
-                    style={{
-                        width: `${((page + 1) / FormTitles.length) * 100}%`,
-                        backgroundColor: "#4B49AC"
-                    }}
-                    aria-valuenow="25"
-                    aria-valuemin="0"
-                    aria-valuemax="100"
-                ></div>
-            </div>
-            <div>
-                <div>{PageDisplay()}</div>
-                <div className="mt-3">
-                    <button
-                        disabled={page === 0}
-                        onClick={() => {
-                            setPage((currPage) => currPage - 1);
-                        }}
-                        className="btn btn-secondary me-2"
-                    >
-                        Prev
-                    </button>
-                    <button
-                        onClick={handleClick}
-                        className="btn btn-primary"
-                    >
-                        {buttonLabel}
-                    </button>
+        <div className="col-10 my-3 mx-auto">
+            <div className="p-3 p-lg-5 border mt-5">
+                <div className="header">
+                    <h3 className="mb-4">Become A Laborer</h3>
                 </div>
-                {serverResponse && (
-                    <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
-                        {serverResponse.message}
+                <div className="progress mb-3">
+                    <div
+                        className="progress-bar"
+                        role="progressbar"
+                        style={{
+                            width: `${((page + 1) / FormTitles.length) * 100}%`,
+                            backgroundColor: "#4B49AC"
+                        }}
+                        aria-valuenow="25"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                    ></div>
+                </div>
+                <div>
+                    <div>{PageDisplay()}</div>
+                    <div className="mt-3">
+                        <button
+                            disabled={page === 0}
+                            onClick={() => {
+                                setPage((currPage) => currPage - 1);
+                            }}
+                            className="btn btn-secondary me-2"
+                        >
+                            Prev
+                        </button>
+                        <button
+                            onClick={handleClick}
+                            className="btn btn-primary"
+                        >
+                            {buttonLabel}
+                        </button>
                     </div>
-                )}
+                    {serverResponse && (
+                        <div className={`alert ${serverResponse.status === "failed" ? "alert-danger" : "alert-success"} mt-3`} role="alert">
+                            {serverResponse.message}
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

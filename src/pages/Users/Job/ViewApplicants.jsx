@@ -61,7 +61,7 @@ const ViewApplicants = () => {
     };
 
     return (
-        <div className="col-10 mx-auto mt-3">
+        <div className="col-10 mx-auto my-3">
             <h3 className="mb-4">{job} Applicants</h3>
             <p>Field: {fieldName}</p>
             {
@@ -69,7 +69,7 @@ const ViewApplicants = () => {
                     applicantsData.map((applicant, index) => (
                         <MDBCard key={index}>
                             <MDBCardBody>
-                                <div className="d-md-flex justify-content-between align-items-center">
+                                <div className="d-flex justify-content-between align-items-center">
                                     <div className="d-flex align-items-center">
                                         <img
                                             src={applicant?.userId?.profile ?
@@ -81,29 +81,33 @@ const ViewApplicants = () => {
                                             className="rounded-circle"
                                         />
                                         <div className="mx-3">
-                                            <p className="fw-bold mb-1">{applicant?.userId?.username}</p>
-                                            <p className="text-muted mb-0">{applicant?.userId?.email}</p>
+                                            <p className="mb-1">{applicant?.userId?.username}</p>
                                         </div>
-                                        <MDBBadge pill color="success" light>
-                                            {applicant?.status}
-                                        </MDBBadge>
                                     </div>
-                                    {/* {(jobStatus !== "closed" && applicant?.status === "pending") && ( */}
-                                    <div className="d-flex flex-column flex-sm-row align-items-center">
-                                        <button
-                                            className="btn btn-warning me-2"
-                                            onClick={() => confirmApproveReject(applicant?.userId?._id, "accept")}
-                                        >
-                                            Approve
-                                        </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => confirmApproveReject(applicant?.userId?._id, "reject")}
-                                        >
-                                            Reject
-                                        </button>
-                                    </div>
-                                    {/* )} */}
+                                    {job.status !== "closed" && (
+                                        <div className="d-flex flex-column flex-md-row align-items-center">
+                                            {(applicant?.status === "pending") ? (
+                                                <>
+                                                    <button
+                                                        className="btn btn-sm btn-warning m-1"
+                                                        onClick={() => confirmApproveReject(applicant?.userId?._id, "accept")}
+                                                    >
+                                                        <i class="bi bi-check2"></i>
+                                                    </button>
+                                                    <button
+                                                        className="btn btn-sm btn-danger"
+                                                        onClick={() => confirmApproveReject(applicant?.userId?._id, "reject")}
+                                                    >
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <MDBBadge pill color={applicant?.status === "accepted" ? "success" : "danger"} light>
+                                                    {applicant?.status}
+                                                </MDBBadge>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
                             </MDBCardBody>
                             <MDBCardFooter background="light" border="0" className="p-2 d-flex justify-content-around">
@@ -112,9 +116,11 @@ const ViewApplicants = () => {
                                         View
                                     </MDBBtn>
                                 </Link>
-                                <MDBBtn color="link" rippleColor="primary" className="text-reset m-0">
-                                    Message <MDBIcon fas icon="envelope" />
-                                </MDBBtn>
+                                <Link to={`/chat/${applicant?.userId?._id}/${applicant?.userId?.username}`}>
+                                    <MDBBtn color="link" rippleColor="primary" className="text-reset m-0">
+                                        Message <MDBIcon fas icon="envelope" />
+                                    </MDBBtn>
+                                </Link>
                             </MDBCardFooter>
                         </MDBCard>
                     ))

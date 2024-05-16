@@ -36,7 +36,6 @@ const WorksHistory = () => {
     const getAnyPendingRequest = async () => {
         try {
             const response = await getPrevRequest(currentUserId);
-            console.log("getPrevRequest: ", response);
             if (response && response.status === 200) {
                 const responseData = response.request;
                 if (responseData) {
@@ -124,7 +123,7 @@ const WorksHistory = () => {
     };
 
     return (
-        <div className="col-10 mx-auto mt-3 vh-100">
+        <div className="col-10 mx-auto my-3">
             <h3 className="mb-4">Your Work History</h3>
             {
                 works.length ? (
@@ -165,20 +164,20 @@ const WorksHistory = () => {
                                         <Link
                                             to="/become-laborer-form"
                                             {...(pendingRequest && { state: pendingRequest })}
-                                            className="btn btn-primary col-12 col-md-5"
+                                            className="btn btn-primary col-12 col-md-5 mb-2"
                                         >
                                             View Request
                                         </Link>
                                     ) : (
                                         <Link
                                             onClick={() => handleLinkClick()}
-                                            className="btn btn-primary col-12 col-md-5"
+                                            className="btn btn-primary col-12 col-md-5 mb-2"
                                         >
                                             Manage Laborer Profile
                                         </Link>
                                     )}
                                     <button
-                                        className="btn btn-danger col-12 col-md-5"
+                                        className="btn btn-danger col-12 col-md-5 mb-2"
                                         onClick={confirmCancelRequest}
                                         disabled={pendingRequest.status !== "pending"}
                                     >

@@ -65,7 +65,7 @@ const Jobs = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3">
+    <div className="col-10 mx-auto my-3">
       {loading ? (
         <>Loading...</>
       ) : (

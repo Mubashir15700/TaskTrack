@@ -155,7 +155,9 @@ const EditListedJob = () => {
     };
 
     return (
-        <JobPostForm {...JobPostFormProps} />
+        <div className="col-10 my-3 mx-auto">
+            <JobPostForm {...JobPostFormProps} />
+        </div>
     );
 };
 

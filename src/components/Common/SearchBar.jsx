@@ -5,7 +5,7 @@ import { setSearchResults } from "../../redux/slices/adminSlice";
 import { setSearchResults as setUserSearchResults } from "../../redux/slices/userSlice";
 import axios from "../../config/axiosConfig";
 import { search } from "../../api/shared/utility";
-import debounce from "../../utils/searchDebounce";
+import { debounce } from "lodash";
 
 const SearchBar = ({ role, onError }) => {
     const navigate = useNavigate();

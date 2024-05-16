@@ -87,7 +87,7 @@ const LaborerProfile = () => {
     };
 
     return (
-        <div className="col-10 mx-auto vh-100">
+        <div className="col-10 mx-auto my-3">
             <div className="my-3  p-3 p-lg-5 border mt-5">
                 <SubForm2 {...SubForm2Props} />
                 {changed && (

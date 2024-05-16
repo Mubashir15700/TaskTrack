@@ -75,7 +75,7 @@ const Laborers = () => {
   };
 
   return (
-    <div className="col-10 mx-auto mt-3">
+    <div className="col-10 mx-auto my-3">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="mb-0">Laborers</h3>
         <NearMeButton

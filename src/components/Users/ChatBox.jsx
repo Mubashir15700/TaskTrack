@@ -70,13 +70,14 @@ const ChatBox = forwardRef(({
     const debouncedCheckScrollPosition = debounce(checkScrollPosition, 200);
 
     return (
-        <MDBCol md="6" lg="7" xl="8" className="border rounded p-2 d-flex flex-column justify-content-end" style={{ height: "75vh" }}>
+        <MDBCol md="6" lg="7" xl="8"
+            className={`border rounded p-2 ${!showEmojiPicker ? "d-flex flex-column justify-content-end" : ""}`}
+            style={{ height: "75vh" }}
+        >
             <div
                 ref={messageContainerRef}
                 className="overflow-auto message-container"
-                style={{
-                    maxHeight: "400px"
-                }}
+                style={{ maxHeight: !showEmojiPicker ? "400px" : "100px" }}
             >
                 {messageList.map((messageContent, index) => (
                     <div
@@ -162,8 +163,10 @@ const ChatBox = forwardRef(({
             </div>
             {showEmojiPicker && (
                 <EmojiPicker
-                    className="w-100"
                     onEmojiClick={handleSelectEmoji}
+                    lazyLoadEmojis={true}
+                    height={300}
+                    width={"100%"}
                 />
             )}
         </MDBCol>
