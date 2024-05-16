@@ -1,29 +1,78 @@
+import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { getMessageTime } from "../../utils/dateutil";
 import IMAGE_URLS from "../../config/imageUrls";
 import { MDBCol, MDBIcon } from "mdb-react-ui-kit";
+import { debounce } from "lodash";
 
-const ChatBox = ({
+const ChatBox = forwardRef(({
     messageList,
     currentUser,
     currentMessage,
     setCurrentMessage,
     sendMessage,
     handleToggleEmojiPicker,
-    handleScrollButtonClick,
     handleSelectEmoji,
-    showScrollButton,
     showEmojiPicker,
+    newMessageCount,
+    setNewMessageCount,
     id
-}) => {
+}, ref) => {
+    const [showScrollButton, setShowScrollButton] = useState(false);
+    const messageContainerRef = useRef(null);
+
+    useImperativeHandle(ref, () => {
+        return {
+            debouncedCheckScrollPosition
+        }
+    });
+
+    useEffect(() => {
+        const messageContainer = messageContainerRef.current;
+        if (messageContainer) {
+            messageContainer.addEventListener("scroll", debouncedCheckScrollPosition);
+
+            // Initial check on mount
+            debouncedCheckScrollPosition();
+
+            scrollToBottom();
+
+            return () => {
+                messageContainer.removeEventListener("scroll", debouncedCheckScrollPosition);
+            };
+        }
+    }, []);
+
+    // to fix
+    const scrollToBottom = () => {
+        const messageContainer = messageContainerRef.current;
+        console.log("lc: ", messageContainer.lastChild);
+        if (messageContainer && messageContainer.lastChild) {
+            setTimeout(() => {
+                messageContainer.lastChild.scrollIntoView({ behavior: "smooth" });
+            }, 50);
+        }
+    };
+
+    const handleScrollButtonClick = () => {
+        scrollToBottom();
+        setNewMessageCount(0);
+    };
+
+    const checkScrollPosition = () => {
+        const messageContainer = messageContainerRef.current;
+        if (messageContainer) {
+            const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
+            setShowScrollButton(!isAtBottom);
+        }
+    };
+
+    const debouncedCheckScrollPosition = debounce(checkScrollPosition, 200);
+
     return (
-        <MDBCol
-            md="6"
-            lg="7"
-            xl="8"
-            className="border rounded p-2"
-        >
+        <MDBCol md="6" lg="7" xl="8" className="border rounded p-2 d-flex flex-column justify-content-end" style={{ height: "75vh" }}>
             <div
+                ref={messageContainerRef}
                 className="overflow-auto message-container"
                 style={{
                     maxHeight: "400px"
@@ -87,7 +136,7 @@ const ChatBox = ({
                         setCurrentMessage(event.target.value);
                     }}
                     onKeyDown={(event) => {
-                        event.key === "Enter" && sendMessage();
+                        event.key === "Enter" && (event.preventDefault(), sendMessage(), scrollToBottom());
                     }}
                     className="form-control form-control-lg"
                     id="exampleFormControlInput2"
@@ -103,7 +152,10 @@ const ChatBox = ({
                     <MDBIcon fas icon="paper-plane" />
                 </a>
                 {showScrollButton && (
-                    <a className="ms-3" onClick={handleScrollButtonClick}>
+                    <a className="ms-3 position-relative" onClick={handleScrollButtonClick} style={{ display: "inline-block" }}>
+                        {newMessageCount > 0 ? <p className="badge bg-danger text-light position-absolute start-100 translate-middle-y">
+                            {newMessageCount}
+                        </p> : null}
                         <MDBIcon fas icon="angle-double-down" />
                     </a>
                 )}
@@ -116,6 +168,6 @@ const ChatBox = ({
             )}
         </MDBCol>
     );
-};
+});
 
 export default ChatBox;

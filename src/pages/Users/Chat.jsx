@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import socket from "../../socket/socket";
@@ -10,15 +10,15 @@ import ChatBox from "../../components/Users/ChatBox";
 export default function Chat() {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
-    const [showScrollButton, setShowScrollButton] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
     const [showChatList, setShowChatList] = useState(true); // State to toggle between chat list and chat box
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [newMessageCount, setNewMessageCount] = useState(0);
+
+    const childRef = useRef();
 
     const currentUser = useSelector((state) => state.user.userData);
-    const { username } = useParams();
-    const { id } = useParams();
-
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const { username, id } = useParams();
 
     const handleToggleEmojiPicker = () => {
         setShowEmojiPicker((prev) => !prev);
@@ -34,13 +34,14 @@ export default function Chat() {
         // Listen for the "chat_history" event
         socket.on("chat_history", (chatHistory) => {
             setMessageList(chatHistory);
-            scrollToBottom();
         });
 
         // Listen for the "receive_message" event
         socket.on("receive_message", (data) => {
             setMessageList((list) => [...list, data]);
-            checkScrollPosition();
+            childRef.current.debouncedCheckScrollPosition();
+            console.log(childRef.current);
+            setNewMessageCount((c) => c + 1);
         });
 
         // Cleanup function when component unmounts
@@ -61,39 +62,10 @@ export default function Chat() {
         // Add event listener for window resize
         window.addEventListener("resize", handleResize);
 
-        const messageContainer = document.querySelector(".message-container");
-
-        const handleScroll = () => {
-            checkScrollPosition();
-        };
-
-        messageContainer?.addEventListener("scroll", handleScroll);
-
         return () => {
             window.removeEventListener("resize", handleResize);
-            messageContainer?.removeEventListener("scroll", handleScroll);
         };
     }, []);
-
-    const checkScrollPosition = () => {
-        const messageContainer = document.querySelector(".message-container");
-        if (messageContainer) {
-            const isAtBottom = messageContainer.scrollHeight - messageContainer.scrollTop === messageContainer.clientHeight;
-            setShowScrollButton(!isAtBottom);
-        }
-    };
-
-    const scrollToBottom = () => {
-        const messageContainer = document.querySelector(".message-container");
-        if (messageContainer) {
-            const lastMessage = messageContainer.lastChild;
-            if (lastMessage) {
-                setTimeout(() => {
-                    lastMessage.scrollIntoView({ behavior: "smooth" });
-                }, 50);
-            }
-        }
-    };
 
     const sendMessage = () => {
         if (currentMessage.trim() !== "") {
@@ -118,13 +90,8 @@ export default function Chat() {
             });
 
             setCurrentMessage("");
-            scrollToBottom();
             setShowEmojiPicker(false);
         }
-    };
-
-    const handleScrollButtonClick = () => {
-        scrollToBottom();
     };
 
     // Function to update the read status of messages in messageList
@@ -167,7 +134,7 @@ export default function Chat() {
         <MDBContainer fluid className="py-3">
             <MDBRow>
                 <MDBCol md="12">
-                    <MDBCard id="chat3" style={{ borderRadius: "15px" }}>
+                    <MDBCard id="chat3" style={{ borderRadius: "15px", height: "83vh" }}>
                         <MDBCardBody>
                             <MDBRow>
                                 {!isSmallScreen ? (
@@ -178,16 +145,17 @@ export default function Chat() {
                                         />
                                         {id &&
                                             <ChatBox
+                                                ref={childRef}
                                                 messageList={messageList}
                                                 currentUser={currentUser}
                                                 currentMessage={currentMessage}
                                                 setCurrentMessage={setCurrentMessage}
                                                 sendMessage={sendMessage}
                                                 handleToggleEmojiPicker={handleToggleEmojiPicker}
-                                                handleScrollButtonClick={handleScrollButtonClick}
                                                 handleSelectEmoji={handleSelectEmoji}
-                                                showScrollButton={showScrollButton}
                                                 showEmojiPicker={showEmojiPicker}
+                                                newMessageCount={newMessageCount}
+                                                setNewMessageCount={setNewMessageCount}
                                                 id={id}
                                             />
                                         }
@@ -207,16 +175,17 @@ export default function Chat() {
                                                 />
                                                 {id &&
                                                     <ChatBox
+                                                        ref={childRef}
                                                         messageList={messageList}
                                                         currentUser={currentUser}
                                                         currentMessage={currentMessage}
                                                         setCurrentMessage={setCurrentMessage}
                                                         sendMessage={sendMessage}
                                                         handleToggleEmojiPicker={handleToggleEmojiPicker}
-                                                        handleScrollButtonClick={handleScrollButtonClick}
                                                         handleSelectEmoji={handleSelectEmoji}
-                                                        showScrollButton={showScrollButton}
                                                         showEmojiPicker={showEmojiPicker}
+                                                        newMessageCount={newMessageCount}
+                                                        setNewMessageCount={setNewMessageCount}
                                                         id={id}
                                                     />
                                                 }
