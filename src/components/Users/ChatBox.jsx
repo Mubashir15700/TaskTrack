@@ -7,6 +7,7 @@ import { debounce } from "lodash";
 
 const ChatBox = forwardRef(({
     messageList,
+    setMessageList,
     currentUser,
     currentMessage,
     setCurrentMessage,
@@ -38,6 +39,7 @@ const ChatBox = forwardRef(({
             scrollToBottom();
 
             return () => {
+                setMessageList([]);
                 messageContainer.removeEventListener("scroll", debouncedCheckScrollPosition);
             };
         }
@@ -46,7 +48,6 @@ const ChatBox = forwardRef(({
     // to fix
     const scrollToBottom = () => {
         const messageContainer = messageContainerRef.current;
-        console.log("lc: ", messageContainer.lastChild);
         if (messageContainer && messageContainer.lastChild) {
             setTimeout(() => {
                 messageContainer.lastChild.scrollIntoView({ behavior: "smooth" });

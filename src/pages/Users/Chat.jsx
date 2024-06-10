@@ -11,7 +11,7 @@ export default function Chat() {
     const [currentMessage, setCurrentMessage] = useState("");
     const [messageList, setMessageList] = useState([]);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
-    const [showChatList, setShowChatList] = useState(true); // State to toggle between chat list and chat box
+    const [showChatList, setShowChatList] = useState(true);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [newMessageCount, setNewMessageCount] = useState(0);
 
@@ -40,7 +40,6 @@ export default function Chat() {
         socket.on("receive_message", (data) => {
             setMessageList((list) => [...list, data]);
             childRef.current.debouncedCheckScrollPosition();
-            console.log(childRef.current);
             setNewMessageCount((c) => c + 1);
         });
 
@@ -61,6 +60,10 @@ export default function Chat() {
 
         // Add event listener for window resize
         window.addEventListener("resize", handleResize);
+
+        if (username || id) {
+            setShowChatList(false);
+        }
 
         return () => {
             window.removeEventListener("resize", handleResize);
@@ -147,6 +150,7 @@ export default function Chat() {
                                             <ChatBox
                                                 ref={childRef}
                                                 messageList={messageList}
+                                                setMessageList={setMessageList}
                                                 currentUser={currentUser}
                                                 currentMessage={currentMessage}
                                                 setCurrentMessage={setCurrentMessage}
@@ -177,6 +181,7 @@ export default function Chat() {
                                                     <ChatBox
                                                         ref={childRef}
                                                         messageList={messageList}
+                                                        setMessageList={setMessageList}
                                                         currentUser={currentUser}
                                                         currentMessage={currentMessage}
                                                         setCurrentMessage={setCurrentMessage}
