@@ -10,9 +10,8 @@ import {
   getUserNotifications,
   markNotificationOpened as markUserNotificationOpened
 } from "../api/user/notification";
-
 import { MDBBtn, MDBListGroup, MDBListGroupItem } from "mdb-react-ui-kit";
-import IMAGE_URLS from "../config/imageUrls";
+import IMAGE_URLS from "../configs/imageUrls";
 
 const Notifications = () => {
   const dispatch = useDispatch();
