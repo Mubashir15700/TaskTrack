@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { getLaborer } from "../../api/user/laborer";
-import IMAGE_URLS from "../../config/imageUrls";
+import IMAGE_URLS from "../../configs/imageUrls";
 import { MDBCard, MDBCardBody, MDBCardImage, MDBBtn } from "mdb-react-ui-kit";
 
 const Account = () => {

@@ -5,7 +5,7 @@ import { applicantAction } from "../../../api/user/job";
 import SweetAlert from "../../../components/SweetAlert";
 import socket from "../../../socket/socket";
 import { MDBCard, MDBCardBody, MDBBadge, MDBBtn, MDBCardFooter, MDBIcon } from "mdb-react-ui-kit";
-import IMAGE_URLS from "../../../config/imageUrls";
+import IMAGE_URLS from "../../../configs/imageUrls";
 
 const ViewApplicants = () => {
     const location = useLocation();

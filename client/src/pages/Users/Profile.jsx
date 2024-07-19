@@ -8,7 +8,7 @@ import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";
 import ImageCrop from "../../components/ImageCrop";
 import Address from "../../components/Users/Address";
 import FormErrorDisplay from "../../components/FormErrorDisplay";
-import IMAGE_URLS from "../../config/imageUrls";
+import IMAGE_URLS from "../../configs/imageUrls";
 
 const UserDetails = () => {
   const navigate = useNavigate();

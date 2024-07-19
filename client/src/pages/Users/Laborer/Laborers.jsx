@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 import NearMeButton from "../../../components/Users/NearMeButton";
 import { getLaborers } from "../../../api/user/laborer";
-import IMAGE_URLS from "../../../config/imageUrls";
+import IMAGE_URLS from "../../../configs/imageUrls";
 
 const Laborers = () => {
   const [laborers, setLaborers] = useState([]);
