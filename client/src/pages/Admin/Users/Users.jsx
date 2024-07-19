@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import SweetAlert from "../../../components/SweetAlert";
 import TableDataDisplay from "../../../components/Admin/TableDataDisplay";
 import { getUsers, userAction } from "../../../api/admin/user";
-import IMAGE_URLS from "../../../config/imageUrls";
+import IMAGE_URLS from "../../../configs/imageUrls";
 
 const Users = () => {
   const [users, setUsers] = useState([]);

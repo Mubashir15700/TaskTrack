@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { getUser, userAction } from "../../../api/admin/user";
 import Address from "../../../components/Users/Address";
 import SweetAlert from "../../../components/SweetAlert";
-import IMAGE_URLS from "../../../config/imageUrls";
+import IMAGE_URLS from "../../../configs/imageUrls";
 
 const UserDetails = () => {
     const [user, setUser] = useState();
