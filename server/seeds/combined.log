@@ -1,0 +1,4 @@
+{"level":"info","message":"Connected to the database successfully."}
+{"level":"error","message":"Error seeding admin: salt is not defined","stack":"ReferenceError: salt is not defined\n    at seedAdmin (/home/mubashir/Tutorials/Brocamp-Second-Project/server/seeds/adminSeed.js:25:64)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+{"level":"info","message":"Connected to the database successfully."}
+{"level":"info","message":"Created admin successfully."}
