@@ -1,0 +1,1 @@
+import{h as e,b as a}from"./index-9d72eabb.js";const o=async(s,n)=>e(a.get(`/admin/users?itemsPerPage=${s}&currentPage=${n}`)),t=async s=>e(a.get(`/admin/users/${s}`)),c=async s=>e(a.post(`/admin/users/${s.userId}/block-unblock`,{reason:s.reason}));export{t as a,o as g,c as u};
