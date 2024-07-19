@@ -8,7 +8,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import SweetAlert from "../../../components/Common/SweetAlert";
+import SweetAlert from "../../../components/SweetAlert";
 import ItemsPerPageCount from "../../../components/Admin/ItemsPerPageCount";
 import Pagination from "../../../components/Admin/Pagination";
 import SortableBanner from "../../../components/Admin/SortableBanner";

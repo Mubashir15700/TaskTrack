@@ -5,9 +5,9 @@ import { profileSchema } from "../../utils/validations/userValidations/profileSc
 import { setUserData as setUpdatedUserData } from "../../redux/slices/userSlice";
 import toast from "react-hot-toast";
 import { updateProfile, deleteUserProfileImage } from "../../api/user/profile";
-import ImageCrop from "../../components/Common/ImageCrop";
+import ImageCrop from "../../components/ImageCrop";
 import Address from "../../components/Users/Address";
-import FormErrorDisplay from "../../components/Common/FormErrorDisplay";
+import FormErrorDisplay from "../../components/FormErrorDisplay";
 import IMAGE_URLS from "../../config/imageUrls";
 
 const UserDetails = () => {
