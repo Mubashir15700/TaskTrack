@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import EmojiPicker from "emoji-picker-react";
-import { getMessageTime } from "../../utils/dateutil";
+import { getMessageTime } from "../../utils/dateUtil";
 import IMAGE_URLS from "../../configs/imageUrls";
 import { MDBCol, MDBIcon } from "mdb-react-ui-kit";
 import { debounce } from "lodash";
