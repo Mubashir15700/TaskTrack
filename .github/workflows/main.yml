@@ -13,22 +13,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Deploy to AWS EC2
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        HOST: ${{ secrets.EC2_HOST }}
-        USER: tasktrack
-      run: |
-        echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
-        chmod 600 /tmp/id_rsa
-        
-        # Sync code to the remote server
-        rsync -avz -e "ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no" ./ $USER@$HOST:/home/$USER/Second-Project/TaskTrack
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-        # Execute deployment commands on the remote server
-        ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd /home/tasktrack/Second-Project/TaskTrack
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com << 'EOF'
+          sudo su - tasktrack
+          cd Second-Project/TaskTrack/
           git pull origin main
           npm install
-          pm2 restart all  # Restart the application using pm2
+          pm2 restart server
         EOF
