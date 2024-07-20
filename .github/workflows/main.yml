@@ -16,14 +16,12 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }} 
+          ssh-private-key: ${{ secrets.SSH_KEY }}  # Add your SSH key to GitHub secrets
 
       - name: Verify SSH Key
         run: ssh-add -L  # List added SSH keys to verify
-        
+
       - name: Deploy to EC2
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }} 
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com << 'EOF'
             sudo su - tasktrack
@@ -32,4 +30,3 @@ jobs:
             npm install
             pm2 restart server
           EOF
-          
