@@ -1,0 +1,30 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to your branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Deploy to AWS EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ${{ secrets.EC2_USER }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
+        chmod 600 /tmp/id_rsa
+        rsync -avz -e "ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no" ./ $USER@$HOST:/path/to/your/project
+        ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+          cd /path/to/your/project
+          git pull origin main
+          npm install
+          pm2 restart all  # Use pm2 to restart your application if you are using it
+        EOF
