@@ -18,6 +18,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }} 
 
+      - name: Verify SSH Key
+        run: ssh-add -L  # List added SSH keys to verify
+        
       - name: Deploy to EC2
         env:
           SSH_KEY: ${{ secrets.SSH_KEY }} 
