@@ -17,13 +17,16 @@ jobs:
       run: |
         echo "${{ secrets.EC2_PEM_FILE }}" > ~/.ssh/TaskTrackPemFile.pem
         chmod 600 ~/.ssh/TaskTrackPemFile.pem
+        ls -al ~/.ssh  # List files to confirm PEM file creation
+        cat ~/.ssh/TaskTrackPemFile.pem  # Display the PEM file content for verification
 
     - name: Deploy to EC2
       run: |
         ssh -i ~/.ssh/TaskTrackPemFile.pem -o StrictHostKeyChecking=no ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com << 'EOF'
-          sudo su - tasktrack
-          cd Second-Project/TaskTrack/
+          sudo su - tasktrack -c "
+          cd /home/tasktrack/Second-Project/TaskTrack/
           git pull origin main
           npm install
           pm2 restart server
+          "
         EOF
