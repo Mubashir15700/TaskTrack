@@ -5,3 +5,4 @@
 {"level":"info","message":"MongoDB disconnected"}
 {"level":"info","message":"Server shutting down..."}
 {"level":"info","message":"Server shutting down..."}
+{"level":"info","message":"Server shut down gracefully."}
