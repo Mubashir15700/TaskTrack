@@ -10,28 +10,21 @@ jobs:
     runs-on: ubuntu-latest  # Run on Ubuntu virtual machines provided by GitHub Actions
 
     steps:
-      - uses: actions/checkout@v3  # Checkout the repository code
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Checkout the repository code
 
-      - name: SSH Setup (replace with your actual setup)
-        uses: actions/checkout@v3  # Fetch SSH key and configuration (details below)
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.7.0
         with:
-          persist-credentials: true  # Keep SSH key for subsequent steps
+          ssh-private-key: ${{ secrets.SSH_KEY }} 
 
-      - name: Connect to Server (replace with your server details)
+      - name: Deploy to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com
-
-      - name: Switch User (adjust as needed)
-        run: sudo su - tasktrack
-
-      - name: Navigate to Project Directory
-        run: cd Second-Project/TaskTrack/
-
-      - name: Pull Code Updates
-        run: git pull origin main
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Restart Server with PM2
-        run: pm2 restart server
+          ssh -o StrictHostKeyChecking=no ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com << 'EOF'
+            sudo su - tasktrack
+            cd Second-Project/TaskTrack/
+            git pull origin main
+            npm install
+            pm2 restart server
+          EOF
+          
