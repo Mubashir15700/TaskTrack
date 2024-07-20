@@ -17,14 +17,18 @@ jobs:
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.EC2_HOST }}
-        USER: ${{ secrets.EC2_USER }}
+        USER: tasktrack
       run: |
         echo "$SSH_PRIVATE_KEY" > /tmp/id_rsa
         chmod 600 /tmp/id_rsa
-        rsync -avz -e "ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no" ./ $USER@$HOST:/path/to/your/project
+        
+        # Sync code to the remote server
+        rsync -avz -e "ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no" ./ $USER@$HOST:/home/$USER/Second-Project/TaskTrack
+
+        # Execute deployment commands on the remote server
         ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd ~/Second-Project/TaskTrack
+          cd /home/tasktrack/Second-Project/TaskTrack
           git pull origin main
           npm install
-          pm2 restart all  # Use pm2 to restart your application if you are using it
+          pm2 restart all  # Restart the application using pm2
         EOF
