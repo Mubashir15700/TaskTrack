@@ -7,26 +7,31 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Run on Ubuntu virtual machines provided by GitHub Actions
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # Checkout the repository code
 
-    - name: Add PEM File
-      run: |
-        echo "${{ secrets.EC2_PEM_FILE }}" > ~/.ssh/TaskTrackPemFile.pem
-        chmod 600 ~/.ssh/TaskTrackPemFile.pem
-        ls -al ~/.ssh  # List files to confirm PEM file creation
-        cat ~/.ssh/TaskTrackPemFile.pem  # Display the PEM file content for verification
+      - name: SSH Setup (replace with your actual setup)
+        uses: actions/checkout@v3  # Fetch SSH key and configuration (details below)
+        with:
+          persist-credentials: true  # Keep SSH key for subsequent steps
 
-    - name: Deploy to EC2
-      run: |
-        ssh -i ~/.ssh/TaskTrackPemFile.pem -o StrictHostKeyChecking=no ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com << 'EOF'
-          sudo su - tasktrack -c "
-          cd /home/tasktrack/Second-Project/TaskTrack/
-          git pull origin main
-          npm install
-          pm2 restart server
-          "
-        EOF
+      - name: Connect to Server (replace with your server details)
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_KEY }} ubuntu@ec2-13-200-252-3.ap-south-1.compute.amazonaws.com
+
+      - name: Switch User (adjust as needed)
+        run: sudo su - tasktrack
+
+      - name: Navigate to Project Directory
+        run: cd Second-Project/TaskTrack/
+
+      - name: Pull Code Updates
+        run: git pull origin main
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Restart Server with PM2
+        run: pm2 restart server
