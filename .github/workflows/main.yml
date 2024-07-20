@@ -23,7 +23,7 @@ jobs:
         chmod 600 /tmp/id_rsa
         rsync -avz -e "ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no" ./ $USER@$HOST:/path/to/your/project
         ssh -i /tmp/id_rsa -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd /path/to/your/project
+          cd ~/Second-Project/TaskTrack
           git pull origin main
           npm install
           pm2 restart all  # Use pm2 to restart your application if you are using it
