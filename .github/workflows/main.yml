@@ -3,7 +3,7 @@ name: Deploy to AWS EC2
 on:
   push:
     branches:
-      - main  # Adjust this to your branch
+      - main 
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}  # Add your SSH key to GitHub secrets
+          ssh-private-key: ${{ secrets.SSH_KEY }}  # Add the SSH key to GitHub secrets
 
       - name: Verify SSH Key
         run: ssh-add -L  # List added SSH keys to verify
