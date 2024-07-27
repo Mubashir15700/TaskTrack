@@ -1,1 +1,0 @@
-import{h as e,b as t}from"./index-e0af1eab.js";const r=async(s,a)=>e(t.get(`/admin/requests?itemsPerPage=${s}&currentPage=${a}`)),i=async s=>e(t.get(`/admin/requests/${s}`)),o=async s=>e(t.post("/admin/requests/list-unlist",s));export{i as a,r as g,o as r};
