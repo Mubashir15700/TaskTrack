@@ -27,6 +27,10 @@ jobs:
             sudo su - tasktrack
             cd Second-Project/TaskTrack/
             git pull origin main
+            cd client
             npm install
+            cd ../server
+            npm install
+            cd ..
             pm2 restart server
           EOF
