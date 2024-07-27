@@ -8,4 +8,4 @@ node_modules/
 docker-compose.yml
 
 # Ignore log files
-.log
+*.log
